@@ -2,7 +2,7 @@
 <html lang="en" class="h-100" data-bs-theme="auto">
 
 <head>
-   
+
 
     <!-- Meta tags -->
     <meta charset="utf-8">
@@ -10,13 +10,17 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.115.4">
-    
+
     <!-- Tab title -->
     <title>RhytoLeaf</title>
-    
+
+    <!-- Logo -->
+    <link rel="icon" type="image/png" href="./logo-icon.png" sizes="32x32">
+
+
     <!-- JS and CSS meant for styling -->
     <script src="./assets/js/color-modes.js"></script>
-    
+
     <!-- DocSearch, a search experience library -->
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
 
@@ -27,7 +31,7 @@
     <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- RhytoLeaf cutsom styles -->
-    <style src="" type='text/css' ></style>
+    <style src="" type='text/css'></style>
 
 
     <!-- Custom styles for this template -->
@@ -56,13 +60,16 @@
     </svg>
 
     <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <!-- <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+
+        <!-- 
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
             aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
             <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
                 <use href="#circle-half"></use>
             </svg>
             <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-        </button> -->
+        </button> 
+        -->
 
 
         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
@@ -106,26 +113,60 @@
     </div>
 
 
+
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        
+
         <!-- HEADER NAVIGATION BAR -->
         <header class="mb-auto">
             <div>
-                <h3 class="float-md-start mb-0">Cover</h3>
+                <h3 class="float-md-start mb-0">RhytoLeaf Inc.</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">About Us</a>
-                    <a class="nav-link fw-bold py-1 px-0" href="#">Contact</a>
+                    <a class="nav-link fw-bold py-1 px-0" href="#">Contact us</a>
                 </nav>
             </div>
         </header>
 
         <main class="px-3">
-            <h1>Cover your page.</h1>
-            <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit
-                the text, and add your own fullscreen background photo to make it your own.</p>
+            <h1>Lets Work Together</h1>
+            <p class="lead">
+
+            </p>
             <p class="lead">
                 <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
             </p>
+
+
+
+            <!-- TESTING SECTION -->
+
+            <section class="container mt-5">
+                <h2 class="text-center mb-4">Contact Us</h2>
+                <div class="row">
+                  <div class="col-md-6 mx-auto">
+                    <form>
+                      <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                      </div>
+                      <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                  </div>
+                </div>
+                <div class="text-center mt-4">
+                  <p><strong>Email:</strong> example@example.com</p>
+                  <p><strong>Phone:</strong> +1 613 983-0184</p>
+                </div>
+              </section>
+
         </main>
 
         <footer class="mt-auto text-white-50">
