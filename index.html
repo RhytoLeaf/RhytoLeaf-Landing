@@ -15,7 +15,7 @@
     <title>RhytoLeaf</title>
 
     <!-- Logo -->
-    <link rel="icon" type="image/png" href="./logo-icon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="./images/logo-icon.png" sizes="32x32">
 
 
     <!-- JS and CSS meant for styling -->
@@ -127,53 +127,76 @@
             </div>
         </header>
 
+
+        <!-- MAIN SECTION -->
         <main class="px-3">
-            <h1>Lets Work Together</h1>
-            <p class="lead">
 
-            </p>
-            <p class="lead">
-                <a href="#" class="btn btn-lg btn-light fw-bold border-white bg-white">Learn more</a>
-            </p>
+            <div id="text-center">
+                <img src="./images/logo-icon.png" width="300px" height="auto">
+            </div>
+
+            <h1>Welcome</h1>
+
+            <br><br>
 
 
 
-            <!-- TESTING SECTION -->
+            <div id="text-center">
 
-            <section class="container mt-5">
-                <h2 class="text-center mb-4">Contact Us</h2>
-                <div class="row">
-                  <div class="col-md-6 mx-auto">
-                    <form>
-                      <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" required>
-                      </div>
-                      <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" required>
-                      </div>
-                      <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea class="form-control" id="message" rows="5" required></textarea>
-                      </div>
-                      <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                  </div>
-                </div>
-                <div class="text-center mt-4">
-                  <p><strong>Email:</strong> example@example.com</p>
-                  <p><strong>Phone:</strong> +1 613 983-0184</p>
-                </div>
-              </section>
+                <h2>Here are IT products created by our team:</h2>
+
+                <br><br>
+
+                <img src="./images/beebs-sc.png" width="300px" height="auto">
+                <p class="lead">
+                    Beebs
+                </p>
+
+                <br>
+
+            </div>
+
+
 
         </main>
 
+
+
         <footer class="mt-auto text-white-50">
-            <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a
-                    href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+            RhytoLeaf Inc. © 2023. All rights reserved.
         </footer>
     </div>
+
+
+
+    <script>
+        document.getElementById('send-button').addEventListener('click', function () {
+            // Basic form validation
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var message = document.getElementById('message').value;
+
+            if (name === '' || email === '' || message === '') {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Simulate sending data to server using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'send_email.php', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert('Message sent successfully!');
+                }
+            };
+            var data = 'name=' + encodeURIComponent(name) +
+                '&email=' + encodeURIComponent(email) +
+                '&message=' + encodeURIComponent(message);
+            xhr.send(data);
+        });
+    </script>
+
     <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
