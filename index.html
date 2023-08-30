@@ -3,6 +3,8 @@
 
 <head>
 
+    <link rel="icon" type="image/png" href="./images/logo-icon.png">
+
 
     <!-- Meta tags -->
     <meta charset="utf-8">
@@ -31,7 +33,7 @@
     <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- RhytoLeaf cutsom styles -->
-    <style src="" type='text/css'></style>
+    <style src="style.css" type='text/css'></style>
 
 
     <!-- Custom styles for this template -->
@@ -121,8 +123,8 @@
             <div>
                 <h3 class="float-md-start mb-0">RhytoLeaf Inc.</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">About Us</a>
-                    <a class="nav-link fw-bold py-1 px-0" href="#">Contact us</a>
+                    <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">Our Team</a>
+                    <a class="nav-link fw-bold py-1 px-0" href="#">Our Craft</a>
                 </nav>
             </div>
         </header>
@@ -140,6 +142,15 @@
             <br><br>
 
 
+            <div id="text-center">
+                <img id="blurredImage" src="./images/lavender-room.png" width="200px" height="200px" style="    filter: blur(4px);
+                  border-radius: 50px; 
+
+                ">
+
+            </div>
+
+
 
             <div id="text-center">
 
@@ -149,9 +160,9 @@
 
                 <div class="rhytoleaf-project">
 
-                    <img src="./images/beebs-sc.png" width="300px" height="auto">
+                    <img src="./images/beebs.png" width="200px" height="auto" style="border-radius: 25%;">
                     <p class="lead">
-                        Beebs
+                        Beebs for iOS and Android<br>(Xcode, Android Studio, C# & Javascript)
                     </p>
                     <br><br>
 
@@ -164,6 +175,16 @@
                     <img src="./images/superchat.png" width="300px" height="auto">
                     <p class="lead">
                         RhytoLeaf Superchat
+                        <br>(React JS)
+                    </p>
+                    <br><br>
+                </div>
+
+                <div class="rhytoleaf-project">
+
+                    <img src="./images/best-movies-now-sc.png" width="300px" height="auto">
+                    <p class="lead">
+                        Movie Ratings<br>(Public films REST API)
                     </p>
                     <br><br>
                 </div>
@@ -173,6 +194,7 @@
                     <img src="./images/pert-solver.png" width="300px" height="auto">
                     <p class="lead">
                         PERT Solver
+                        <br>(Python)
                     </p>
                     <br><br>
                 </div>
@@ -181,7 +203,7 @@
 
                     <img src="./images/androne18-sc.png" width="300px" height="auto">
                     <p class="lead">
-                        ANDRONE 18
+                        ANDRONE 18<br>(Special Effects using HTML CSS JS)
                     </p>
                     <br><br>
 
@@ -191,7 +213,7 @@
 
                     <img src="./images/BMI-calc-sc.png" width="300px" height="auto">
                     <p class="lead">
-                        BMI Calculator
+                        BMI Calculator <br>( JQuery & AJAX)
                     </p>
                     <br><br>
                 </div>
@@ -207,11 +229,25 @@
 
 
 
+
+
             </div>
-
-
+<!-- 
+            <div id="MAIN-CUBE">
+                <div class="cube">
+                    <div>
+                        <span style="--i:0;"></span>
+                        <span style="--i:1;"></span>
+                        <span style="--i:2;"></span>
+                        <span style="--i:3;"></span>
+                    </div>
+                </div>
+            </div> -->
 
         </main>
+
+
+
 
 
 
@@ -250,7 +286,24 @@
         });
     </script>
 
+
+    <script>
+        // script.js
+        const imageElement = document.getElementById('blurredImage');
+
+        // Function to toggle blur effect
+        function toggleBlur() {
+            imageElement.classList.toggle('blurred');
+        }
+
+        // Attach click event to toggle blur on image
+        imageElement.addEventListener('click', toggleBlur);
+    </script>
+
     <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
 
 </body>
 

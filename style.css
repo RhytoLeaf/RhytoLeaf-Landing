@@ -1,4 +1,3 @@
-
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -70,4 +69,60 @@
 
 .bd-mode-toggle {
     z-index: 1500;
+}
+
+
+
+
+
+
+.cube {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    transform-style: preserve-3d;
+}
+@keyframes animate{
+    0%
+    {
+        transform:  rotateX(-30deg) rotate Y(0deg);
+    }
+    100%
+    {
+        transform: rotate(-30deg) rotateY(360deg);
+    }
+}
+
+.cube div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: #222;
+    transform: rotate(90deg) translateZ(150px);
+}
+
+.top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: #0f0;
+    transform: translate(-380px);
+    filter: blur (20px);
+    box-shadow: 0 0 120px Orgba (0, 255, 0, 0.2), 0 0 200px Orgba(0, 255, 0, 0.4),
+        0 0 300px Orgba (0, 255, 0, 0.6),
+        0 0 400px Urgba (0, 255, 0, 0.8), 0 0 500px Orgba (0, 255, 0, 1);
 }
