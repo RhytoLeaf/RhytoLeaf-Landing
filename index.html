@@ -3,281 +3,406 @@
 
 <head>
 
-    <link rel="icon" type="image/png" href="./images/logo-icon.png">
+
+  <script src="./assets/js/color-modes.js"></script>
+
+  <link rel="icon" type="image/png" href="./images/logo-icon.png">
 
 
-    <!-- Meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.115.4">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.115.4">
+  <title>RhytoLeaf 2023</title>
 
-    <!-- Tab title -->
-    <title>RhytoLeaf</title>
-
-    <!-- Logo -->
-    <link rel="icon" type="image/png" href="./images/logo-icon.png" sizes="32x32">
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/jumbotrons/">
 
 
-    <!-- JS and CSS meant for styling -->
-    <script src="./assets/js/color-modes.js"></script>
 
-    <!-- DocSearch, a search experience library -->
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/cover/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-    <!-- DocSearch: search experience library -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+  <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap CSS -->
-    <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
 
-    <!-- RhytoLeaf cutsom styles -->
-    <style src="style.css" type='text/css'></style>
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      width: 100%;
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-bd-primary {
+      --bd-violet-bg: #712cf9;
+      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #6528e0;
+      --bs-btn-hover-border-color: #6528e0;
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #5a23c8;
+      --bs-btn-active-border-color: #5a23c8;
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+  </style>
 
 
-    <!-- Custom styles for this template -->
-    <link href="cover.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="jumbotrons.css" rel="stylesheet">
 </head>
 
-<body class="d-flex h-100 text-center text-bg-dark">
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="check2" viewBox="0 0 16 16">
+      <path
+        d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+    </symbol>
+    <symbol id="circle-half" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z" />
+    </symbol>
+    <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+      <path
+        d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z" />
+      <path
+        d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+    </symbol>
+    <symbol id="sun-fill" viewBox="0 0 16 16">
+      <path
+        d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+    </symbol>
+  </svg>
+
+  <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+    <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+      aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
+      <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
+        <use href="#circle-half"></use>
+      </svg>
+      <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
+          aria-pressed="false">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#sun-fill"></use>
+          </svg>
+          Light
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
+          aria-pressed="false">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#moon-stars-fill"></use>
+          </svg>
+          Dark
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto"
+          aria-pressed="true">
+          <svg class="bi me-2 opacity-50 theme-icon" width="1em" height="1em">
+            <use href="#circle-half"></use>
+          </svg>
+          Auto
+          <svg class="bi ms-auto d-none" width="1em" height="1em">
+            <use href="#check2"></use>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+
+  <!--  -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="bootstrap" viewBox="0 0 118 94">
+      <title>RhytoLeaf</title>
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z">
+      </path>
+    </symbol>
+    <symbol id="arrow-right-short" viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z" />
+    </symbol>
+    <symbol id="check2-circle" viewBox="0 0 16 16">
+      <path
+        d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
+      <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
+    </symbol>
+  </svg>
+
+  <!-- MAIN JUMBO  -->
+  <div class="my-5">
+    <div class="p-5 text-center bg-body-tertiary">
+      <div class="container py-5">
+        <!-- <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100">
+          <use xlink:href="#bootstrap" /></svg> -->
+        <img src="./images/logo-icon.png" width="20%" height="auto">
+        <h1 class="text-body-emphasis">RhytoLeaf &copy;</h1>
+        <p class="col-lg-8 mx-auto lead">
+          Cultivating Innovators: One App at a Time
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="b-example-divider"></div>
+
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
+
+
+  </div>
+
+  <div class="b-example-divider"></div>
 
 
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href='https://appadvice.com/app/beebs/1247188870'>
+        <img src="./images/beebs.png" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">Beebs</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (Xcode, Android Studio, C# & Javascript)
+      </p>
 
-        <div id="text-center">
-            <img src="./images/logo-icon.png" width="300px" height="auto">
+      <br>
 
+      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
 
+    </div>
 
-            <h1>Welcome</h1>
+  </div>
 
-            <br>
-            <br>
-            <br>
-            <br>
+  <div class="b-example-divider"></div>
 
-            <!-- MAIN SECTION -->
-            <main class="px-3">
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
 
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href="https://rhyto-superchat.web.app">
+        <img src="./images/superchat-logo.png" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">RhytoLeaf Superchat</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (React JS & Google Firebase)
+      </p>
+    </div>
 
+  </div>
 
+  <div class="b-example-divider"></div>
 
-
-                <div id="text-center">
-
-                    <h2>Here are some IT products created by our team:</h2>
-
-                    <br><br>
-
-                    <div class="rhytoleaf-project">
-
-                        <a href='https://appadvice.com/app/beebs/1247188870'>
-                            <img src="./images/beebs.png" width="200px" height="auto" style="border-radius: 25%;">
-                        </a>
-                        <br><br>
-                        <img src="./images/beebs-sc-2.png" width="300px" height="auto">
-
-                        <p class="lead">
-                            (Xcode, Android Studio, C# & Javascript)
-                        </p>
-                        <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
-
-
-                    </div>
-
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
-
-                    <div class="rhytoleaf-project">
-                        <a href="https://rhyto-superchat.web.app">
-                            <img src="./images/superchat-logo.png" width="200px" height="auto"
-                                style="border-radius: 25%;">
-                        </a>
-                        <br><br>
-                        <img src="./images/superchat.png" width="300px" height="auto">
-                        <p class="lead">
-                            <br>(React JS & Google Firebase)
-                        </p>
-                        <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href="https://rhytoleaf.github.io/Movies-web-app/">
+        <img src="./images/wuxi-logo.png" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">Wuxi</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (HTML + CSS + JS + REST API)
+      </p>
+      <br>
+      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+    </div>
+  </div>
 
 
-                    </div>
+  <div class="b-example-divider"></div>
 
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
-
-                    <div class="rhytoleaf-project">
-                        <a href="https://rhytoleaf.github.io/Movies-web-app/">
-                            <img src="./images/wuxi-logo.png" width="200px" height="auto" style="border-radius: 25%;">
-                        </a>
-                        <br><br>
-                        <img src="./images/wuxi-sc.png" width="300px" height="auto">
-                        <p class="lead">
-                            (HTML + CSS + JS + REST API)
-                        </p>
-                        <br><br>
-                    </div>
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href="https://rhytoleaf.github.io/Rhyto-BMI/">
+        <img src="./images/bmi-calc-logo.png" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">BMI Cacluator</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (JQuery & AJAX)
+      </p>
+      <br>
+    </div>
+  </div>
 
 
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
 
-                    <div class="rhytoleaf-project">
-                        <a href="https://rhytoleaf.github.io/CacheHax/">
-                            <img src="./images/cache-hax-logo.png" width="200px" height="auto"
-                                style="border-radius: 25%;">
-                        </a>
-                        <br><br>
-                        <img src="./images/cachehax-sc.png" width="300px" height="auto">
-                        <p class="lead">
-                            (HTML + AJAX + Chart JS)
-                        </p>
-                        <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+  <div class="b-example-divider"></div>
 
-                        <br><br>
-                    </div>
-
-
-                    <!--  -->
-                    <!-- <hr style="padding: 3rem;"> -->
-                    <!--  -->
-
-                    <!-- <div class="rhytoleaf-project">
-                        <a href="#">
-                            <img src="./images/PERT-SOLVER-logo.png" width="200px" height="auto"
-                                style="border-radius: 25%;">
-                        </a>
-                        <br> <br>
-                        <img src="./images/pert-solver.png" width="300px" height="auto">
-                        <p class="lead">
-                            PERT Solver
-                            <br>(Python)
-                        </p>
-                        <p style="color:red;">PRIVATE</p>
-
-                        <br><br>
-                    </div> -->
-
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
-
-                    <div class="rhytoleaf-project">
-                        <a href="https://rhytoleaf.github.io/Androne18/">
-                            <img src="./images/androne18.png" width="200px" height="auto" style="border-radius: 25%;">
-                        </a>
-                        <br> <br>
-                        <img src="./images/androne18-sc.png" width="300px" height="auto">
-                        <p class="lead">
-                            (HTML + CSS + JS)
-                        </p>
-                        <br><br>
-
-                    </div>
-
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
-
-                    <div class="rhytoleaf-project">
-                        <a href="https://rhytoleaf.github.io/Rhyto-BMI/">
-                            <img src="./images/bmi-calc-logo.png" width="200px" height="auto" style="border-radius: 25%;
-                        "></a>
-                        <br> <br>
-                        <img src="./images/bmi-calc-sc.png" width="300px" height="auto">
-                        <p class="lead">
-                            (JQuery & AJAX)
-                        </p>
-                        <br><br>
-                    </div>
-
-                    <!--  -->
-                    <hr style="padding: 3rem;">
-                    <!--  -->
-
-                    <div class="rhytoleaf-project">
-                        <img src="./images/matrixcalculatorlogo.png" width="200px" height="auto"
-                            style="border-radius: 25%;"><br><br>
-                        <img src="./images/matrix-calculator.png" width="300px" height="auto">
-                        <p class="lead">
-                            (C & Linux Terminal)
-                        </p>
-                        <p style="color:red;">PRIVATE</p>
-
-                        <br><br>
-                    </div>
+  <!-- REGULAR JUMBO -->
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href="https://rhytoleaf.github.io/Androne18/">
+        <img src="./images/androne18.png" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">Cache Hax</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (HTML + AJAX + Chart JS)
+      </p>
+      <br>
+      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+    </div>
+  </div>
 
 
 
 
-                </div>
-            </main>
 
 
+
+  <!-- END OF OUR APPS -->
+  <div class="b-example-divider"></div>
+
+
+  <!-- Placeholder jumbotron (Work with us!) -->
+  <div class="container my-5">
+    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
+
+      <svg class="bi mt-5 mb-3" width="48" height="48">
+        <use xlink:href="#check2-circle" /></svg>
+      <h1 class="text-body-emphasis">Your vision</h1>
+      <p class="col-lg-6 mx-auto mb-4">
+        Transform this blank canvas into your innovation playground! This jumbotron serves as a canvas for your ideas.
+        Instead of fading into the background, let's fill it with the vibrant colors of your STEM-inspired application
+        project.
+        <br>
+        <br>
+        Take action now—share your proposal details in the form below and let's bring your vision to
+        life!
+      </p>
+
+      <form action="mailto:rhytoleaf.ops@gmail.com" method="post" enctype="text/plain">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" required>
+
+        <br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <br><br>
+
+        <label for="platform">Platform:</label>
+        <select id="platform" name="platform">
+          <option value="website">Website</option>
+          <option value="iosAndroid">iOS/Android</option>
+          <option value="unixLinux">UNIX/Linux</option>
+        </select>
+
+        <br><br>
+
+        <input class="btn btn-primary px-5 mb-5" type="submit" value="LET'S DO THIS!">
+      </form>
+
+      <!-- Bootstrap Modal -->
+      <div class="modal" id="thankYouModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Thank You!</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <p>Thank you for your interest! A member of our team will get back to you as soon as possible. 🙇🏾‍♂️</p>
+            </div>
+
+          </div>
         </div>
+      </div>
 
 
-        <footer class="mt-auto text-white-50">
-            RhytoLeaf Inc. &copy; 2023. All rights reserved.
-        </footer>
     </div>
 
 
+  </div>
 
-    <script>
-        document.getElementById('send-button').addEventListener('click', function () {
-            // Basic form validation
-            var name = document.getElementById('name').value;
-            var email = document.getElementById('email').value;
-            var message = document.getElementById('message').value;
+  <script>
+    // Handle form submission
+    document.getElementById("myForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission
 
-            if (name === '' || email === '' || message === '') {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            // Simulate sending data to server using AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'send_email.php', true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert('Message sent successfully!');
-                }
-            };
-            var data = 'name=' + encodeURIComponent(name) +
-                '&email=' + encodeURIComponent(email) +
-                '&message=' + encodeURIComponent(message);
-            xhr.send(data);
-        });
-    </script>
-
-
-    <script>
-        // script.js
-        const imageElement = document.getElementById('blurredImage');
-
-        // Function to toggle blur effect
-        function toggleBlur() {
-            imageElement.classList.toggle('blurred');
-        }
-
-        // Attach click event to toggle blur on image
-        imageElement.addEventListener('click', toggleBlur);
-    </script>
-
-    <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+      // Trigger the Bootstrap modal
+      $('#thankYouModal').modal('show');
+    });
+  </script>
 
 
 
-    <!-- GOOGLE ADSENSE -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4298895490101974"
-        crossorigin="anonymous"></script>
+  <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 </body>
