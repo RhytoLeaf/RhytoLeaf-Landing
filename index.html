@@ -90,6 +90,56 @@
   </style>
 
 
+  <style>
+    #app-list-container.grid-view {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    #app-list-container.grid-view .container {
+      margin: 0 !important;
+      position: relative;
+    }
+
+    #app-list-container.grid-view .text-muted {
+      display: none;
+    }
+
+    #app-list-container.grid-view .text-body-emphasis {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      border-radius: 5px;
+    }
+
+    #app-list-container.grid-view .container:hover .text-body-emphasis {
+      display: block;
+    }
+
+    .view-switch {
+      display: inline-flex;
+      border: 1px solid #00CE7C; /* Changed to RhytoLeaf green */
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .view-switch i {
+      padding: 10px;
+      cursor: pointer;
+      color: #00CE7C; /* Changed to RhytoLeaf green */
+    }
+
+    .view-switch i.active {
+      background-color: #00CE7C; /* Changed to RhytoLeaf green */
+      color: white;
+    }
+  </style>
   <!-- Custom styles for this template -->
   <link href="jumbotrons.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -224,9 +274,26 @@
 
     </div>
 
+  <div class="container text-center my-5">
+    <div id="view-switch" class="view-switch">
+      <i class="fas fa-list active"></i>
+      <i class="fas fa-th"></i>
+    </div>
   </div>
 
-
+  <!-- REGULAR JUMBO -->
+<div id="app-list-container">
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <a href="#">
+        <img src="./images/styleunderstress-logo.jpg" width="20%" height="auto" style="border-radius: 25%;">
+      </a>
+      <h1 class="text-body-emphasis">Style Under Stress</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        (HTML5, CSS3, jQuery)
+      </p>
+    </div>
+  </div>
 
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
@@ -270,7 +337,7 @@
       </a>
       <h1 class="text-body-emphasis">Wuxi</h1>
       <p class="col-lg-8 mx-auto fs-5 text-muted">
-        (HTML, CSS, JS & REST API)
+        (HTML, CSS, JS)
       </p>
       <br>
       <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
@@ -320,6 +387,7 @@
       <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
     </div>
   </div>
+</div>
 
 
   <!-- Work with us container -->
@@ -419,7 +487,22 @@
 
 
   <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const viewSwitch = document.getElementById('view-switch');
+    const appListContainer = document.getElementById('app-list-container');
+    const listIcon = viewSwitch.querySelector('.fa-list');
+    const gridIcon = viewSwitch.querySelector('.fa-th');
 
+    viewSwitch.addEventListener('click', (e) => {
+      if (e.target.tagName === 'I') {
+        if (!e.target.classList.contains('active')) {
+          appListContainer.classList.toggle('grid-view');
+          listIcon.classList.toggle('active');
+          gridIcon.classList.toggle('active');
+        }
+      }
+    });
+  </script>
 
 
 </body>
