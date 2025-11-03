@@ -93,9 +93,11 @@
   <style>
     #app-list-container.grid-view {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
     }
+
+
 
     #app-list-container.grid-view .container {
       margin: 0 !important;
@@ -111,15 +113,21 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
+                transform: translate(-50%, -50%);
+                color: white !important;      background-color: rgba(0, 0, 0, 0.5);
       padding: 1rem;
       border-radius: 5px;
     }
 
     #app-list-container.grid-view .container:hover .text-body-emphasis {
       display: block;
+    }
+
+
+
+    #app-list-container.grid-view .container img {
+      width: 50% !important;
+      height: auto !important;
     }
 
     .view-switch {
@@ -283,18 +291,17 @@
 
   <!-- REGULAR JUMBO -->
 <div id="app-list-container">
-  <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
-      <a href="#">
-        <img src="./images/styleunderstress-logo.jpg" width="20%" height="auto" style="border-radius: 25%;">
-      </a>
-      <h1 class="text-body-emphasis">Style Under Stress</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
-        (HTML5, CSS3, jQuery)
-      </p>
-    </div>
-  </div>
-
+      <div class="container my-5">
+        <div class="p-5 text-center bg-body-tertiary rounded-3">
+          <a href="#" >
+            <img src="./images/styleunderstress-logo.jpg" width="20%" height="auto" style="border-radius: 25%;">
+          </a>
+          <h1 class="text-body-emphasis">Style Under Stress</h1>
+          <p class="col-lg-8 mx-auto fs-5 text-muted">
+            (HTML5, CSS3, jQuery)
+          </p>
+        </div>
+      </div>
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
     <div class="p-5 text-center bg-body-tertiary rounded-3">
@@ -306,9 +313,7 @@
         (Xcode, Android Studio, C# & Javascript)
       </p>
 
-      <br>
 
-      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
 
     </div>
 
@@ -337,10 +342,9 @@
       </a>
       <h1 class="text-body-emphasis">Wuxi</h1>
       <p class="col-lg-8 mx-auto fs-5 text-muted">
-        (HTML, CSS, JS)
+        (HTML5, CSS3, JS)
       </p>
-      <br>
-      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+
     </div>
   </div>
 
@@ -381,10 +385,9 @@
       </a>
       <h1 class="text-body-emphasis">Androne 18</h1>
       <p class="col-lg-8 mx-auto fs-5 text-muted">
-        (HTML, CSS, & JS)
+        (HTML5, CSS3, & JS)
       </p>
-      <br>
-      <p style="color:#00CE7C; font-style: italic;">UNDER MAINTENANCE</p>
+
     </div>
   </div>
 </div>
@@ -504,7 +507,23 @@
     });
   </script>
 
+<script>
+  const copyCopyright = document.getElementById('copy-copyright');
+  copyCopyright.addEventListener('click', () => {
+    const copyrightText = "Copyright 2025 RhytoLeaf Inc. All rights reserved.";
+    navigator.clipboard.writeText(copyrightText)
+      .then(() => {
+        alert('Copyright text copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+  });
+</script>
 
+  <footer class="py-3 my-4">
+    <p class="text-center text-body-secondary">Copyright &copy; 2025 RhytoLeaf Inc. All rights reserved.</p>
+  </footer>
 </body>
 
 </html>
