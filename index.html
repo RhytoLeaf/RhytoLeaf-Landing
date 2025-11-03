@@ -105,29 +105,29 @@
     }
 
     #app-list-container.grid-view .text-muted {
-      display: none;
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 0;
     }
 
     #app-list-container.grid-view .text-body-emphasis {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-                transform: translate(-50%, -50%);
-                color: white !important;      background-color: rgba(0, 0, 0, 0.5);
-      padding: 1rem;
-      border-radius: 5px;
-    }
-
-    #app-list-container.grid-view .container:hover .text-body-emphasis {
       display: block;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
     }
 
 
+
+
+
+    #app-list-container:not(.grid-view) .text-center.bg-body-tertiary.rounded-3 {
+      padding-top: 1rem;
+    }
 
     #app-list-container.grid-view .container img {
       width: 50% !important;
       height: auto !important;
+      margin-top: 1rem;
     }
 
     .view-switch {
@@ -292,24 +292,24 @@
   <!-- REGULAR JUMBO -->
 <div id="app-list-container">
       <div class="container my-5">
-        <div class="p-5 text-center bg-body-tertiary rounded-3">
-          <a href="#" >
+        <div class="text-center bg-body-tertiary rounded-3">
+          <a href="https://rhytoleaf.github.io/StyleUnderStress/" >
             <img src="./images/styleunderstress-logo.jpg" width="20%" height="auto" style="border-radius: 25%;">
           </a>
           <h1 class="text-body-emphasis">Style Under Stress</h1>
-          <p class="col-lg-8 mx-auto fs-5 text-muted">
+          <p class="text-muted">
             (HTML5, CSS3, jQuery)
           </p>
         </div>
       </div>
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href='https://appadvice.com/app/beebs/1247188870'>
         <img src="./images/beebs.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">Beebs</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (Xcode, Android Studio, C# & Javascript)
       </p>
 
@@ -322,12 +322,12 @@
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
 
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href="https://rhyto-superchat.web.app">
         <img src="./images/superchat-logo.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">RhytoLeaf Superchat</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (React JS & Google Firebase)
       </p>
     </div>
@@ -336,12 +336,12 @@
 
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href="https://rhytoleaf.github.io/Movies-web-app/">
         <img src="./images/wuxi-logo.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">Wuxi</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (HTML5, CSS3, JS)
       </p>
 
@@ -351,12 +351,12 @@
 
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href="https://rhytoleaf.github.io/CacheHax/">
         <img src="./images/cache-hax-logo.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">Cache Hax</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (JQuery & AJAX)
       </p>
       <br>
@@ -365,12 +365,12 @@
 
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href="https://rhytoleaf.github.io/Rhyto-BMI/">
         <img src="./images/bmi-calc-logo.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">BMI Calculator</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (JQuery & AJAX)
       </p>
       <br>
@@ -379,12 +379,12 @@
 
   <!-- REGULAR JUMBO -->
   <div class="container my-5">
-    <div class="p-5 text-center bg-body-tertiary rounded-3">
+    <div class="text-center bg-body-tertiary rounded-3">
       <a href="https://rhytoleaf.github.io/Androne18/">
         <img src="./images/androne18.png" width="20%" height="auto" style="border-radius: 25%;">
       </a>
       <h1 class="text-body-emphasis">Androne 18</h1>
-      <p class="col-lg-8 mx-auto fs-5 text-muted">
+      <p class="text-muted">
         (HTML5, CSS3, & JS)
       </p>
 
