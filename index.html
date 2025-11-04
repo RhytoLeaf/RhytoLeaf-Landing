@@ -265,7 +265,7 @@
         <a href="index.html"><img src="./images/logo-icon.png" width="20%" height="auto"></a>
         <h1 class="text-body-emphasis" style="font-size: 3rem;">RhytoLeaf</h1>
         <p class="col-lg-8 mx-auto lead">
-          Cultivating Innovators: One App at a Time
+          Cultivating Innovators: One <span id="sparkle-word">App</span> at a Time
         </p>
       </div>
     </div>
@@ -540,6 +540,53 @@
   <footer class="py-3 my-4">
     <p class="text-center text-body-secondary">Copyright &copy; 2025 RhytoLeaf Inc. All rights reserved.</p>
   </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    #sparkle-word {
+      color: gold;
+      position: relative;
+      display: inline-block;
+    }
+    .sparkle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: gold;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+  </style>
+  <script>
+    const sparkleWord = document.getElementById('sparkle-word');
+
+    function createSparkle(e) {
+      const rect = sparkleWord.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < 5; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        sparkleWord.appendChild(sparkle);
+
+        anime({
+          targets: sparkle,
+          translateX: anime.random(-25, 25),
+          translateY: anime.random(-25, 25),
+          scale: anime.random(0.5, 1.5),
+          opacity: [1, 0],
+          duration: anime.random(500, 1000),
+          easing: 'easeOutExpo',
+          complete: () => sparkle.remove()
+        });
+      }
+    }
+
+    sparkleWord.addEventListener('mouseenter', createSparkle);
+    sparkleWord.addEventListener('mousemove', createSparkle);
+  </script>
 </body>
 
 </html>
