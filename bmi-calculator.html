@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BMI Calculator</title>
+
+    <link rel="icon" type="image/png" href="./images/logo-icon.png">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <style>
+        body {
+            background-color: green;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #calculator {
+            background-color: #00CE7C;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        #result {
+            color: white;
+            margin-top: 10px;
+        }
+
+        .list-title {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .bmi-list {
+            margin-top: 10px;
+            padding-left: 20px;
+            list-style-type: decimal;
+            /* This sets the numbering style to decimal (1, 2, 3, etc.) */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="calculator">
+        <h1>BMI Calculator</h1>
+
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="unit-switch">
+            <label class="custom-control-label" for="unit-switch">Metric/Imperial</label>
+        </div>
+
+        <br>
+
+        <!-- Weight -->
+        <label for="weight">Weight (lbs):</label><br>
+        <input type="number" id="weight" step="any" required>
+
+        <br>
+        <br>
+
+        <!-- Height -->
+        <label>Height:</label>
+        <div id="height-imperial">
+            <select id="feet" required>
+                <option value="3">3'</option>
+                <!-- Add options for feet from 4 to 7 -->
+                <option value="4">4'</option>
+                <option value="5">5'</option>
+                <option value="6">6'</option>
+                <option value="7">7'</option>
+            </select>
+            <select id="inches" required>
+                <!-- Add options for inches from 0 to 11 -->
+                <option value="0">0"</option>
+                <option value="1">1"</option>
+                <option value="2">2"</option>
+                <option value="3">3"</option>
+                <option value="4">4"</option>
+                <option value="5">5"</option>
+                <option value="6">6"</option>
+                <option value="7">7"</option>
+                <option value="8">8"</option>
+                <option value="9">9"</option>
+                <option value="10">10"</option>
+                <option value="11">11"</option>
+            </select>
+        </div>
+        <div id="height-metric" style="display: none;">
+            <input type="number" id="height-metric-input" step="any" required placeholder="cm">
+        </div>
+
+        <br>
+        <br>
+
+
+        <button style="padding: 0.5rem;" id="calculate">Calculate<br>BMI</button>
+
+        <br><br>
+
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">
+            * DISCLAIMER *
+        </button>
+
+
+        <div id="result"></div>
+
+    </div>
+
+
+
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">BMI Classification Information</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" style="">
+                    <p>This classification is often used by organizations like the World Health Organization (WHO) and
+                        the Centers for Disease Control and Prevention (CDC) to help assess an individual's weight
+                        status and potential health risks associated with different BMI ranges.</p>
+                    <p>Keep in mind that specific guidelines and cutoffs might vary slightly between different
+                        organizations and countries.</p>
+                    <p class="list-title">Please keep in mind:</p>
+
+                    <!-- BMI Classifications -->
+
+                    <!-- Limitations -->
+                    <ol class="limitations-list">
+                        <li>Doesn't account for muscle vs. fat</li>
+                        <li>Doesn't differentiate body composition</li>
+                        <li>Age and gender variations</li>
+                        <li>Ethnic and racial differences</li>
+                        <li>Doesn't consider health factors</li>
+                        <li>Limited accuracy for children and adolescents</li>
+                        <li>Doesn't reflect central obesity</li>
+                        <li>May misclassify individuals</li>
+                        <li>Not suitable for athletes and older adults</li>
+                        <li>Health risk differences within categories</li>
+                    </ol>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+
+
+        <script>
+            $(document).ready(function () {
+                // Function to update labels based on the unit system
+                function updateLabels() {
+                    if ($("#unit-switch").is(":checked")) {
+                        // Metric units
+                        $("label[for='weight']").text("Weight (kg):");
+                        $("#height-imperial").hide();
+                        $("#height-metric").show();
+                    } else {
+                        // Imperial units
+                        $("label[for='weight']").text("Weight (lbs):");
+                        $("#height-imperial").show();
+                        $("#height-metric").hide();
+                    }
+                }
+    
+                // Initial label setup
+                updateLabels();
+    
+                // Toggle switch event listener
+                $("#unit-switch").change(function () {
+                    updateLabels();
+                });
+    
+                $("#calculate").click(function () {
+                    var weight = parseFloat($("#weight").val());
+                    var height;
+    
+                    if ($("#unit-switch").is(":checked")) {
+                        // Metric calculation
+                        height = parseFloat($("#height-metric-input").val()) / 100; // Convert cm to meters
+                    } else {
+                        // Imperial calculation
+                        var feet = parseInt($("#feet").val());
+                        var inches = parseInt($("#inches").val());
+                        height = (feet * 12 + inches) * 0.0254; // Convert to meters
+                        weight = weight * 0.45359237; //convert to Kg
+                    }
+    
+    
+                    var bmi = weight / (height * height);
+    
+                    console.log(height);
+                    var resultText = "Your BMI is " + bmi.toFixed(1) + ". ";
+    
+    
+                    /*******************************************************************
+                     *
+                     *              LIST:
+                     *
+                     * BMI below 16: Severely underweight
+                     * BMI 16 to 16.9: Underweight
+                     * BMI 17 to 18.4: Mildly underweight
+                     * BMI 18.5 to 24.9: Normal weight
+                     * BMI 25 to 29.9: Overweight
+                     * BMI 30 to 34.9: Obese (Class 1)
+                     * BMI 35 to 39.9: Obese (Class 2)
+                     * BMI 40 and above: Obese (Class 3, morbidly obese)
+                     *
+                     * This classification is often used by organizations
+                     * like the World Health Organization (WHO)
+                     * and the Centers for Disease Control and Prevention (CDC)
+                     * to help assess an individual's weight status
+                     * and potential health risks associated with different BMI ranges.
+                     *
+                     * Keep in mind that specific guidelines
+                     * and cutoffs might vary slightly between different
+                     * organizations and countries
+                     ********************************************************************/
+    
+                    if (bmi > 40) {
+    
+                        $("body").css("background-color", "black");
+                        resultText += "\nObese (Class 3, morbidly obese)";
+    
+                    } else if (bmi > 35) {
+    
+                        $("body").css("background-color", "maroon");
+                        resultText += "\nObese (Class 2)";
+    
+                    } else if (bmi > 30) {
+    
+                        $("body").css("background-color", "red");
+                        resultText += "\nObese (Class 1)";
+    
+                    } else if (bmi > 25) {
+    
+                        $("body").css("background-color", "orange");
+                        resultText += "\nOverweight";
+    
+                    } else if (bmi < 16) {
+    
+                        $("body").css("background-color", "grey");
+                        resultText += "\nSeverely underweight";
+                    } else if (bmi < 16.9) {
+    
+                        $("body").css("background-color", "cream");
+                        resultText += "\nUnderweight";
+    
+                    } else if (bmi < 18.4) {
+    
+                        $("body").css("background-color", "yellow");
+                        resultText += "\nMildly underweight";
+                    } else {
+    
+                        $("body").css("background-color", "green");
+                        resultText += "\nYou are in a healthy weight range.";
+    
+                    }
+    
+                    $("#result").text(resultText);
+                });
+            });
+        </script>    <footer>
+        <p style="text-align: center; color: white; position: absolute; bottom: 0; width: 100%; left: 50%; transform: translateX(-50%);">Copyright &copy; 2025 RhytoLeaf Inc. All rights reserved</p>
+    </footer>
+</body>
+
+</html>
