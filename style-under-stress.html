@@ -307,7 +307,7 @@
     </header>
 
     <!-- MAIN HEADER FOR QUIZ -->
-    <img src="./images/logo-icon.png" alt="RhytoLeaf Logo" width="50px" style="display: block; margin: 0 auto;">
+    <a href="javascript:void(0)" onclick="showExitQuizModal()"><img src="./images/logo-icon.png" alt="RhytoLeaf Logo" width="50px" style="display: block; margin: 0 auto;"></a>
     <h1 style="padding: 2.2rem; font-size: clamp(2.5rem, 6vw, 4rem);">Style Under Stress</h1>
     <h3 id="why-benefit-header" style="cursor: pointer; text-decoration: underline;">Why?</h3>
 
@@ -715,6 +715,16 @@
         <p id="modal-description"></p>
         <h3>Common Logical Fallacies:</h3>
         <ul id="modal-fallacies"></ul>
+      </div>
+    </div>
+
+    <div id="exit-quiz-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Are you sure you want to exit the quiz?</h2>
+        <p>Your progress will not be saved.</p>
+        <button id="confirm-exit-button" class="btn btn-danger">Yes, exit</button>
+        <button id="cancel-exit-button" class="btn btn-secondary">No, stay</button>
       </div>
     </div>
 
@@ -1363,6 +1373,35 @@ console.log(questions.length);
   window.addEventListener("click", function(event) {
     if (event.target == whyBenefitModal) {
       whyBenefitModal.style.display = "none";
+    }
+  });
+</script>
+
+<script>
+  const exitQuizModal = document.getElementById("exit-quiz-modal");
+  const confirmExitButton = document.getElementById("confirm-exit-button");
+  const cancelExitButton = document.getElementById("cancel-exit-button");
+  const exitQuizCloseButton = exitQuizModal.querySelector(".close-button");
+
+  function showExitQuizModal() {
+    exitQuizModal.style.display = "block";
+  }
+
+  confirmExitButton.addEventListener("click", function() {
+    window.location.href = "index.html";
+  });
+
+  cancelExitButton.addEventListener("click", function() {
+    exitQuizModal.style.display = "none";
+  });
+
+  exitQuizCloseButton.addEventListener("click", function() {
+    exitQuizModal.style.display = "none";
+  });
+
+  window.addEventListener("click", function(event) {
+    if (event.target == exitQuizModal) {
+      exitQuizModal.style.display = "none";
     }
   });
 </script>
