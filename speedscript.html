@@ -21,7 +21,7 @@
         }
 
         [data-theme="light"] {
-            --background-rgb: 255, 255, 255;
+            --background-rgb: 245, 245, 220;
             --text-color: black;
             --primary-rgb: 0, 206, 124;
         }
@@ -215,6 +215,13 @@
                 font-size: 1rem;
             }
         }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-color);
+        }
     </style>
 </head>
 <body>
@@ -284,6 +291,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <footer>
+        <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All rights reserved.</p>
+    </footer>
     <script>
         const quotes = [
             "The only way to do great work is to love what you do.",
@@ -377,7 +387,7 @@
             timeLeft = 90;
             timer = setInterval(() => {
                 timeLeft -= 0.001;
-                timerDisplay.innerText = timeLeft.toFixed(3);
+                timerDisplay.innerText = `${timeLeft.toFixed(3)}s`;
                 if (timeLeft <= 0) {
                     endGame();
                 }
@@ -485,6 +495,13 @@
         }
 
         toggleSwitch.addEventListener('change', switchTheme, false);
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
     </script>
+    <footer>
+        <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All rights reserved.</p>
+    </footer>
 </body>
 </html>
