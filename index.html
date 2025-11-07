@@ -162,6 +162,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .app-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 22.5%;
+      background-color: #333;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .app-icon i {
+      font-size: 50px;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
@@ -396,7 +411,9 @@
   <div class="container my-5">
     <div class="text-center bg-body-tertiary rounded-3">
       <a href="basic-calculator.html">
-        <img src="./images/basic-calc-logo.jpg" style="width: 100px; height: 100px; border-radius: 22.5%; object-fit: cover;">
+        <div class="app-icon">
+          <i class="fas fa-calculator"></i>
+        </div>
       </a>
       <h1 class="text-body-emphasis">Basic Calculator</h1>
       <p class="text-muted">
