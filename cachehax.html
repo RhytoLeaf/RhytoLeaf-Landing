@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+    <!-- adsense -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4298895490101974"
+        crossorigin="anonymous">
+    </script> -->
+
+
+    <!-- TAB LOGO -->
+    <link rel="icon" type="image/png" href="./images/logo-icon.png">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Hax</title>
+
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+
+    <!-- custom -->
+    <style>
+        body {
+            background-color: #808ea4;
+            /* Background color */
+            color: #212121;
+            /* Text color */
+        }
+
+        .card-header {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        h1 {
+            color: #00CE7C;
+            /* Header text color */
+        }
+
+        /* Input field styling */
+        .form-control {
+            background-color: #F2F2F2;
+            /* Input background color */
+            color: #212121;
+            /* Input text color */
+        }
+
+        /* Card styling */
+        .card {
+            background-color: #F2F2F2;
+            /* Card background color */
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #00CE7C;
+            /* Card header background color */
+            color: #F2F2F2;
+            /* Card header text color */
+        }
+
+        .card-body {
+            color: #212121;
+            /* Card body text color */
+        }
+
+        /* Chart canvas styling */
+        #pieChart {
+            background-color: #F2F2F2;
+            /* Chart background color */
+            
+        }
+
+        /* Center the canvas */
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            /* Adjust the height as needed */
+
+            
+        }
+
+
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+
+            .card-header {
+                font-size: 20px;
+            }
+
+            .form-control {
+                font-size: 18px;
+            }
+
+            .container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container mt-5">
+
+        <h1 class="text-center">
+            <img src="./images/cache-hax-logo.png" width="150px" alt="" style="border-radius: 25%;">
+        </h1>
+
+
+
+        <!-- Button to trigger the modal -->
+        <div class="text-center mt-4">
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                DISCLAIMER
+            </button>
+
+        </div>
+
+
+
+
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+
+                        <div class="text-center mt-4">
+                            <h4 class="modal-title">This is a financial literacy exercise</h4>
+                        </div>
+
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <p>
+                            Please be aware that financial markets and regulations can change rapidly, and the
+                            information provided may become outdated. It is your responsibility to verify and update any
+                            information before making financial decisions.
+                            <br>
+                            By engaging in any discussion or receiving information from me, you acknowledge and agree to
+                            these terms and release me from any and all liability, claims, or damages arising from or in
+                            connection with the use of the information provided.
+                            <br>
+                            If you require personalized financial advice, it is strongly advised to consult with a
+                            qualified financial professional who can assess your individual situation and provide
+                            appropriate guidance.
+                        </p>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3 text-center">
+                <div class="form-group">
+                    <label for="salaryProfit">Please enter your profit:</label>
+                    <br>
+                    <input class="text-center" type="number" class="form-control" id="salaryProfit">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="chart-container">
+            <canvas class="numer-text" id="pieChart" style="border-radius: 10%; padding: 1.5rem;"></canvas>
+        </div>
+    </div>
+
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- Add Chart.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <!-- Add chartjs-plugin-datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+    <script>
+        // Get references to the input field and canvas element
+        const salaryProfitInput = document.getElementById('salaryProfit');
+        const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+
+        const contrastingColors = [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0'
+        ];
+
+        // Function to format currency
+        function formatCurrency(amount) {
+            return `$${amount.toFixed(2)}`;
+        }
+
+        // Update card headers dynamically
+        function updateCardHeaders(salaryProfit) {
+            const fixedCostsAmount = (50 / 100) * salaryProfit;
+            const guiltFreeSpendingAmount = (35 / 100) * salaryProfit;
+            const savingsAmount = (5 / 100) * salaryProfit;
+            const investmentsAmount = (10 / 100) * salaryProfit;
+
+            document.getElementById('fixedCostsHeader').textContent =
+                `Fixed Costs (${formatCurrency(fixedCostsAmount)})`;
+            document.getElementById('guiltFreeSpendingHeader').textContent =
+                `Guilt-free Spending (${formatCurrency(guiltFreeSpendingAmount)})`;
+            document.getElementById('savingsHeader').textContent = `Savings (${formatCurrency(savingsAmount)})`;
+            document.getElementById('investmentsHeader').textContent =
+                `Investments (${formatCurrency(investmentsAmount)})`;
+        }
+
+        // Initialize the pie chart with initial data
+        const pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: {
+                labels: [
+                    'Fixed Costs (50%)',
+                    'Guilt-free Spending (35%)',
+                    'Savings (5%)',
+                    'Investments (10%)'
+                ],
+                datasets: [{
+                    data: [50, 35, 5, 10], // Initial distribution percentages
+                    backgroundColor: contrastingColors
+                }]
+            },
+            options: {
+                responsive: false, // Disable responsiveness
+                plugins: {
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                        formatter: (value, context) => {
+                            return context.chart.data.labels[context.dataIndex] + ': ' + value + '%';
+                        }
+                    },
+                },
+                legend: {
+                    display: false, // Hide the default legend
+                },
+                tooltips: {
+                    callbacks: {
+                        label: (tooltipItem, data) => {
+                            const dataset = data.datasets[tooltipItem.datasetIndex];
+                            const total = dataset.data.reduce((previousValue, currentValue) =>
+                                previousValue + currentValue);
+                            const currentValue = dataset.data[tooltipItem.index];
+                            const percentage = ((currentValue / total) * 100).toFixed(2);
+                            return `${data.labels[tooltipItem.index]}: ${percentage}%`;
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true, // Enable rotation animation
+                    animateScale: false, // Disable scale animation
+                }
+            }
+        });
+
+        // Update the pie chart and card headers when the input field value changes
+        salaryProfitInput.addEventListener('input', () => {
+            const salaryProfit = parseFloat(salaryProfitInput.value);
+            updateCardHeaders(salaryProfit);
+
+            const fixedCosts = (50 / 100) * salaryProfit;
+            const guiltFreeSpending = (35 / 100) * salaryProfit;
+            const savings = (5 / 100) * salaryProfit;
+            const investments = (10 / 100) * salaryProfit;
+
+            // Update the pie chart data and colors
+            pieChart.data.datasets[0].data = [
+                fixedCosts,
+                guiltFreeSpending,
+                savings,
+                investments
+            ];
+            pieChart.data.datasets[0].backgroundColor = contrastingColors;
+
+            // Update the pie chart
+            pieChart.update();
+
+            // Update card header colors
+            const cardHeaders = [
+                document.getElementById('fixedCostsHeader'),
+                document.getElementById('guiltFreeSpendingHeader'),
+                document.getElementById('savingsHeader'),
+                document.getElementById('investmentsHeader')
+            ];
+
+            cardHeaders.forEach((header, index) => {
+                header.style.backgroundColor = contrastingColors[index];
+            });
+        });
+
+        // Initialize card headers with initial values
+        updateCardHeaders(0); // assuming initial value is 0
+
+        const initialColors = pieChart.data.datasets[0].backgroundColor;
+        const cardHeaders = [
+            document.getElementById('fixedCostsHeader'),
+            document.getElementById('guiltFreeSpendingHeader'),
+            document.getElementById('savingsHeader'),
+            document.getElementById('investmentsHeader')
+        ];
+
+        cardHeaders.forEach((header, index) => {
+            header.style.backgroundColor = initialColors[index];
+        });
+
+
+    </script>
+
+    <!-- Modal Cards -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header" id="fixedCostsHeader">
+                        Fixed Costs
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Debt</li>
+                            <li>Mortgage / rent</li>
+                            <li>Insurance</li>
+                            <li>Groceries</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header" id="guiltFreeSpendingHeader">
+                        Guilt-free Spending
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Passion projects</li>
+                            <li>Things you love</li>
+                            <li>Eating out occasionally</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header" id="savingsHeader">
+                        Savings
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Emergency fund (6 months of fixed costs covered)</li>
+                            <li>Down payment</li>
+                            <li>Vacation plans</li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header" id="investmentsHeader">
+                        Investments
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Select an ETF</li>
+                            <li>Focus on low cost funds</li>
+                            <li>Activate automatic deposit/invest to the fund</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- Perspective -->
+    <!-- 
+    <hr>
+
+    <div style="text-align: center; padding: 1rem;">
+
+        <p>According to <a> href='https://www.policyadvisor.com/magazine/what-is-the-average-income-in-canada-2023/#:~:text=Average%20Income%20by%20Age%20Group&text=Generally%2C%20younger%20Canadians%20earn%20less,earn%20an%20average%20of%20%2463%2C652'>
+            Statistics Canada</a>, the average income for:</p>
+
+        <p>Ages 15 to 24 is <b>$15,784</b></p>
+
+
+        <p>Ages 25 to 39 is <b>$51,000</b></p>
+
+        <p>Those agedd 55 and over earn an average of <b>$63,652</b></p>
+
+        <p>The 🇨🇦 National average in 2023 is <b>$68,400 after taxes</b></p>
+
+    </div> 
+
+-->
+    <br><br>
+
+
+
+
+
+
+
+    <br><br>
+    <footer class="text-center">&copy; Rhytoleaf Inc.</footer>
+
+
+
+
+
+</body>
+
+</html>
