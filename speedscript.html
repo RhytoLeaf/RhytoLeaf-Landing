@@ -268,7 +268,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Once you press start you will be able to calculate your typing speed in words per minute in just 90 seconds!
+                    <p>This quiz helps you:</p>
+                    <ul>
+                        <li>Calculate your typing speed (WPM) in 90 seconds.</li>
+                        <li>Improve typing accuracy and efficiency.</li>
+                        <li>Enhance productivity and communication skills.</li>
+                        <li>Focus on content, not just typing mechanics.</li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -316,6 +322,7 @@
         let totalChars = 0;
         let correctChars = 0;
         let score = 0; // Initialize score
+        let startTime;
 
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -344,6 +351,7 @@
             accuracyDisplay.innerText = '';
             dictationBoard.disabled = false;
             passBtn.disabled = false; // Enable pass button when game starts
+            startTime = new Date();
             nextQuote();
             startTimer();
             startBtn.disabled = true;
@@ -376,14 +384,23 @@
             }, 1);
         }
 
-        function endGame() {
+        function endGame(disqualified = false) {
             clearInterval(timer);
             dictationBoard.disabled = true;
             startBtn.disabled = false;
             passBtn.disabled = true; // Disable pass button when game ends
-            const accuracy = totalChars > 0 ? (correctChars / totalChars) * 100 : 0;
-            accuracyDisplay.innerText = `Accuracy: ${accuracy.toFixed(2)}%`;
+            if (disqualified) {
+                accuracyDisplay.innerText = "Disqualified for cheating.";
+            } else {
+                const accuracy = totalChars > 0 ? (correctChars / totalChars) * 100 : 0;
+                accuracyDisplay.innerText = `Accuracy: ${accuracy.toFixed(2)}%`;
+            }
         }
+
+        dictationBoard.addEventListener('paste', (e) => {
+            e.preventDefault();
+            endGame(true);
+        });
 
         dictationBoard.addEventListener('input', () => {
             const quoteChars = quoteDisplay.querySelectorAll('span');
@@ -412,6 +429,14 @@
                 scoreDisplay.innerText = `Score: ${score}`; // Display updated score
                 quizQuotes.shift(); // Remove the completed quote
                 nextQuote();
+            }
+
+            // WPM calculation
+            const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
+            const wordsTyped = dictationBoard.value.length / 5; // average word length is 5
+            const wpm = wordsTyped / timeElapsed;
+            if (wpm > 200) {
+                endGame(true);
             }
         });
 
