@@ -158,10 +158,11 @@
       .modal-content {
         background-color: #fefefe;
         margin: 15% auto; 
-        padding: 20px;
+        padding: 30px;
         border: 1px solid #888;
         width: 80%; 
         text-align: center;
+        position: relative; /* Added for absolute positioning of close button */
       }
 
       .modal-content ul {
@@ -172,7 +173,9 @@
 
       .close-button {
         color: #aaa;
-        float: right;
+        position: absolute; /* Changed from float: right; */
+        top: 1rem;
+        right: 1rem;
         font-size: 28px;
         font-weight: bold;
       }
@@ -231,6 +234,19 @@
     .form-check-input:not(:checked) {
       background-color: orange !important;
       border-color: orange !important;
+    }
+    #result-card-container input[type="checkbox"]:checked {
+      background-color: rgb(99,203,131) !important;
+      border-color: rgb(99,203,131) !important;
+    }
+    #scroll-to-results {
+      background-color: rgb(99,203,131) !important;
+      border-color: rgb(99,203,131) !important;
+    }
+    #scroll-to-results:hover,
+    #scroll-to-results:active {
+      background-color: rgb(79,183,111) !important; /* A slightly darker shade for hover/active */
+      border-color: rgb(79,183,111) !important;
     }
   </style>
 
