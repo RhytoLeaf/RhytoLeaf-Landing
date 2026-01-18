@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>将棋 Shoganai - Japanese Chess</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600;700&family=Crimson+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        board: { light: '#E8D4B8', dark: '#D4A373', accent: '#8B6F47', line: '#5C4A32' },
+                        shogi: { black: '#1a1a1a', white: '#f5f0e8', red: '#C41E3A', gold: '#C9A227', ink: '#2D2D2D' },
+                        ui: { bg: '#FAF7F2', card: '#FFFFFF', text: '#2D2D2D', muted: '#6B6B6B', border: '#E5E0D8' }
+                    },
+                    fontFamily: {
+                        'display': ['Noto Serif JP', 'serif'],
+                        'body': ['Crimson Pro', 'serif'],
+                        'kanji': ['Noto Serif JP', 'serif'],
+                        'ui': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 8px rgba(201, 162, 39, 0.4); } 50% { box-shadow: 0 0 20px rgba(201, 162, 39, 0.8); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-pulse-glow { animation: pulse-glow 1.5s ease-in-out infinite; }
+        .shogi-board {
+            background: linear-gradient(135deg, #E8D4B8 0%, #D4A373 100%);
+            box-shadow: inset 0 0 30px rgba(139, 111, 71, 0.3), 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            background-image: 
+                linear-gradient(to right, rgba(92, 74, 50, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(92, 74, 50, 0.5) 1px, transparent 1px);
+            background-size: calc(100% / 9) calc(100% / 9);
+            border: 2px solid rgba(92, 74, 50, 0.5);
+        }
+        .shogi-piece {
+            background: linear-gradient(180deg, #F5EEE0 0%, #E8DCC8 100%);
+            clip-path: polygon(50% 0%, 95% 15%, 100% 100%, 0% 100%, 5% 15%);
+            box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.25);
+            transition: all 0.15s ease;
+        }
+        .shogi-piece:hover { transform: translateY(-2px); box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.3); }
+        .shogi-piece.selected { box-shadow: 0 0 0 3px #C9A227, 3px 5px 10px rgba(0, 0, 0, 0.3); }
+        .shogi-piece.enemy { transform: rotate(180deg); }
+        .shogi-piece.enemy:hover { transform: rotate(180deg) translateY(2px); }
+        .legal-move { background: radial-gradient(circle, rgba(74, 222, 128, 0.4) 0%, rgba(74, 222, 128, 0.1) 70%); }
+        .capture-move { box-shadow: inset 0 0 0 3px rgba(220, 38, 38, 0.5); }
+        .drop-zone { background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 70%); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D4A373; border-radius: 3px; }
+        .dark .shogi-board { background: linear-gradient(135deg, #E8D4B8 0%, #D4A373 100%); }
+        .dark .board-grid {
+            background-image: 
+                linear-gradient(to right, rgba(92, 74, 50, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(92, 74, 50, 0.5) 1px, transparent 1px);
+            border-color: rgba(92, 74, 50, 0.5);
+        }
+        .dark .shogi-piece { background: linear-gradient(180deg, #F5EEE0 0%, #E8DCC8 100%); }
+        .dark .shogi-piece span { color: #2D2D2D; }
+        .dark .shogi-piece span.text-shogi-red { color: #C41E3A; }
+        .transition-theme { transition: background-color 0.3s ease, color 0.3s ease; }
+        @media (pointer: coarse) { .shogi-piece, .board-cell { -webkit-tap-highlight-color: transparent; } }
+    </style>
+</head>
+<body class="min-h-screen bg-ui-bg dark:bg-gray-900 transition-theme">
+    <div id="app"></div>
+    <script>
+    // ========== LOCALIZATION ==========
+    const i18n = {
+        en: {
+            appName: "Shoganai", appSubtitle: "しょうがない", tagline: "It can't be helped",
+            playGame: "Play Game", tutorial: "Tutorial", settings: "Settings",
+            yourTurn: "Your Turn", cpuTurn: "CPU Thinking...", yourHand: "Your Hand", cpuHand: "CPU Hand",
+            moveHistory: "Move History", resign: "Resign", newGame: "New Game", mainMenu: "Main Menu",
+            check: "Check!", checkmate: "Checkmate!", youWin: "You Win!", youLose: "You Lose!",
+            draw: "Draw", stalemate: "Stalemate", resignation: "Resignation", sennichite: "Draw by Repetition",
+            difficulty: "Difficulty", beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced", master: "Master",
+            language: "Language", sound: "Sound Effects", animations: "Animations", showHints: "Show AI Hints",
+            darkMode: "Dark Mode", on: "On", off: "Off", back: "Back",
+            king: "King", rook: "Rook", bishop: "Bishop", gold: "Gold", silver: "Silver",
+            knight: "Knight", lance: "Lance", pawn: "Pawn",
+            promote: "Promote", dontPromote: "Don't Promote", promotionChoice: "Promote this piece?",
+            tutorialTitle: "Learn Shogi",
+            module1: "Board Setup", module2: "King, Gold, Silver", module3: "Other Pieces",
+            module4: "Promotion", module5: "Captures & Drops", module6: "Check & Checkmate",
+            module7: "Opening Principles", module8: "Basic Tactics",
+            continue: "Continue", previous: "Previous", next: "Next",
+            tutorial1Title: "The Shogi Board",
+            tutorial1Content: "Shogi is played on a 9×9 board. Files are numbered 1-9 from right to left, ranks 1-9 from top to bottom. Each player starts with 20 pieces. Unlike chess, captured pieces can be dropped back as your own!",
+            tutorial2Title: "King, Gold, Silver",
+            tutorial2Content: "The King (玉/王) moves one square any direction. Gold Generals (金) move one square except diagonally backward. Silver Generals (銀) move diagonally or straight forward.",
+            tutorial3Title: "Knight, Lance, Pawn, Rook, Bishop",
+            tutorial3Content: "Knights (桂) jump forward in an L-shape only. Lances (香) move forward any distance. Pawns (歩) move one forward. Rooks (飛) move orthogonally. Bishops (角) move diagonally.",
+            tutorial4Title: "Promotion Zone",
+            tutorial4Content: "The furthest 3 ranks are the promotion zone. Pieces may promote when entering, within, or leaving this zone. Pawns, Lances, Knights MUST promote when reaching ranks where they cannot move.",
+            tutorial5Title: "Captures & Drops",
+            tutorial5Content: "Captured pieces join your hand and can be dropped on empty squares. Key rules: No two unpromoted pawns per file (nifu), no checkmate by pawn drop (uchifuzume).",
+            tutorial6Title: "Check & Checkmate",
+            tutorial6Content: "When your King is attacked, you must escape. No legal escape means checkmate. You cannot move into check.",
+            tutorial7Title: "Opening Principles",
+            tutorial7Content: "Static Rook keeps the Rook on its file. Ranging Rook moves it left. Develop pieces, castle your King, control the center!",
+            tutorial8Title: "Basic Tactics",
+            tutorial8Content: "Forks attack two pieces. Pins prevent movement. Discovered attacks reveal threats. Sacrifices trade material for advantage.",
+        },
+        fr: {
+            appName: "Shoganai", appSubtitle: "しょうがない", tagline: "C'est ainsi",
+            playGame: "Jouer", tutorial: "Tutoriel", settings: "Paramètres",
+            yourTurn: "Votre Tour", cpuTurn: "L'IA réfléchit...", yourHand: "Votre Main", cpuHand: "Main IA",
+            moveHistory: "Historique", resign: "Abandonner", newGame: "Nouvelle Partie", mainMenu: "Menu",
+            check: "Échec!", checkmate: "Échec et mat!", youWin: "Victoire!", youLose: "Défaite!",
+            draw: "Nulle", stalemate: "Pat", resignation: "Abandon", sennichite: "Nulle par Répétition",
+            difficulty: "Difficulté", beginner: "Débutant", intermediate: "Intermédiaire", advanced: "Avancé", master: "Maître",
+            language: "Langue", sound: "Sons", animations: "Animations", showHints: "Conseils IA",
+            darkMode: "Mode Sombre", on: "Activé", off: "Désactivé", back: "Retour",
+            king: "Roi", rook: "Tour", bishop: "Fou", gold: "Or", silver: "Argent",
+            knight: "Cavalier", lance: "Lance", pawn: "Pion",
+            promote: "Promouvoir", dontPromote: "Ne pas promouvoir", promotionChoice: "Promouvoir?",
+            tutorialTitle: "Apprendre le Shogi",
+            module1: "Le Plateau", module2: "Roi, Or, Argent", module3: "Autres Pièces",
+            module4: "Promotion", module5: "Captures", module6: "Échec et Mat",
+            module7: "Ouvertures", module8: "Tactiques",
+            continue: "Continuer", previous: "Précédent", next: "Suivant",
+            tutorial1Title: "Le Plateau", tutorial1Content: "Le Shogi se joue sur 9×9. Colonnes 1-9 droite à gauche, rangées 1-9 haut en bas. 20 pièces par joueur. Les pièces capturées peuvent être replacées!",
+            tutorial2Title: "Roi, Or, Argent", tutorial2Content: "Le Roi (玉/王) bouge d'une case. L'Or (金) partout sauf diagonale arrière. L'Argent (銀) en diagonale ou avant.",
+            tutorial3Title: "Autres Pièces", tutorial3Content: "Cavalier (桂): L avant seulement. Lance (香): avant illimité. Pion (歩): un avant. Tour (飛): orthogonal. Fou (角): diagonal.",
+            tutorial4Title: "Promotion", tutorial4Content: "Les 3 rangées adverses = zone de promotion. Promotion possible à l'entrée/sortie. Obligatoire si la pièce ne peut plus bouger.",
+            tutorial5Title: "Captures", tutorial5Content: "Pièces capturées = main. Parachutage sur cases vides. Interdit: 2 pions non promus par colonne (nifu), mat par pion (uchifuzume).",
+            tutorial6Title: "Échec et Mat", tutorial6Content: "Roi attaqué = échec, fuite obligatoire. Pas de fuite = mat. Interdit de se mettre en échec.",
+            tutorial7Title: "Ouvertures", tutorial7Content: "Tour Statique: Tour sur place. Tour Mobile: Tour à gauche. Développez, roquez, contrôlez le centre!",
+            tutorial8Title: "Tactiques", tutorial8Content: "Fourchette: 2 pièces attaquées. Clouage: pièce immobile. Découverte: menace révélée. Sacrifice: matériel contre avantage.",
+        },
+        ja: {
+            appName: "将棋", appSubtitle: "しょうがない", tagline: "仕方がない",
+            playGame: "対局開始", tutorial: "入門", settings: "設定",
+            yourTurn: "あなたの番", cpuTurn: "思考中...", yourHand: "持ち駒", cpuHand: "相手の持ち駒",
+            moveHistory: "棋譜", resign: "投了", newGame: "新規対局", mainMenu: "メニュー",
+            check: "王手!", checkmate: "詰み!", youWin: "勝利!", youLose: "敗北",
+            draw: "引き分け", stalemate: "千日手", resignation: "投了", sennichite: "千日手",
+            difficulty: "難易度", beginner: "初心者", intermediate: "中級", advanced: "上級", master: "名人",
+            language: "言語", sound: "効果音", animations: "アニメーション", showHints: "ヒント表示",
+            darkMode: "ダークモード", on: "オン", off: "オフ", back: "戻る",
+            king: "玉将", rook: "飛車", bishop: "角行", gold: "金将", silver: "銀将",
+            knight: "桂馬", lance: "香車", pawn: "歩兵",
+            promote: "成る", dontPromote: "成らない", promotionChoice: "成りますか?",
+            tutorialTitle: "将棋入門",
+            module1: "盤面", module2: "玉・金・銀", module3: "その他の駒",
+            module4: "成り", module5: "取りと打ち", module6: "王手と詰み",
+            module7: "序盤", module8: "戦法",
+            continue: "続ける", previous: "前へ", next: "次へ",
+            tutorial1Title: "将棋盤", tutorial1Content: "9×9の盤。筋は右から1〜9、段は上から一〜九。各20枚。取った駒は自分の駒として打てます!",
+            tutorial2Title: "玉・金・銀", tutorial2Content: "玉(王)は全方向1マス。金は斜め後ろ以外。銀は前方と斜め4方向。",
+            tutorial3Title: "その他の駒", tutorial3Content: "桂馬は前方L字のみ。香車は前方無制限。歩は前1マス。飛車は縦横。角は斜め。",
+            tutorial4Title: "成り", tutorial4Content: "敵陣3段が成りの範囲。入る・中で動く・出る時に成れます。歩・香・桂は最奥で必ず成り。",
+            tutorial5Title: "取りと打ち", tutorial5Content: "取った駒は持ち駒。空きマスに打てます。二歩禁止、打ち歩詰め禁止。",
+            tutorial6Title: "王手と詰み", tutorial6Content: "玉が攻撃されたら王手。逃げられなければ詰み。自ら王手になる手は禁止。",
+            tutorial7Title: "序盤", tutorial7Content: "居飛車は飛車をそのまま。振り飛車は左へ。駒を展開し、玉を囲い、中央を制圧!",
+            tutorial8Title: "戦法", tutorial8Content: "両取り、ピン、開き王手、駒損でも速度優先。",
+        }
+    };
+
+    // ========== PIECE DEFINITIONS ==========
+    const PIECE_KANJI = {
+        'K': { sente: '玉', gote: '王' }, 'R': { sente: '飛', gote: '飛' }, 'B': { sente: '角', gote: '角' },
+        'G': { sente: '金', gote: '金' }, 'S': { sente: '銀', gote: '銀' }, 'N': { sente: '桂', gote: '桂' },
+        'L': { sente: '香', gote: '香' }, 'P': { sente: '歩', gote: '歩' },
+        '+R': { sente: '龍', gote: '龍' }, '+B': { sente: '馬', gote: '馬' },
+        '+S': { sente: '全', gote: '全' }, '+N': { sente: '圭', gote: '圭' },
+        '+L': { sente: '杏', gote: '杏' }, '+P': { sente: 'と', gote: 'と' }
+    };
+    const PIECE_VALUES = { 'K': 10000, 'R': 1000, 'B': 890, 'G': 540, 'S': 510, 'N': 450, 'L': 430, 'P': 100, '+R': 1300, '+B': 1200, '+S': 540, '+N': 540, '+L': 540, '+P': 540 };
+
+    // ========== SHOGI ENGINE ==========
+    class ShogiEngine {
+        constructor() { this.reset(); }
+        reset() {
+            this.board = this.createInitialBoard();
+            this.hands = { sente: {}, gote: {} };
+            this.turn = 'sente';
+            this.moveHistory = [];
+            this.positionHistory = [];
+            this.gameOver = false;
+            this.winner = null;
+            this.gameEndReason = null;
+        }
+        createInitialBoard() {
+            const b = Array(9).fill(null).map(() => Array(9).fill(null));
+            // Gote back rank
+            b[0][0] = { type: 'L', owner: 'gote' }; b[0][1] = { type: 'N', owner: 'gote' };
+            b[0][2] = { type: 'S', owner: 'gote' }; b[0][3] = { type: 'G', owner: 'gote' };
+            b[0][4] = { type: 'K', owner: 'gote' }; b[0][5] = { type: 'G', owner: 'gote' };
+            b[0][6] = { type: 'S', owner: 'gote' }; b[0][7] = { type: 'N', owner: 'gote' };
+            b[0][8] = { type: 'L', owner: 'gote' };
+            b[1][1] = { type: 'R', owner: 'gote' }; b[1][7] = { type: 'B', owner: 'gote' };
+            for (let c = 0; c < 9; c++) b[2][c] = { type: 'P', owner: 'gote' };
+            // Sente back rank
+            for (let c = 0; c < 9; c++) b[6][c] = { type: 'P', owner: 'sente' };
+            b[7][1] = { type: 'B', owner: 'sente' }; b[7][7] = { type: 'R', owner: 'sente' };
+            b[8][0] = { type: 'L', owner: 'sente' }; b[8][1] = { type: 'N', owner: 'sente' };
+            b[8][2] = { type: 'S', owner: 'sente' }; b[8][3] = { type: 'G', owner: 'sente' };
+            b[8][4] = { type: 'K', owner: 'sente' }; b[8][5] = { type: 'G', owner: 'sente' };
+            b[8][6] = { type: 'S', owner: 'sente' }; b[8][7] = { type: 'N', owner: 'sente' };
+            b[8][8] = { type: 'L', owner: 'sente' };
+            return b;
+        }
+        getLegalMovesForPiece(row, col) {
+            const piece = this.board[row][col];
+            if (!piece || piece.owner !== this.turn) return [];
+            const moves = [], type = piece.type, dir = piece.owner === 'sente' ? -1 : 1;
+            
+            if (type === 'R' || type === '+R') {
+                this.addSliding(moves, row, col, [[0,1],[0,-1],[1,0],[-1,0]], piece);
+                if (type === '+R') this.addStep(moves, row, col, [[-1,-1],[-1,1],[1,-1],[1,1]], piece);
+            } else if (type === 'B' || type === '+B') {
+                this.addSliding(moves, row, col, [[1,1],[1,-1],[-1,1],[-1,-1]], piece);
+                if (type === '+B') this.addStep(moves, row, col, [[0,1],[0,-1],[1,0],[-1,0]], piece);
+            } else if (type === 'N') {
+                this.addStep(moves, row, col, [[dir*2,-1],[dir*2,1]], piece);
+            } else if (type === 'L') {
+                this.addSliding(moves, row, col, [[dir,0]], piece);
+            } else if (type === 'P') {
+                this.addStep(moves, row, col, [[dir,0]], piece);
+            } else if (type === 'K') {
+                this.addStep(moves, row, col, [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]], piece);
+            } else if (type === 'G' || type === '+S' || type === '+N' || type === '+L' || type === '+P') {
+                this.addStep(moves, row, col, [[dir,-1],[dir,0],[dir,1],[0,-1],[0,1],[-dir,0]], piece);
+            } else if (type === 'S') {
+                this.addStep(moves, row, col, [[dir,-1],[dir,0],[dir,1],[-dir,-1],[-dir,1]], piece);
+            }
+            return moves.filter(m => !this.wouldBeInCheck(row, col, m.toRow, m.toCol, m.promote));
+        }
+        addStep(moves, fr, fc, patterns, piece) {
+            for (const [dr, dc] of patterns) {
+                const tr = fr + dr, tc = fc + dc;
+                if (tr >= 0 && tr < 9 && tc >= 0 && tc < 9) {
+                    const target = this.board[tr][tc];
+                    if (!target || target.owner !== piece.owner) this.addWithPromo(moves, fr, fc, tr, tc, piece);
+                }
+            }
+        }
+        addSliding(moves, fr, fc, dirs, piece) {
+            for (const [dr, dc] of dirs) {
+                let tr = fr + dr, tc = fc + dc;
+                while (tr >= 0 && tr < 9 && tc >= 0 && tc < 9) {
+                    const target = this.board[tr][tc];
+                    if (target) {
+                        if (target.owner !== piece.owner) this.addWithPromo(moves, fr, fc, tr, tc, piece);
+                        break;
+                    }
+                    this.addWithPromo(moves, fr, fc, tr, tc, piece);
+                    tr += dr; tc += dc;
+                }
+            }
+        }
+        addWithPromo(moves, fr, fc, tr, tc, piece) {
+            const inZone = this.inPromoZone(fr, piece.owner) || this.inPromoZone(tr, piece.owner);
+            const canP = ['R','B','S','N','L','P'].includes(piece.type) && inZone;
+            const mustP = this.mustPromote(piece.type, tr, piece.owner);
+            if (mustP) moves.push({ fromRow: fr, fromCol: fc, toRow: tr, toCol: tc, promote: true });
+            else if (canP) {
+                moves.push({ fromRow: fr, fromCol: fc, toRow: tr, toCol: tc, promote: false });
+                moves.push({ fromRow: fr, fromCol: fc, toRow: tr, toCol: tc, promote: true });
+            } else moves.push({ fromRow: fr, fromCol: fc, toRow: tr, toCol: tc, promote: false });
+        }
+        inPromoZone(row, owner) { return owner === 'sente' ? row <= 2 : row >= 6; }
+        mustPromote(type, tr, owner) {
+            if ((type === 'P' || type === 'L') && ((owner === 'sente' && tr === 0) || (owner === 'gote' && tr === 8))) return true;
+            if (type === 'N' && ((owner === 'sente' && tr <= 1) || (owner === 'gote' && tr >= 7))) return true;
+            return false;
+        }
+        getPromoted(t) { return { R: '+R', B: '+B', S: '+S', N: '+N', L: '+L', P: '+P' }[t] || t; }
+        getUnpromoted(t) { return t.startsWith('+') ? t.slice(1) : t; }
+        getLegalDrops(pieceType) {
+            const drops = [], owner = this.turn;
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    if (this.board[r][c]) continue;
+                    if (pieceType === 'P') {
+                        let hasPawn = false;
+                        for (let rr = 0; rr < 9; rr++) if (this.board[rr][c]?.type === 'P' && this.board[rr][c]?.owner === owner) { hasPawn = true; break; }
+                        if (hasPawn) continue;
+                        if ((owner === 'sente' && r === 0) || (owner === 'gote' && r === 8)) continue;
+                        if (this.wouldBeCheckmateByPawnDrop(r, c)) continue;
+                    }
+                    if (pieceType === 'L' && ((owner === 'sente' && r === 0) || (owner === 'gote' && r === 8))) continue;
+                    if (pieceType === 'N' && ((owner === 'sente' && r <= 1) || (owner === 'gote' && r >= 7))) continue;
+                    if (!this.wouldDropLeaveInCheck(r, c, pieceType)) drops.push({ row: r, col: c, pieceType, isDrop: true });
+                }
+            }
+            return drops;
+        }
+        wouldBeCheckmateByPawnDrop(r, c) {
+            const owner = this.turn, dir = owner === 'sente' ? -1 : 1, kr = r + dir;
+            if (kr < 0 || kr > 8) return false;
+            const target = this.board[kr][c];
+            if (!target || target.type !== 'K' || target.owner === owner) return false;
+            const testBoard = this.cloneBoard();
+            testBoard[r][c] = { type: 'P', owner };
+            const enemy = owner === 'sente' ? 'gote' : 'sente';
+            const origBoard = this.board, origTurn = this.turn;
+            this.board = testBoard; this.turn = enemy;
+            const hasMove = this.hasAnyLegalMove();
+            this.board = origBoard; this.turn = origTurn;
+            return !hasMove;
+        }
+        wouldDropLeaveInCheck(r, c, pieceType) {
+            const testBoard = this.cloneBoard();
+            testBoard[r][c] = { type: pieceType, owner: this.turn };
+            return this.isKingInCheck(this.turn, testBoard);
+        }
+        wouldBeInCheck(fr, fc, tr, tc, promote) {
+            const testBoard = this.cloneBoard();
+            const piece = { ...testBoard[fr][fc] };
+            if (promote) piece.type = this.getPromoted(piece.type);
+            testBoard[tr][tc] = piece;
+            testBoard[fr][fc] = null;
+            return this.isKingInCheck(this.turn, testBoard);
+        }
+        isKingInCheck(player, board = this.board) {
+            const kp = this.findKing(player, board);
+            if (!kp) return true;
+            const enemy = player === 'sente' ? 'gote' : 'sente';
+            return this.isSquareAttacked(kp.row, kp.col, enemy, board);
+        }
+        findKing(player, board = this.board) {
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (board[r][c]?.type === 'K' && board[r][c]?.owner === player) return { row: r, col: c };
+            return null;
+        }
+        isSquareAttacked(row, col, attacker, board) {
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+                const p = board[r][c];
+                if (p && p.owner === attacker && this.canAttack(r, c, row, col, p, board)) return true;
+            }
+            return false;
+        }
+        canAttack(fr, fc, tr, tc, piece, board) {
+            const dr = tr - fr, dc = tc - fc, dir = piece.owner === 'sente' ? -1 : 1, type = piece.type;
+            if (type === 'K') return Math.abs(dr) <= 1 && Math.abs(dc) <= 1 && (dr !== 0 || dc !== 0);
+            if (type === 'G' || type === '+S' || type === '+N' || type === '+L' || type === '+P') {
+                if (Math.abs(dr) <= 1 && Math.abs(dc) <= 1 && (dr !== 0 || dc !== 0)) return !(dr === -dir && Math.abs(dc) === 1);
+                return false;
+            }
+            if (type === 'S') return (Math.abs(dr) === 1 && Math.abs(dc) === 1) || (dr === dir && dc === 0);
+            if (type === 'N') return dr === dir * 2 && Math.abs(dc) === 1;
+            if (type === 'L') return dc === 0 && ((dir === -1 && dr < 0) || (dir === 1 && dr > 0)) && this.pathClear(fr, fc, tr, tc, board);
+            if (type === 'P') return dr === dir && dc === 0;
+            if (type === 'R') return (dr === 0 || dc === 0) && this.pathClear(fr, fc, tr, tc, board);
+            if (type === '+R') return ((dr === 0 || dc === 0) && this.pathClear(fr, fc, tr, tc, board)) || (Math.abs(dr) === 1 && Math.abs(dc) === 1);
+            if (type === 'B') return Math.abs(dr) === Math.abs(dc) && dr !== 0 && this.pathClear(fr, fc, tr, tc, board);
+            if (type === '+B') return (Math.abs(dr) === Math.abs(dc) && dr !== 0 && this.pathClear(fr, fc, tr, tc, board)) || ((dr === 0 || dc === 0) && Math.abs(dr) + Math.abs(dc) === 1);
+            return false;
+        }
+        pathClear(fr, fc, tr, tc, board) {
+            const dr = Math.sign(tr - fr), dc = Math.sign(tc - fc);
+            let r = fr + dr, c = fc + dc;
+            while (r !== tr || c !== tc) { if (board[r][c]) return false; r += dr; c += dc; }
+            return true;
+        }
+        cloneBoard() { return this.board.map(row => row.map(cell => cell ? { ...cell } : null)); }
+        makeMove(move) {
+            if (this.gameOver) return false;
+            if (move.isDrop) return this.makeDrop(move.row, move.col, move.pieceType);
+            const { fromRow: fr, fromCol: fc, toRow: tr, toCol: tc, promote } = move;
+            const piece = this.board[fr][fc];
+            if (!piece || piece.owner !== this.turn) return false;
+            const captured = this.board[tr][tc];
+            if (captured) {
+                const ct = this.getUnpromoted(captured.type);
+                this.hands[this.turn][ct] = (this.hands[this.turn][ct] || 0) + 1;
+            }
+            this.board[tr][tc] = { ...piece };
+            if (promote) this.board[tr][tc].type = this.getPromoted(piece.type);
+            this.board[fr][fc] = null;
+            this.moveHistory.push({ from: { row: fr, col: fc }, to: { row: tr, col: tc }, piece: piece.type, promoted: promote, captured: captured?.type, player: this.turn });
+            this.positionHistory.push(this.getBoardHash());
+            this.turn = this.turn === 'sente' ? 'gote' : 'sente';
+            this.checkGameEnd();
+            return true;
+        }
+        makeDrop(r, c, pieceType) {
+            if (this.board[r][c] || !this.hands[this.turn][pieceType]) return false;
+            this.hands[this.turn][pieceType]--;
+            if (this.hands[this.turn][pieceType] === 0) delete this.hands[this.turn][pieceType];
+            this.board[r][c] = { type: pieceType, owner: this.turn };
+            this.moveHistory.push({ to: { row: r, col: c }, piece: pieceType, isDrop: true, player: this.turn });
+            this.positionHistory.push(this.getBoardHash());
+            this.turn = this.turn === 'sente' ? 'gote' : 'sente';
+            this.checkGameEnd();
+            return true;
+        }
+        getBoardHash() { return JSON.stringify({ board: this.board, hands: this.hands, turn: this.turn }); }
+        checkGameEnd() {
+            if (this.isKingInCheck(this.turn) && !this.hasAnyLegalMove()) {
+                this.gameOver = true; this.winner = this.turn === 'sente' ? 'gote' : 'sente'; this.gameEndReason = 'checkmate'; return;
+            }
+            if (!this.hasAnyLegalMove()) {
+                this.gameOver = true; this.winner = this.turn === 'sente' ? 'gote' : 'sente'; this.gameEndReason = 'stalemate'; return;
+            }
+            const currPos = this.getBoardHash();
+            let count = 0;
+            for (const pos of this.positionHistory) if (pos === currPos) count++;
+            if (count >= 4) { this.gameOver = true; this.winner = null; this.gameEndReason = 'sennichite'; }
+        }
+        hasAnyLegalMove() {
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+                const p = this.board[r][c];
+                if (p && p.owner === this.turn && this.getLegalMovesForPiece(r, c).length > 0) return true;
+            }
+            for (const pt of Object.keys(this.hands[this.turn])) if (this.hands[this.turn][pt] > 0 && this.getLegalDrops(pt).length > 0) return true;
+            return false;
+        }
+        getAllLegalMoves() {
+            const moves = [];
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+                const p = this.board[r][c];
+                if (p && p.owner === this.turn) moves.push(...this.getLegalMovesForPiece(r, c));
+            }
+            for (const pt of Object.keys(this.hands[this.turn])) if (this.hands[this.turn][pt] > 0) moves.push(...this.getLegalDrops(pt));
+            return moves;
+        }
+        resign() { this.gameOver = true; this.winner = this.turn === 'sente' ? 'gote' : 'sente'; this.gameEndReason = 'resignation'; }
+    }
+
+    // ========== AI ENGINE ==========
+    class ShogiAI {
+        constructor(depth = 6) { this.maxDepth = depth; this.nodes = 0; }
+        setDepth(d) { this.maxDepth = d; }
+        evaluate(engine) {
+            if (engine.gameOver) {
+                if (engine.winner === 'gote') return 100000;
+                if (engine.winner === 'sente') return -100000;
+                return 0;
+            }
+            let score = 0;
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+                const p = engine.board[r][c];
+                if (p) {
+                    const val = PIECE_VALUES[p.type] || 0;
+                    const mult = p.owner === 'gote' ? 1 : -1;
+                    score += val * mult;
+                    if (p.type === 'K') {
+                        if (p.owner === 'gote') score += r <= 2 ? 50 : -30;
+                        else score += r >= 6 ? -50 : 30;
+                    } else {
+                        if (p.owner === 'gote') score += r * 3;
+                        else score -= (8 - r) * 3;
+                    }
+                }
+            }
+            for (const pt of Object.keys(engine.hands.gote)) score += (PIECE_VALUES[pt] || 0) * 0.9 * engine.hands.gote[pt];
+            for (const pt of Object.keys(engine.hands.sente)) score -= (PIECE_VALUES[pt] || 0) * 0.9 * engine.hands.sente[pt];
+            if (engine.isKingInCheck('sente')) score += 50;
+            if (engine.isKingInCheck('gote')) score -= 50;
+            return score;
+        }
+        async getBestMove(engine) {
+            this.nodes = 0;
+            const moves = engine.getAllLegalMoves();
+            if (moves.length === 0) return null;
+            if (moves.length === 1) return moves[0];
+            let bestMove = moves[0];
+            for (let depth = 1; depth <= this.maxDepth; depth++) {
+                const result = await this.searchRoot(engine, moves, depth);
+                bestMove = result.move;
+                await new Promise(r => setTimeout(r, 0));
+            }
+            return bestMove;
+        }
+        async searchRoot(engine, moves, depth) {
+            let bestScore = -Infinity, bestMove = moves[0];
+            moves.sort((a, b) => {
+                const ac = !a.isDrop && engine.board[a.toRow]?.[a.toCol] ? 1 : 0;
+                const bc = !b.isDrop && engine.board[b.toRow]?.[b.toCol] ? 1 : 0;
+                return (bc + (b.promote ? 1 : 0)) - (ac + (a.promote ? 1 : 0));
+            });
+            for (const move of moves) {
+                const clone = this.cloneEngine(engine);
+                clone.makeMove(move);
+                const score = -await this.alphaBeta(clone, depth - 1, -Infinity, -bestScore);
+                if (score > bestScore) { bestScore = score; bestMove = move; }
+            }
+            return { move: bestMove, score: bestScore };
+        }
+        async alphaBeta(engine, depth, alpha, beta) {
+            this.nodes++;
+            if (this.nodes % 500 === 0) await new Promise(r => setTimeout(r, 0));
+            if (depth === 0 || engine.gameOver) {
+                const score = this.evaluate(engine);
+                return engine.turn === 'gote' ? score : -score;
+            }
+            const moves = engine.getAllLegalMoves();
+            if (moves.length === 0) return engine.isKingInCheck(engine.turn) ? -99999 + (this.maxDepth - depth) : 0;
+            moves.sort((a, b) => {
+                const ac = !a.isDrop && engine.board[a.toRow]?.[a.toCol] ? 1 : 0;
+                const bc = !b.isDrop && engine.board[b.toRow]?.[b.toCol] ? 1 : 0;
+                return bc - ac;
+            });
+            for (const move of moves) {
+                const clone = this.cloneEngine(engine);
+                clone.makeMove(move);
+                const score = -await this.alphaBeta(clone, depth - 1, -beta, -alpha);
+                if (score >= beta) return beta;
+                if (score > alpha) alpha = score;
+            }
+            return alpha;
+        }
+        cloneEngine(engine) {
+            const c = new ShogiEngine();
+            c.board = engine.board.map(r => r.map(cell => cell ? { ...cell } : null));
+            c.hands = { sente: { ...engine.hands.sente }, gote: { ...engine.hands.gote } };
+            c.turn = engine.turn;
+            c.moveHistory = [...engine.moveHistory];
+            c.positionHistory = [...engine.positionHistory];
+            c.gameOver = engine.gameOver;
+            c.winner = engine.winner;
+            c.gameEndReason = engine.gameEndReason;
+            return c;
+        }
+    }
+
+    // ========== AUDIO ==========
+    class AudioEngine {
+        constructor() { this.enabled = true; this.ctx = null; }
+        init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+        
+        // Realistic wood clack sound for shogi pieces
+        playClack(volume = 0.4, pitch = 1.0) {
+            if (!this.enabled || !this.ctx) return;
+            const now = this.ctx.currentTime;
+            
+            // Create noise buffer for the "crack" component
+            const noiseBuffer = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.1, this.ctx.sampleRate);
+            const noiseData = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseData.length; i++) {
+                noiseData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (this.ctx.sampleRate * 0.008));
+            }
+            
+            // Noise source (the initial "crack")
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            
+            // Bandpass filter for woody tone
+            const noiseFilter = this.ctx.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.value = 1800 * pitch;
+            noiseFilter.Q.value = 1.5;
+            
+            // Main body tone (low thump)
+            const osc1 = this.ctx.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.value = 180 * pitch;
+            
+            // Overtone for wood character
+            const osc2 = this.ctx.createOscillator();
+            osc2.type = 'triangle';
+            osc2.frequency.value = 420 * pitch;
+            
+            // High click component
+            const osc3 = this.ctx.createOscillator();
+            osc3.type = 'square';
+            osc3.frequency.value = 1200 * pitch;
+            
+            // Gain envelopes
+            const noiseGain = this.ctx.createGain();
+            const osc1Gain = this.ctx.createGain();
+            const osc2Gain = this.ctx.createGain();
+            const osc3Gain = this.ctx.createGain();
+            const masterGain = this.ctx.createGain();
+            
+            // Sharp attack, quick decay (like wood impact)
+            noiseGain.gain.setValueAtTime(volume * 0.6, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            
+            osc1Gain.gain.setValueAtTime(volume * 0.5, now);
+            osc1Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            
+            osc2Gain.gain.setValueAtTime(volume * 0.3, now);
+            osc2Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            
+            osc3Gain.gain.setValueAtTime(volume * 0.15, now);
+            osc3Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+            
+            masterGain.gain.value = 1.0;
+            
+            // Connect noise path
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(masterGain);
+            
+            // Connect oscillators
+            osc1.connect(osc1Gain);
+            osc2.connect(osc2Gain);
+            osc3.connect(osc3Gain);
+            osc1Gain.connect(masterGain);
+            osc2Gain.connect(masterGain);
+            osc3Gain.connect(masterGain);
+            
+            masterGain.connect(this.ctx.destination);
+            
+            // Start and stop
+            noise.start(now);
+            osc1.start(now);
+            osc2.start(now);
+            osc3.start(now);
+            
+            noise.stop(now + 0.1);
+            osc1.stop(now + 0.1);
+            osc2.stop(now + 0.1);
+            osc3.stop(now + 0.1);
+        }
+        
+        playMove() { this.playClack(0.35, 1.0); }
+        playCapture() { 
+            this.playClack(0.5, 0.9); 
+            setTimeout(() => this.playClack(0.3, 1.1), 40);
+        }
+        playCheck() { 
+            this.playClack(0.6, 1.2);
+        }
+        playEnd() { 
+            this.playClack(0.4, 0.8);
+            setTimeout(() => this.playClack(0.35, 1.0), 120);
+            setTimeout(() => this.playClack(0.5, 1.2), 250);
+        }
+    }
+
+    // ========== STATE ==========
+    const loadSettings = () => { try { return JSON.parse(localStorage.getItem('shoganai_settings') || '{}'); } catch { return {}; } };
+    const saved = loadSettings();
+    let state = {
+        screen: 'menu', language: saved.language || 'en', difficulty: saved.difficulty || 'intermediate',
+        soundEnabled: saved.soundEnabled !== false, animationsEnabled: saved.animationsEnabled !== false,
+        showHints: saved.showHints || false, darkMode: saved.darkMode || false,
+        tutorialProgress: JSON.parse(localStorage.getItem('shoganai_tutorial') || '{}'), tutorialModule: 0,
+        engine: null, selectedPiece: null, selectedHand: null, legalMoves: [], isThinking: false, recommendedMove: null, promotionPending: null
+    };
+    const setState = (newState) => { state = { ...state, ...newState }; saveSettings(); render(); };
+    const saveSettings = () => { localStorage.setItem('shoganai_settings', JSON.stringify({ language: state.language, difficulty: state.difficulty, soundEnabled: state.soundEnabled, animationsEnabled: state.animationsEnabled, showHints: state.showHints, darkMode: state.darkMode })); };
+    const audio = new AudioEngine();
+    const ai = new ShogiAI();
+    const t = (k) => i18n[state.language]?.[k] || i18n.en[k] || k;
+
+    // ========== RENDER ==========
+    const render = () => {
+        if (state.darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');
+        const app = document.getElementById('app');
+        if (state.screen === 'menu') app.innerHTML = renderMenu();
+        else if (state.screen === 'game') app.innerHTML = renderGame();
+        else if (state.screen === 'tutorial') app.innerHTML = renderTutorial();
+        else if (state.screen === 'settings') app.innerHTML = renderSettings();
+    };
+
+    const renderMenu = () => `
+        <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-ui-bg via-board-light/30 to-ui-bg dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
+            <button onclick="toggle('darkMode')" class="absolute top-4 right-4 text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white transition-colors p-2" title="${t('darkMode')}">
+                ${state.darkMode 
+                    ? '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>'
+                    : '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>'
+                }
+            </button>
+            <div class="text-center mb-12 animate-fade-in">
+                <h1 class="font-display text-6xl md:text-8xl text-shogi-ink dark:text-white mb-2">${t('appName')}</h1>
+                <p class="font-kanji text-2xl md:text-3xl text-shogi-gold mb-1">${t('appSubtitle')}</p>
+                <p class="font-body text-lg text-ui-muted dark:text-gray-400 italic">${t('tagline')}</p>
+            </div>
+            <div class="flex flex-col gap-4 w-full max-w-xs animate-fade-in">
+                <button onclick="startGame()" class="px-8 py-4 bg-board-accent hover:bg-board-line text-white font-ui font-medium text-lg rounded-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">${t('playGame')}</button>
+                <button onclick="setState({screen:'tutorial'})" class="px-8 py-4 bg-white dark:bg-gray-800 hover:bg-board-light dark:hover:bg-gray-700 text-shogi-ink dark:text-white font-ui font-medium text-lg rounded-lg transition-all shadow-md border border-ui-border dark:border-gray-600">${t('tutorial')}</button>
+                <button onclick="setState({screen:'settings'})" class="px-8 py-4 text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white font-ui transition-colors">${t('settings')}</button>
+            </div>
+            <div class="mt-16 opacity-30"><div class="flex gap-2 justify-center">${['玉','飛','角','金','銀'].map(k=>`<span class="font-kanji text-3xl text-board-accent">${k}</span>`).join('')}</div></div>
+        </div>`;
+
+    const renderGame = () => {
+        const e = state.engine; if (!e) return '';
+        const isCheck = e.isKingInCheck(e.turn);
+        const status = e.gameOver ? (e.winner === 'sente' ? t('youWin') : e.winner === 'gote' ? t('youLose') : t('draw')) : (e.turn === 'sente' ? (state.isThinking ? t('cpuTurn') : t('yourTurn')) : t('cpuTurn'));
+        return `
+        <div class="min-h-screen bg-gradient-to-br from-ui-bg to-board-light/20 dark:from-gray-900 dark:to-gray-800 p-2 md:p-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center justify-between mb-4">
+                    <button onclick="setState({screen:'menu',engine:null})" class="text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white font-ui text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>${t('mainMenu')}
+                    </button>
+                    <span class="font-ui text-sm md:text-base ${isCheck && !e.gameOver ? 'text-shogi-red font-bold' : 'text-shogi-ink dark:text-white'}">${isCheck && !e.gameOver ? t('check')+' ' : ''}${status}</span>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggle('darkMode')" class="text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white transition-colors" title="${t('darkMode')}">
+                            ${state.darkMode 
+                                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>'
+                                : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>'
+                            }
+                        </button>
+                        ${!e.gameOver ? `<button onclick="resign()" class="text-ui-muted dark:text-gray-400 hover:text-shogi-red font-ui text-sm">${t('resign')}</button>` : ''}
+                        <button onclick="startGame()" class="text-board-accent hover:text-board-line font-ui text-sm">${t('newGame')}</button>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <!-- CPU Hand -->
+                    <div class="w-full max-w-md">${renderHand('gote')}</div>
+                    
+                    <!-- Board Container - Centered -->
+                    <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 w-full">
+                        <div class="flex-shrink-0">${renderBoard()}</div>
+                        <div class="w-full lg:w-48">${renderHistory()}</div>
+                    </div>
+                    
+                    <!-- Player Hand -->
+                    <div class="w-full max-w-md">${renderHand('sente')}</div>
+                </div>
+                ${state.promotionPending ? renderPromoModal() : ''}
+                ${e.gameOver ? renderEndModal() : ''}
+            </div>
+        </div>`;
+    };
+
+    const renderBoard = () => {
+        const e = state.engine;
+        let html = `<div class="shogi-board p-3 md:p-4 rounded-lg mx-auto"><div class="board-grid w-[288px] h-[324px] md:w-[396px] md:h-[432px]">`;
+        for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+            const p = e.board[r][c];
+            const isLegal = state.legalMoves.some(m => !m.isDrop && m.toRow === r && m.toCol === c);
+            const isDrop = state.legalMoves.some(m => m.isDrop && m.row === r && m.col === c);
+            const isSel = state.selectedPiece && state.selectedPiece.row === r && state.selectedPiece.col === c;
+            const isCap = isLegal && p && p.owner !== e.turn;
+            let cls = 'board-cell relative w-8 h-9 md:w-11 md:h-12 flex items-center justify-center cursor-pointer';
+            if (isLegal || isDrop) cls += ' legal-move';
+            if (isCap) cls += ' capture-move';
+            if (isDrop && !isLegal) cls += ' drop-zone';
+            html += `<div class="${cls}" onclick="handleCell(${r},${c})">`;
+            if (p) {
+                const enemy = p.owner === 'gote', kanji = PIECE_KANJI[p.type]?.[p.owner] || p.type, prom = p.type.startsWith('+');
+                html += `<div class="shogi-piece ${enemy ? 'enemy' : ''} ${isSel ? 'selected' : ''} w-7 h-8 md:w-9 md:h-10 flex items-center justify-center"><span class="font-kanji text-base md:text-lg ${prom ? 'text-shogi-red' : 'text-shogi-ink'} select-none">${kanji}</span></div>`;
+            }
+            html += '</div>';
+        }
+        html += '</div></div>';
+        return html;
+    };
+
+    const renderHand = (owner) => {
+        const e = state.engine, hand = e.hands[owner], pieces = Object.entries(hand).filter(([_,c])=>c>0);
+        const isP = owner === 'sente', label = isP ? t('yourHand') : t('cpuHand');
+        return `<div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-md border border-ui-border dark:border-gray-700 ${isP?'':'opacity-90'}">
+            <h3 class="font-ui text-xs text-ui-muted dark:text-gray-400 mb-2">${label}</h3>
+            <div class="flex flex-wrap gap-2 min-h-[40px] ${!isP?'justify-end':''}">
+                ${pieces.length===0?'<span class="text-ui-muted dark:text-gray-500 text-xs">—</span>':''}
+                ${pieces.map(([type,count])=>{
+                    const kanji = PIECE_KANJI[type]?.[owner] || type, isSel = state.selectedHand === type;
+                    const canSel = isP && e.turn === 'sente' && !state.isThinking && !e.gameOver;
+                    return `<div class="relative ${canSel?'cursor-pointer':''}" ${canSel?`onclick="selectHand('${type}')"`:''}>
+                        <div class="shogi-piece ${!isP?'enemy':''} ${isSel?'selected animate-pulse-glow':''} w-8 h-9 md:w-9 md:h-10 flex items-center justify-center">
+                            <span class="font-kanji text-base text-shogi-ink select-none">${kanji}</span>
+                        </div>
+                        ${count>1?`<span class="absolute -bottom-1 -right-1 bg-shogi-gold text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-ui font-bold">${count}</span>`:''}
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`;
+    };
+
+    const renderHistory = () => {
+        const e = state.engine;
+        return `<div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-md border border-ui-border dark:border-gray-700 max-h-64 lg:max-h-96 overflow-y-auto">
+            <h3 class="font-ui text-xs text-ui-muted dark:text-gray-400 mb-2">${t('moveHistory')}</h3>
+            <div class="space-y-1 font-ui text-xs">
+                ${e.moveHistory.length===0?'<span class="text-ui-muted dark:text-gray-500">—</span>':''}
+                ${e.moveHistory.map((m,i)=>{
+                    const isG = m.player === 'gote', kanji = PIECE_KANJI[m.piece]?.[m.player] || m.piece;
+                    const file = 9 - m.to.col, rank = m.to.row + 1;
+                    const notation = `${file}${rank}${kanji}${m.promoted?'成':''}${m.isDrop?'打':''}`;
+                    return `<div class="flex items-center gap-2 ${isG?'pl-4':''}">
+                        ${!isG?`<span class="text-ui-muted w-4">${Math.floor(i/2)+1}.</span>`:''}
+                        <span class="${isG?'text-ui-muted dark:text-gray-400':'text-shogi-ink dark:text-white'}">${notation}</span>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`;
+    };
+
+    const renderPromoModal = () => `
+        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-2xl animate-fade-in">
+                <h3 class="font-display text-xl text-shogi-ink dark:text-white mb-4 text-center">${t('promotionChoice')}</h3>
+                <div class="flex gap-4">
+                    <button onclick="confirmPromo(true)" class="px-6 py-3 bg-shogi-gold text-white font-ui rounded-lg hover:bg-yellow-600">${t('promote')}</button>
+                    <button onclick="confirmPromo(false)" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-shogi-ink dark:text-white font-ui rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">${t('dontPromote')}</button>
+                </div>
+            </div>
+        </div>`;
+
+    const renderEndModal = () => {
+        const e = state.engine, won = e.winner === 'sente', isDraw = e.winner === null;
+        const msg = isDraw ? t('draw') : (won ? t('youWin') : t('youLose'));
+        const reason = { checkmate: t('checkmate'), resignation: t('resignation'), sennichite: t('sennichite'), stalemate: t('stalemate') }[e.gameEndReason] || '';
+        return `<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-2xl animate-fade-in text-center max-w-sm">
+                <div class="text-6xl mb-4">${won?'🎉':isDraw?'🤝':'😔'}</div>
+                <h2 class="font-display text-3xl ${won?'text-shogi-gold':'text-shogi-ink dark:text-white'} mb-2">${msg}</h2>
+                <p class="text-ui-muted dark:text-gray-400 font-ui mb-6">${reason}</p>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="startGame()" class="px-6 py-3 bg-board-accent text-white font-ui rounded-lg hover:bg-board-line">${t('newGame')}</button>
+                    <button onclick="setState({screen:'menu',engine:null})" class="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-shogi-ink dark:text-white font-ui rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">${t('mainMenu')}</button>
+                </div>
+            </div>
+        </div>`;
+    };
+
+    const renderSettings = () => `
+        <div class="min-h-screen bg-gradient-to-br from-ui-bg to-board-light/20 dark:from-gray-900 dark:to-gray-800 p-6 relative">
+            <button onclick="toggle('darkMode')" class="absolute top-4 right-4 text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white transition-colors p-2" title="${t('darkMode')}">
+                ${state.darkMode 
+                    ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>'
+                    : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>'
+                }
+            </button>
+            <div class="max-w-md mx-auto">
+                <button onclick="setState({screen:'menu'})" class="text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white font-ui text-sm flex items-center gap-2 mb-8">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>${t('back')}
+                </button>
+                <h1 class="font-display text-4xl text-shogi-ink dark:text-white mb-8">${t('settings')}</h1>
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-ui-border dark:border-gray-700">
+                        <label class="font-ui text-sm text-ui-muted dark:text-gray-400 mb-2 block">${t('language')}</label>
+                        <div class="flex gap-2">${['en','fr','ja'].map(l=>`<button onclick="setState({language:'${l}'})" class="px-4 py-2 rounded-lg font-ui text-sm transition-colors ${state.language===l?'bg-board-accent text-white':'bg-gray-100 dark:bg-gray-700 text-shogi-ink dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}">${l==='en'?'English':l==='fr'?'Français':'日本語'}</button>`).join('')}</div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-ui-border dark:border-gray-700">
+                        <label class="font-ui text-sm text-ui-muted dark:text-gray-400 mb-2 block">${t('difficulty')}</label>
+                        <div class="grid grid-cols-2 gap-2">${['beginner','intermediate','advanced','master'].map(d=>`<button onclick="setState({difficulty:'${d}'})" class="px-4 py-2 rounded-lg font-ui text-sm transition-colors ${state.difficulty===d?'bg-board-accent text-white':'bg-gray-100 dark:bg-gray-700 text-shogi-ink dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600'}">${t(d)}</button>`).join('')}</div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-md border border-ui-border dark:border-gray-700 space-y-4">
+                        ${renderToggle('soundEnabled',t('sound'))}
+                        ${renderToggle('animationsEnabled',t('animations'))}
+                        ${renderToggle('showHints',t('showHints'))}
+                        ${renderToggle('darkMode',t('darkMode'))}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+    const renderToggle = (key, label) => `
+        <div class="flex items-center justify-between">
+            <span class="font-ui text-shogi-ink dark:text-white">${label}</span>
+            <button onclick="toggle('${key}')" class="relative w-12 h-6 rounded-full transition-colors ${state[key]?'bg-board-accent':'bg-gray-300 dark:bg-gray-600'}">
+                <span class="absolute top-1 ${state[key]?'right-1':'left-1'} w-4 h-4 bg-white rounded-full shadow transition-all"></span>
+            </button>
+        </div>`;
+
+    const renderTutorial = () => {
+        const modules = ['module1','module2','module3','module4','module5','module6','module7','module8'];
+        const m = state.tutorialModule, prog = state.tutorialProgress;
+        return `
+        <div class="min-h-screen bg-gradient-to-br from-ui-bg to-board-light/20 dark:from-gray-900 dark:to-gray-800 p-6 relative">
+            <button onclick="toggle('darkMode')" class="absolute top-4 right-4 text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white transition-colors p-2" title="${t('darkMode')}">
+                ${state.darkMode 
+                    ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>'
+                    : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>'
+                }
+            </button>
+            <div class="max-w-4xl mx-auto">
+                <button onclick="setState({screen:'menu'})" class="text-ui-muted dark:text-gray-400 hover:text-shogi-ink dark:hover:text-white font-ui text-sm flex items-center gap-2 mb-8">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>${t('back')}
+                </button>
+                <h1 class="font-display text-4xl text-shogi-ink dark:text-white mb-8">${t('tutorialTitle')}</h1>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                    ${modules.map((mod,i)=>`<button onclick="setState({tutorialModule:${i}})" class="relative p-4 rounded-lg text-left transition-all ${m===i?'bg-board-accent text-white shadow-lg':'bg-white dark:bg-gray-800 hover:bg-board-light dark:hover:bg-gray-700 border border-ui-border dark:border-gray-700'}">
+                        <span class="font-ui text-xs ${m===i?'text-white/70':'text-ui-muted dark:text-gray-400'}">Module ${i+1}</span>
+                        <p class="font-ui text-sm mt-1">${t(mod)}</p>
+                        ${prog[i]?'<span class="absolute top-2 right-2 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></span>':''}
+                    </button>`).join('')}
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg border border-ui-border dark:border-gray-700 animate-fade-in">
+                    <h2 class="font-display text-2xl text-shogi-ink dark:text-white mb-4">${t(`tutorial${m+1}Title`)}</h2>
+                    <div class="font-body text-lg text-ui-text dark:text-gray-300 leading-relaxed mb-6">${t(`tutorial${m+1}Content`)}</div>
+                    <div class="my-8 flex justify-center">${renderTutorialBoard(m)}</div>
+                    <div class="flex items-center justify-between mt-8 pt-6 border-t border-ui-border dark:border-gray-700">
+                        <button onclick="setState({tutorialModule:Math.max(0,${m}-1)})" class="px-4 py-2 font-ui text-sm ${m===0?'text-ui-muted dark:text-gray-600 cursor-not-allowed':'text-board-accent hover:text-board-line'}"${m===0?' disabled':''}>← ${t('previous')}</button>
+                        <button onclick="completeTutorial(${m})" class="px-6 py-2 bg-shogi-gold text-white font-ui rounded-lg hover:bg-yellow-600">${prog[m]?'✓ ':''}${t('continue')}</button>
+                        <button onclick="setState({tutorialModule:Math.min(7,${m}+1)})" class="px-4 py-2 font-ui text-sm ${m===7?'text-ui-muted dark:text-gray-600 cursor-not-allowed':'text-board-accent hover:text-board-line'}"${m===7?' disabled':''}>${t('next')} →</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    };
+
+    const renderTutorialBoard = (m) => {
+        const demos = [
+            { showFull: true },
+            { pieces: [{ type:'K',row:4,col:4,owner:'sente' },{ type:'G',row:5,col:3,owner:'sente' },{ type:'S',row:5,col:5,owner:'sente' }] },
+            { pieces: [{ type:'N',row:6,col:1,owner:'sente' },{ type:'L',row:8,col:0,owner:'sente' },{ type:'P',row:6,col:4,owner:'sente' },{ type:'R',row:7,col:7,owner:'sente' },{ type:'B',row:7,col:1,owner:'sente' }] },
+            { pieces: [{ type:'P',row:3,col:4,owner:'sente' },{ type:'+P',row:2,col:3,owner:'sente' }], highlightZone: true },
+            { pieces: [{ type:'K',row:8,col:4,owner:'sente' },{ type:'K',row:0,col:4,owner:'gote' }] },
+            { pieces: [{ type:'K',row:0,col:4,owner:'gote' },{ type:'R',row:0,col:7,owner:'sente' },{ type:'G',row:1,col:4,owner:'sente' }] },
+            { showFull: true },
+            { pieces: [{ type:'K',row:1,col:2,owner:'gote' },{ type:'R',row:1,col:6,owner:'gote' },{ type:'N',row:5,col:4,owner:'sente' }] }
+        ];
+        const demo = demos[m];
+        let html = `<div class="shogi-board p-3 rounded-lg inline-block"><div class="board-grid w-[252px] h-[288px] md:w-[324px] md:h-[360px]">`;
+        for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+            let p = null;
+            if (demo.showFull) { const e = new ShogiEngine(); p = e.board[r][c]; }
+            else if (demo.pieces) p = demo.pieces.find(x=>x.row===r&&x.col===c);
+            const inZone = demo.highlightZone && r <= 2;
+            html += `<div class="w-7 h-8 md:w-9 md:h-10 flex items-center justify-center ${inZone?'bg-shogi-gold/20':''}">`;
+            if (p) {
+                const enemy = p.owner === 'gote', kanji = PIECE_KANJI[p.type]?.[p.owner] || p.type, prom = p.type.startsWith('+');
+                html += `<div class="shogi-piece ${enemy?'enemy':''} w-6 h-7 md:w-8 md:h-9 flex items-center justify-center"><span class="font-kanji text-sm md:text-base ${prom?'text-shogi-red':'text-shogi-ink'} select-none">${kanji}</span></div>`;
+            }
+            html += '</div>';
+        }
+        html += '</div></div>';
+        return html;
+    };
+
+    // ========== HANDLERS ==========
+    window.startGame = () => {
+        const e = new ShogiEngine();
+        ai.setDepth({ beginner: 3, intermediate: 5, advanced: 8, master: 12 }[state.difficulty] || 5);
+        setState({ screen: 'game', engine: e, selectedPiece: null, selectedHand: null, legalMoves: [], isThinking: false, recommendedMove: null, promotionPending: null });
+    };
+    window.handleCell = (r, c) => {
+        const e = state.engine;
+        if (!e || e.gameOver || state.isThinking || e.turn !== 'sente') return;
+        const p = e.board[r][c];
+        if (state.selectedHand) {
+            const drops = state.legalMoves.filter(m=>m.isDrop&&m.row===r&&m.col===c);
+            if (drops.length > 0) executeMove(drops[0]);
+            else setState({ selectedHand: null, legalMoves: [] });
+            return;
+        }
+        if (state.selectedPiece) {
+            const moves = state.legalMoves.filter(m=>!m.isDrop&&m.toRow===r&&m.toCol===c);
+            if (moves.length > 0) {
+                const promo = moves.filter(m=>m.promote), noPromo = moves.filter(m=>!m.promote);
+                if (promo.length > 0 && noPromo.length > 0) setState({ promotionPending: { promoteMove: promo[0], noPromoteMove: noPromo[0] } });
+                else executeMove(moves[0]);
+            } else if (p && p.owner === 'sente') selectPiece(r, c);
+            else setState({ selectedPiece: null, legalMoves: [] });
+            return;
+        }
+        if (p && p.owner === 'sente') selectPiece(r, c);
+    };
+    window.selectHand = (pt) => {
+        const e = state.engine;
+        if (!e || e.gameOver || state.isThinking || e.turn !== 'sente') return;
+        if (state.selectedHand === pt) setState({ selectedHand: null, legalMoves: [] });
+        else setState({ selectedHand: pt, selectedPiece: null, legalMoves: e.getLegalDrops(pt) });
+    };
+    const selectPiece = (r, c) => { setState({ selectedPiece: { row: r, col: c }, selectedHand: null, legalMoves: state.engine.getLegalMovesForPiece(r, c) }); };
+    window.confirmPromo = (promote) => {
+        const pending = state.promotionPending;
+        if (pending) { setState({ promotionPending: null }); executeMove(promote ? pending.promoteMove : pending.noPromoteMove); }
+    };
+    const executeMove = async (move) => {
+        const e = state.engine;
+        const isCap = !move.isDrop && e.board[move.toRow]?.[move.toCol];
+        e.makeMove(move);
+        if (state.soundEnabled) { audio.init(); if (isCap) audio.playCapture(); else audio.playMove(); if (e.isKingInCheck(e.turn)) setTimeout(()=>audio.playCheck(), 150); if (e.gameOver) setTimeout(()=>audio.playEnd(), 300); }
+        setState({ selectedPiece: null, selectedHand: null, legalMoves: [], recommendedMove: null });
+        if (!e.gameOver && e.turn === 'gote') {
+            setState({ isThinking: true });
+            await new Promise(r => setTimeout(r, 100));
+            const cpuMove = await ai.getBestMove(e);
+            if (cpuMove && !e.gameOver) {
+                const cpuCap = !cpuMove.isDrop && e.board[cpuMove.toRow]?.[cpuMove.toCol];
+                e.makeMove(cpuMove);
+                if (state.soundEnabled) { if (cpuCap) audio.playCapture(); else audio.playMove(); if (e.isKingInCheck(e.turn)) setTimeout(()=>audio.playCheck(), 150); if (e.gameOver) setTimeout(()=>audio.playEnd(), 300); }
+            }
+            setState({ isThinking: false });
+        }
+    };
+    window.resign = () => { if (state.engine && !state.engine.gameOver) { state.engine.resign(); if (state.soundEnabled) { audio.init(); audio.playEnd(); } setState({}); } };
+    window.toggle = (key) => { const newState = { [key]: !state[key] }; if (key === 'soundEnabled') audio.enabled = newState[key]; setState(newState); };
+    window.completeTutorial = (i) => { const prog = { ...state.tutorialProgress, [i]: true }; setState({ tutorialProgress: prog, tutorialModule: i < 7 ? i + 1 : i }); localStorage.setItem('shoganai_tutorial', JSON.stringify(prog)); };
+
+    // ========== INIT ==========
+    document.addEventListener('click', () => audio.init(), { once: true });
+    render();
+    </script>
+</body>
+</html>
