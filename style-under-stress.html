@@ -1,816 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Under Stress</title>
 
-    <!-- importing for Montserrat font family -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="./images/logo-icon.png" type="image/png">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <title>Style Under Stress</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
 
-  <link rel="icon" href="./images/logo-icon.png" type="image/png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
-  <!-- Custom Style -->
-  <style>
-    body {
-      min-width: 30%;
-
-      /* RhytolLeaf Montserrat font */
-      font-family: 'Montserrat', sans-serif !important;
-
-      /* RhytoLeaf Soft black */
-      color: 212121;
-
-
-    }
-
-    .progress-bar {
-      transition: width 0.5s ease;
-    }
-
-
-    .card-img-top{
-      height: 286px;
-      width: 955px;
-      
-    }
-
-    .container-xxl {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    header, h1, h2, p, a, button, .progress {
-      text-align: center;
-    }
-
-    header{
-        text-align: center;
-    }
-
-    #question-text{
-        text-align: center;
-        font-size: clamp(1rem, 2.5vw, 1.5rem);
-    }
-
-    #question-number {
-        font-size: clamp(2rem, 5vw, 3.5rem);
-    }
-
-    h2 {
-        font-size: clamp(1.8rem, 4.5vw, 3rem);
-    }
-
-    .result-card{
-    width: 18rem;
-    }
-
-    #result-card-container{
-    }
-
-
-
-    #begin-button{
-        padding: 2rem;
-        font-size: 33px;
-    }
-
-    #list-of-answers{
-        display : none;
-
-    }
-
-    #true-button,
-    #false-button {
-        width: 200px; /* Adjust as needed */
-        height: 200px; /* Adjust as needed */
-        padding: 0; /* Remove padding */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 8px; /* Slightly rounded corners */
-        text-align: center; /* Ensure text is centered */
-        line-height: 200px; /* Vertically center text */
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: clamp(1.5rem, 5vw, 2.5rem);
-    }
-    #true-button{
-        background-color: rgb(0, 255, 251);
-    }
-    #false-button{
-        background-color: rgb(255, 31, 102);
-    }
-
-    .container { 
-        height: 200px;
-        position: relative;
-      }
-      
-      .vertical-center {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        -ms-transform: translateY(-50%);
-        transform: translateY(-50%);
-      }
-
-      #question-grid {
-        margin-bottom: 20px;
-      }
-
-      .grid-button {
-        width: 40px;
-        height: 40px;
-        margin: 2px;
-        border-radius: 50%;
-        border: 1px solid #ccc;
-        background-color: #f0f0f0;
-        color: #333;
-        font-weight: bold;
-        cursor: pointer;
-      }
-
-      .grid-button.true {
-        background-color: rgb(0, 255, 251);
-        color: white;
-      }
-
-      .grid-button.false {
-        background-color: rgb(255, 31, 102);
-        color: white;
-      }
-
-      .modal {
-        display: none; 
-        position: fixed; 
-        z-index: 1; 
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        overflow: auto; 
-        background-color: rgb(0,0,0); 
-        background-color: rgba(0,0,0,0.4); 
-      }
-
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto; 
-        padding: 30px;
-        border: 1px solid #888;
-        width: 80%; 
-        text-align: center;
-        position: relative; /* Added for absolute positioning of close button */
-      }
-
-      .modal-content ul {
-        padding-left: 0;
-        list-style-type: none;
-        text-align: center; /* Center the text within the bullet points */
-      }
-
-      .close-button {
-        color: #aaa;
-        position: absolute; /* Changed from float: right; */
-        top: 1rem;
-        right: 1rem;
-        font-size: 28px;
-        font-weight: bold;
-      }
-
-      .close-button:hover,
-      .close-button:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-      }
-    body.dark-mode {
-      background-color: #212121 !important;
-      color: #f2f2f2 !important;
-    }
-
-    body.dark-mode .card {
-      background-color: #333333 !important;
-      color: #f2f2f2 !important;
-    }
-
-    body.dark-mode h1, body.dark-mode h2, body.dark-mode p, body.dark-mode a, body.dark-mode button {
-      color: #f2f2f2 !important;
-    }
-
-    body.dark-mode .grid-button {
-      background-color: #555555 !important;
-      color: #f2f2f2 !important;
-      border: 1px solid #777777 !important;
-    }
-
-    body.dark-mode .grid-button.true {
-      background-color: rgb(0, 150, 147) !important;
-    }
-
-    body.dark-mode .grid-button.false {
-      background-color: rgb(150, 20, 60) !important;
-    }
-
-    body.dark-mode .modal-content {
-      background-color: #333333 !important;
-      color: #f2f2f2 !important;
-      border: 1px solid #555555 !important;
-    }
-
-    body.dark-mode .close-button {
-      color: #f2f2f2 !important;
-    }
-    #darkModeIcon {
-      font-size: 2em; /* Double the size */
-    }
-    .form-check-input:checked {
-      background-color: darkblue !important;
-      border-color: darkblue !important;
-    }
-
-    .form-check-input:not(:checked) {
-      background-color: orange !important;
-      border-color: orange !important;
-    }
-    #result-card-container input[type="checkbox"]:checked {
-      background-color: rgb(99,203,131) !important;
-      border-color: rgb(99,203,131) !important;
-    }
-    #scroll-to-results {
-      background-color: rgb(99,203,131) !important;
-      border-color: rgb(99,203,131) !important;
-    }
-    #scroll-to-results:hover,
-    #scroll-to-results:active {
-      background-color: rgb(79,183,111) !important; /* A slightly darker shade for hover/active */
-      border-color: rgb(79,183,111) !important;
-    }
-  </style>
-
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
-
-
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4298895490101974"
-     crossorigin="anonymous"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4298895490101974"
-     crossorigin="anonymous"></script>
     <style>
-      @media (max-width: 768px) {
-        .result-card {
-          width: 90%;
+        /* ============================================
+           CSS VARIABLES & BASE STYLES
+           ============================================ */
+        :root {
+            --rhyto-green: #00CE7C;
+            --rhyto-green-hover: #00b56d;
+            --rhyto-green-dark: #009d5e;
         }
-        .card-img-top {
-          height: auto;
-          width: 100%;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        #begin-button {
-          font-size: 24px;
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            color: #f2f2f2;
+            padding: 1rem;
+            overflow-x: hidden;
         }
-        .grid-button {
-          width: 30px;
-          height: 30px;
-          font-size: 14px;
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            color: #f2f2f2;
         }
-        .col-sm {
-          width: 100%;
+
+        body:not(.dark-mode) {
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
+            background-attachment: fixed;
+            color: #1a1a1a;
         }
-      }
-      @media (max-width: 768px) {
-        .card[style*="width: 700px"] { /* Target the question card specifically */
-          width: 90% !important;
-          min-height: auto !important; /* Allow height to adjust on smaller screens */
+
+        /* ============================================
+           GLASSMORPHISM
+           ============================================ */
+        .glass {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
+
+        body:not(.dark-mode) .glass {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* ============================================
+           HEADER & NAVIGATION
+           ============================================ */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            color: inherit;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: var(--rhyto-green);
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .logo-center {
+            flex: 1;
+            text-align: center;
+        }
+
+        .logo-center img {
+            width: 60px;
+            height: auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border-radius: 20%;
+        }
+
+        .logo-center img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle-wrapper i {
+            font-size: 1.5rem;
+            color: var(--rhyto-green);
+        }
+
+        .form-check-input {
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--rhyto-green);
+            border-color: var(--rhyto-green);
+        }
+
+        .form-check-input:not(:checked) {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .container-xxl {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         h1 {
-          font-size: 2rem;
+            text-align: center;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 1rem;
+            color: var(--rhyto-green);
+            font-weight: 700;
         }
+
+        h2 {
+            font-size: clamp(1.8rem, 4.5vw, 3rem);
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        #why-benefit-header {
+            cursor: pointer;
+            text-decoration: underline;
+            color: var(--rhyto-green);
+            transition: opacity 0.3s ease;
+        }
+
+        #why-benefit-header:hover {
+            opacity: 0.8;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2rem 1.5rem;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        body:not(.dark-mode) .question-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        #question-number {
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--rhyto-green);
+        }
+
+        #question-text {
+            text-align: center;
+            font-size: clamp(0.95rem, 2.2vw, 1.5rem);
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* ============================================
+           QUESTION GRID
+           ============================================ */
+        #question-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .grid-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .grid-button:hover {
+            transform: scale(1.1);
+            border-color: var(--rhyto-green);
+        }
+
+        .grid-button.true {
+            background-color: rgba(0, 255, 251, 0.8);
+            border-color: rgb(0, 255, 251);
+            color: #000;
+        }
+
+        .grid-button.false {
+            background-color: rgba(255, 31, 102, 0.8);
+            border-color: rgb(255, 31, 102);
+            color: #fff;
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
         #begin-button {
-          padding: 1rem;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            padding: 2rem 4rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
         }
-      }
+
+        #begin-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+        }
+
+        #true-button,
+        #false-button {
+            width: clamp(150px, 30vw, 250px);
+            height: clamp(150px, 30vw, 250px);
+            padding: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        #true-button {
+            background: linear-gradient(135deg, rgb(0, 255, 251), rgb(0, 200, 196));
+            color: #000;
+            box-shadow: 0 8px 20px rgba(0, 255, 251, 0.3);
+        }
+
+        #true-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 255, 251, 0.4);
+        }
+
+        #false-button {
+            background: linear-gradient(135deg, rgb(255, 31, 102), rgb(220, 20, 80));
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 31, 102, 0.3);
+        }
+
+        #false-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 31, 102, 0.4);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        #scroll-to-results {
+            background-color: var(--rhyto-green);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 206, 124, 0.3);
+            display: none;
+        }
+
+        #scroll-to-results:hover {
+            background-color: var(--rhyto-green-hover);
+            transform: scale(1.1);
+        }
+
+        /* ============================================
+           PROGRESS BAR
+           ============================================ */
+        .progress {
+            width: 100%;
+            max-width: 800px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            margin: 2rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--rhyto-green), var(--rhyto-green-hover));
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        #quiz-progress-text {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: inherit;
+        }
+
+        /* ============================================
+           RESULT CARDS
+           ============================================ */
+        #result-card-container {
+            display: none;
+            margin-top: 3rem;
+        }
+
+        #results-header {
+            color: var(--rhyto-green);
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 22rem;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        body:not(.dark-mode) .result-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 206, 124, 0.2);
+        }
+
+        .result-card .card-img-top {
+            height: auto;
+            width: 100%;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .result-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .result-card input[type="checkbox"] {
+            margin: 0 0.25rem;
+        }
+
+        .result-card input[type="checkbox"]:checked {
+            background-color: var(--rhyto-green);
+            border-color: var(--rhyto-green);
+        }
+
+        .info-icon {
+            color: var(--rhyto-green);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .info-icon:hover {
+            transform: scale(1.2);
+        }
+
+        /* ============================================
+           MODALS
+           ============================================ */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            color: #f2f2f2;
+        }
+
+        body:not(.dark-mode) .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a1a;
+        }
+
+        .modal-content h2 {
+            color: var(--rhyto-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content ul {
+            text-align: left;
+            padding-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--rhyto-green);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-button:hover {
+            transform: scale(1.2);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .back-button span {
+                display: none;
+            }
+
+            .logo-center img {
+                width: 50px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .question-card {
+                padding: 2rem 1rem;
+                min-height: 200px;
+            }
+
+            .grid-button {
+                width: 38px;
+                height: 38px;
+                font-size: 0.8rem;
+            }
+
+            #begin-button {
+                padding: 1.5rem 3rem;
+            }
+
+            .button-container {
+                gap: 1rem;
+            }
+
+            .result-card {
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .header-container {
+                margin-bottom: 1rem;
+            }
+
+            .grid-button {
+                width: 32px;
+                height: 32px;
+                font-size: 0.75rem;
+            }
+
+            #question-grid {
+                gap: 0.25rem;
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .text-center {
+            text-align: center;
+        }
+
+        #list-of-answers {
+            display: none;
+        }
+
+        #question-hr {
+            display: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            margin: 2rem 0;
+        }
     </style>
 </head>
 
+<body class="dark-mode">
+    <!-- Header -->
+    <div class="header-container">
+        <a href="index.html" class="back-button" aria-label="Back to home">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Home</span>
+        </a>
 
-
-
-
-
-<!-- 
-  
-  To learn with the intention to succeed
-
- -->
-
-<body class="bg-success justify-content-center dark-mode">
-
-  <div class="container-xxl">
-    <!-- TITLE -->
-    <header>
-
-
-    </header>
-
-    <!-- MAIN HEADER FOR QUIZ -->
-    <a href="javascript:void(0)" onclick="showExitQuizModal()"><img src="./images/logo-icon.png" alt="RhytoLeaf Logo" width="50px" style="display: block; margin: 0 auto;"></a>
-    <h1 style="padding: 2.2rem; font-size: clamp(2.5rem, 6vw, 4rem);">Style Under Stress</h1>
-    <h3 id="why-benefit-header" style="cursor: pointer; text-decoration: underline;">Why?</h3>
-
-    <div id="question-grid" class="d-flex flex-wrap justify-content-center"></div>
-
-    <div class="d-flex flex-column align-items-center my-3">
-      <i id="darkModeIcon" class="fas fa-moon mb-2"></i>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="darkModeToggle" checked>
-        <label class="form-check-label" for="darkModeToggle"></label>
-      </div>
-    </div>
-
-
-
-
-
-    <!-- QUIZ PANEL -->
-    <div class="col-xl-8">
-      <br />
-
-      <!--  -->
-      <hr id="question-hr" style="display: none;">
-      <br><br>
-      <h2 id="question-number" class="bd-title"></h2>
-
-
-      <br><br>
-
-
-      <div class="card" style="background-color:#F2F2F2; padding: 2rem; width: 700px; min-height: 200px; display: flex; align-items: center; justify-content: center; flex-direction: column; margin: 0 auto;">
-
-
-        <!-- QUESTION TEXT  -->
-        <p id="question-text">
-          Welcome! <br>Please press "Begin" to start the quiz.
-          <br>
-          (33 Questions)
-        </p>
-
-      </div>
-
-
-      <br>
-
-      <div class="container-xxl bd-gutter">
-        <div class="row">
-
-          <!-- ANSWER BOARD (TRUE OR FALSE) -->
-          <div class="d-flex flex-column flex-md-row gap-3">
-
-            <a class="btn btn-lg bd-btn-lg" id="true-button" style="display: none" onclick="pressTrue()">
-              True
-            </a>
-
-            <a class="btn btn-lg bd-btn-lg" id="false-button" style="display: none" onclick="pressFalse()">
-              False
-            </a>
-          </div>
-
+        <div class="logo-center">
+            <img src="./images/logo-icon.png" alt="RhytoLeaf Logo" onclick="showExitQuizModal()">
         </div>
 
-        <div class="col-xl-4 d-lg-flex justify-content-xl-end">
-
+        <div class="theme-toggle-wrapper">
+            <i id="darkModeIcon" class="fas fa-sun"></i>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle" checked aria-label="Toggle dark mode">
+            </div>
         </div>
-      </div>
     </div>
 
-    <div class="text-center" style="margin-top: 20px;">
-      <button id="scroll-to-results" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; padding: 10px 16px; font-size: 18px; line-height: 1.33; display: none;">
-        &#8595;
-      </button>
-    </div>
+    <div class="container-xxl">
+        <!-- Title -->
+        <h1>Style Under Stress</h1>
+        <h3 id="why-benefit-header">Why?</h3>
 
+        <!-- Question Grid -->
+        <div id="question-grid"></div>
 
+        <!-- Question Panel -->
+        <div class="text-center">
+            <hr id="question-hr">
+            <h2 id="question-number"></h2>
 
-    <br>
-
-    <!---------------------------------------------- 
-    BEGIN
-
-    BUTTON 
-    ------------------------------------------------>
-    <div class="container my-3">
-      <div class="col-md-12 text-center">
-        <button id="begin-button" onclick="startQuiz()" class="bg-danger btn">
-          Begin
-        </button>
-      </div>
-    </div>
-
-
-    <!-- QUESTIONS DISPLAY HERE -->
-    <div id="question-board" style="width: 50%; ">
-
-      <br />
-
-    </div>
-
-
-
-
-    <!-------------------------------------------------->
-    <!-------------------------------------------------->
-    <!-- LIST OF ANSWERED TRUE (MEANT FOR DEBUGGING) -->
-    <div id="list-of-answers">
-      <h4>Answered True</h4>
-      <p id="answered-true">[ ]</p>
-    </div>
-
-
-    <!-- QUIZ PROGRESS BAR-->
-    <div class="progress" style="width: 60%; height:30px; background-color: #e0e0e0; overflow: hidden; position: relative;" role="progressbar" aria-label="Basic example"
-      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-      <div id="quiz-progress" class="progress-bar" style="background-color:#00CE7C; height: 100%;"></div>
-      <span id="quiz-progress-text" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: black; font-weight: bold;">0%</span>
-    </div>
-
-
-
-
-    <br><br><br>
-
-    <!-------------------------------------------------->
-    <!-------------------------------------------------->
-    <!-------------------- RESULTS --------------------->
-    <div id="result-card-container" style="display:none " class="text-center">
-
-
-      <!-- Explaining results -->
-      <h2 id="results-header">Results</h2>
-
-      <p>
-        Your silence and violence scores give you a measure of <br>
-        how frequently you fall into these less-than-perfect strategies.
-      </p>
-
-      <p>These scores represent how you may typically behave during stressful or crucial conversations, but they can
-        change.</p>
-
-      <br><br>
-      <b class="text-center" style="color: red;">Your score DOES NOT represent an inalterable character trait or a genetic propensity.</b>
-      <p>It's merely a measure of your behavior and you can change that.</p>
-
-      <br><br>
-
-
-
-
-      <!-- Boostrap row object that will contain 2 col-sm objects -->
-      <div class=" row">
-
-
-
-
-        <br>
-        <br>
-
-
-        <!---------------------- SILENCE ----------------------->
-        <div class="col-sm text-center d-flex flex-column align-items-center">
-          <h3>Silence</h3>
-          <div class="card result-card flex-grow-1 mr-2">
-
-
-            <!-- Thumbnail image -->
-            <img class="card-img-top" src="./images/silence.png" alt="Card image cap">
-            <div class="card-body">
-
-              <!-- Masking -->
-              <div id="masking-div">
-                <p>Masking <i class="fas fa-info-circle info-icon" data-category="masking"></i></p>
-                <input type="checkbox" id="q-5" name="" value="">
-                <input type="checkbox" id="q-6" name="" value="">
-                <p id="masking-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- Avoiding -->
-              <div id="avoiding-div">
-                <p>Avoiding <i class="fas fa-info-circle info-icon" data-category="avoiding"></i></p>
-                <input type="checkbox" id="q-3" name="" value="">
-                <input type="checkbox" id="q-4" name="" value="">
-                <p id="avoiding-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- Withdrawing -->
-              <div id="withdrawing-div">
-                <p>Withdrawing <i class="fas fa-info-circle info-icon" data-category="withdrawing"></i></p>
-                <input type="checkbox" id="q-1" name="" value="">
-                <input type="checkbox" id="q-2" name="" value="">
-                <p id="withdrawing-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- start w the heart -->
-              <div id="heart-div">
-                <p>Start with the heart <i class="fas fa-info-circle info-icon" data-category="heart"></i></p>
-                <input type="checkbox" id="q-13" name="" value="">
-                <input type="checkbox" id="q-19" name="" value="">
-                <input type="checkbox" id="q-25" name="" value="">
-                <p id="heart-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- Learn to look -->
-              <div id="look-div">
-                <p>Learn to look <i class="fas fa-info-circle info-icon" data-category="look"></i></p>
-                <input type="checkbox" id="q-14" name="" value="">
-                <input type="checkbox" id="q-20" name="" value="">
-                <input type="checkbox" id="q-26" name="" value="">
-                <p id="look-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- Make it safe -->
-              <div id="safe-div">
-                <p>Make it safe <i class="fas fa-info-circle info-icon" data-category="safe"></i></p>
-                <input type="checkbox" id="q-15" name="" value="">
-                <input type="checkbox" id="q-21" name="" value="">
-                <input type="checkbox" id="q-27" name="" value="">
-                <p id="safe-pct">0%</p>
-              </div>
-              <hr>
-
-
-
-              <!-- Master my stories -->
-              <div id="stories-div">
-                <p>Master my stories <i class="fas fa-info-circle info-icon" data-category="stories"></i></p>
-                <input type="checkbox" id="q-16" name="" value="">
-                <input type="checkbox" id="q-22" name="" value="">
-                <input type="checkbox" id="q-28" name="" value="">
-                <p id="stories-pct">0%</p>
-              </div>
-
+            <div class="question-card">
+                <p id="question-text">
+                    Welcome!<br>
+                    Please press "Begin" to start the quiz.<br>
+                    (33 Questions)
+                </p>
             </div>
 
-          </div>
-
+            <!-- Answer Buttons -->
+            <div class="button-container">
+                <button id="true-button" onclick="pressTrue()" aria-label="Answer True">True</button>
+                <button id="false-button" onclick="pressFalse()" aria-label="Answer False">False</button>
+            </div>
         </div>
 
+        <!-- Begin Button -->
+        <div class="text-center my-3">
+            <button id="begin-button" onclick="startQuiz()">Begin</button>
+        </div>
 
-        <!----------------- VIOLENCE ------------------->
-        <div class="col-sm text-center d-flex flex-column align-items-center">
-          <h3>Violence</h3>
+        <!-- Debug -->
+        <div id="list-of-answers">
+            <h4>Answered True</h4>
+            <p id="answered-true">[ ]</p>
+        </div>
 
-          <div class="card result-card flex-grow-1 ml-2">
+        <!-- Progress Bar -->
+        <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+            <div id="quiz-progress" class="progress-bar"></div>
+            <span id="quiz-progress-text">0%</span>
+        </div>
 
-            <!-- Thumbnail image -->
-            <img class="card-img-top" src="./images/violence.png" alt="Card image cap">
-            <div class="card-body">
+        <!-- Scroll to Results Button -->
+        <div class="text-center" style="margin-top: 20px;">
+            <button id="scroll-to-results" aria-label="Scroll to results">&#8595;</button>
+        </div>
 
-              <!-- Controlling -->
-              <div id="controlling-div">
-                <p>Controlling <i class="fas fa-info-circle info-icon" data-category="controlling"></i></p>
-                <input type="checkbox" id="q-7" name="" value="">
-                <input type="checkbox" id="q-8" name="" value="">
-                <p id="controlling-pct">0%</p>
-              </div>
+        <!-- Results Section -->
+        <div id="result-card-container" class="text-center">
+            <h2 id="results-header">Results</h2>
 
-              <hr>
+            <p>Your silence and violence scores give you a measure of how frequently you fall into these less-than-perfect strategies.</p>
+            <p>These scores represent how you may typically behave during stressful or crucial conversations, but they can change.</p>
 
+            <br>
+            <b style="color: #ef4444;">Your score DOES NOT represent an inalterable character trait or a genetic propensity.</b>
+            <p>It's merely a measure of your behavior and you can change that.</p>
+            <br><br>
 
-              <!-- Labeling -->
-              <div id="labeling-div">
-                <p>Labeling <i class="fas fa-info-circle info-icon" data-category="labeling"></i></p>
-                <input type="checkbox" id="q-9" name="" value="">
-                <input type="checkbox" id="q-10" name="" value="">
-                <p id="labeling-pct">0%</p>
-              </div>
+            <!-- Result Cards Row -->
+            <div class="row g-4">
+                <!-- Silence Card -->
+                <div class="col-sm-12 col-md-6 d-flex flex-column align-items-center">
+                    <h3 class="mb-3">Silence</h3>
+                    <div class="result-card">
+                        <img class="card-img-top" src="./images/silence.png" alt="Silence">
+                        <div class="card-body">
+                            <div id="masking-div">
+                                <p>Masking <i class="fas fa-info-circle info-icon" data-category="masking"></i></p>
+                                <input type="checkbox" id="q-5">
+                                <input type="checkbox" id="q-6">
+                                <p id="masking-pct">0%</p>
+                            </div>
+                            <hr>
 
-              <hr>
+                            <div id="avoiding-div">
+                                <p>Avoiding <i class="fas fa-info-circle info-icon" data-category="avoiding"></i></p>
+                                <input type="checkbox" id="q-3">
+                                <input type="checkbox" id="q-4">
+                                <p id="avoiding-pct">0%</p>
+                            </div>
+                            <hr>
 
+                            <div id="withdrawing-div">
+                                <p>Withdrawing <i class="fas fa-info-circle info-icon" data-category="withdrawing"></i></p>
+                                <input type="checkbox" id="q-1">
+                                <input type="checkbox" id="q-2">
+                                <p id="withdrawing-pct">0%</p>
+                            </div>
+                            <hr>
 
-              <!-- Attacking -->
-              <div id="attacking-div">
-                <p>Attacking <i class="fas fa-info-circle info-icon" data-category="attacking"></i></p>
-                <input type="checkbox" id="q-11" name="" value="">
-                <input type="checkbox" id="q-12" name="" value="">
-                <p id="attacking-pct">0%</p>
-              </div>
+                            <div id="heart-div">
+                                <p>Start with the heart <i class="fas fa-info-circle info-icon" data-category="heart"></i></p>
+                                <input type="checkbox" id="q-13">
+                                <input type="checkbox" id="q-19">
+                                <input type="checkbox" id="q-25">
+                                <p id="heart-pct">0%</p>
+                            </div>
+                            <hr>
 
-              <hr>
+                            <div id="look-div">
+                                <p>Learn to look <i class="fas fa-info-circle info-icon" data-category="look"></i></p>
+                                <input type="checkbox" id="q-14">
+                                <input type="checkbox" id="q-20">
+                                <input type="checkbox" id="q-26">
+                                <p id="look-pct">0%</p>
+                            </div>
+                            <hr>
 
+                            <div id="safe-div">
+                                <p>Make it safe <i class="fas fa-info-circle info-icon" data-category="safe"></i></p>
+                                <input type="checkbox" id="q-15">
+                                <input type="checkbox" id="q-21">
+                                <input type="checkbox" id="q-27">
+                                <p id="safe-pct">0%</p>
+                            </div>
+                            <hr>
 
-              <!-- STATE my path -->
-              <div id="state-div">
-                <p>STATE my path <i class="fas fa-info-circle info-icon" data-category="state"></i></p>
-                <input type="checkbox" id="q-17" name="" value="">
-                <input type="checkbox" id="q-23" name="" value="">
-                <input type="checkbox" id="q-29" name="" value="">
-                <p id="state-pct">0%</p>
-              </div>
-
-              <hr>
-
-
-              <!-- Explore Others' Paths -->
-              <div id="explore-div">
-                <p>Explore Others' Paths <i class="fas fa-info-circle info-icon" data-category="explore"></i></p>
-                <input type="checkbox" id="q-18" name="" value="">
-                <input type="checkbox" id="q-24" name="" value="">
-                <input type="checkbox" id="q-30" name="" value="">
-                <p id="explore-pct">0%</p>
-              </div>
-
-              <hr>
-
-              <!-- Move to action -->
-              <div id="action-div">
-                <p>Move to action <i class="fas fa-info-circle info-icon" data-category="action"></i></p>
-                <div class="justify-content-center">
-                  <input type="checkbox" id="q-31" name="" value="">
-                  <input type="checkbox" id="q-32" name="" value="">
-                  <input type="checkbox" id="q-33" name="" value="">
-                  <p id="action-pct">0%</p>
+                            <div id="stories-div">
+                                <p>Master my stories <i class="fas fa-info-circle info-icon" data-category="stories"></i></p>
+                                <input type="checkbox" id="q-16">
+                                <input type="checkbox" id="q-22">
+                                <input type="checkbox" id="q-28">
+                                <p id="stories-pct">0%</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
 
-              <br><br><br><br><br>
+                <!-- Violence Card -->
+                <div class="col-sm-12 col-md-6 d-flex flex-column align-items-center">
+                    <h3 class="mb-3">Violence</h3>
+                    <div class="result-card">
+                        <img class="card-img-top" src="./images/violence.png" alt="Violence">
+                        <div class="card-body">
+                            <div id="controlling-div">
+                                <p>Controlling <i class="fas fa-info-circle info-icon" data-category="controlling"></i></p>
+                                <input type="checkbox" id="q-7">
+                                <input type="checkbox" id="q-8">
+                                <p id="controlling-pct">0%</p>
+                            </div>
+                            <hr>
 
+                            <div id="labeling-div">
+                                <p>Labeling <i class="fas fa-info-circle info-icon" data-category="labeling"></i></p>
+                                <input type="checkbox" id="q-9">
+                                <input type="checkbox" id="q-10">
+                                <p id="labeling-pct">0%</p>
+                            </div>
+                            <hr>
+
+                            <div id="attacking-div">
+                                <p>Attacking <i class="fas fa-info-circle info-icon" data-category="attacking"></i></p>
+                                <input type="checkbox" id="q-11">
+                                <input type="checkbox" id="q-12">
+                                <p id="attacking-pct">0%</p>
+                            </div>
+                            <hr>
+
+                            <div id="state-div">
+                                <p>STATE my path <i class="fas fa-info-circle info-icon" data-category="state"></i></p>
+                                <input type="checkbox" id="q-17">
+                                <input type="checkbox" id="q-23">
+                                <input type="checkbox" id="q-29">
+                                <p id="state-pct">0%</p>
+                            </div>
+                            <hr>
+
+                            <div id="explore-div">
+                                <p>Explore Others' Paths <i class="fas fa-info-circle info-icon" data-category="explore"></i></p>
+                                <input type="checkbox" id="q-18">
+                                <input type="checkbox" id="q-24">
+                                <input type="checkbox" id="q-30">
+                                <p id="explore-pct">0%</p>
+                            </div>
+                            <hr>
+
+                            <div id="action-div">
+                                <p>Move to action <i class="fas fa-info-circle info-icon" data-category="action"></i></p>
+                                <input type="checkbox" id="q-31">
+                                <input type="checkbox" id="q-32">
+                                <input type="checkbox" id="q-33">
+                                <p id="action-pct">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
+            <br><br>
 
+            <!-- Conclusion -->
+            <div id="conclusion">
+                <p>Save and/or share results:</p>
+                <button id="copy-results" class="btn btn-primary" style="background-color: var(--rhyto-green); border-color: var(--rhyto-green);">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
 
-          </div>
+                <br><br>
+
+                <p>We have a tool that can help you:</p>
+                <p><a href="https://www.amazon.ca/Crucial-Conversations-Talking-Stakes-Second/dp/0071771328"
+                    target="_blank" rel="noopener noreferrer" style="color: var(--rhyto-green); font-weight: 600;">
+                    Crucial Conversations
+                </a></p>
+            </div>
         </div>
-
-
-
-
-
-
-
-      </div>
-
-      <br><br><br><br>
-
-     
-
-
-
-
-      <div id="conclusion">
-
-        <p>Save and/or share results:</p>
-        <button id="copy-results" class="btn btn-primary"><i class="fas fa-copy"></i> Copy</button>
-
-        <br><br>
-
-        <p>We have a tool that can help you:</p>
-        <p><a href="https://www.amazon.ca/Crucial-Conversations-Talking-Stakes-Second/dp/0071771328">Crucial
-            Conversations</a></p>
-
-
-       <!------------------------------------>
-      <!------------------------------------>
-      <!------------------------------------>
-      <!-- FEATURE TO BE RELEASED 
-       
-      <div class="row">
-
-        <h3>
-          Share Results with someone you want to connect with
-        </h3>
-
-      </div>
-    -->
-      <!------------------------------------>
-      <!------------------------------------>
-      <!------------------------------------>
-
-
-      </div>
-      <!-- END -->
-
-
-
     </div>
 
-
-
-
-
-
-
-
-
+    <!-- Modals -->
     <div id="info-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2 id="modal-title"></h2>
-        <p id="modal-description"></p>
-        <h3>Common Logical Fallacies:</h3>
-        <ul id="modal-fallacies"></ul>
-      </div>
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+            <h3>Common Logical Fallacies:</h3>
+            <ul id="modal-fallacies"></ul>
+        </div>
     </div>
 
     <div id="exit-quiz-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Are you sure you want to exit the quiz?</h2>
-        <p>Your progress will not be saved.</p>
-        <button id="confirm-exit-button" class="btn btn-danger">Yes, exit</button>
-        <button id="cancel-exit-button" class="btn btn-secondary">No, stay</button>
-      </div>
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Are you sure you want to exit the quiz?</h2>
+            <p>Your progress will not be saved.</p>
+            <button id="confirm-exit-button" class="btn btn-danger">Yes, exit</button>
+            <button id="cancel-exit-button" class="btn btn-secondary">No, stay</button>
+        </div>
     </div>
 
     <div id="why-benefit-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Why this quiz can benefit you</h2>
-        <ul>
-          <li>Understand your communication style under stress.</li>
-          <li>Improve relationships and achieve your goals.</li>
-          <li>Make conscious choices for more productive conversations.</li>
-        </ul>
-        <p style="text-align: center; font-weight: bold;">Best of all, it's <span style="color: red;">FREE</span>!</p>
-      </div>
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Why this quiz can benefit you</h2>
+            <ul>
+                <li>Understand your communication style under stress</li>
+                <li>Improve relationships and achieve your goals</li>
+                <li>Make conscious choices for more productive conversations</li>
+            </ul>
+            <p style="text-align: center; font-weight: bold;">Best of all, it's <span style="color: #ef4444;">FREE</span>!</p>
+        </div>
     </div>
 
-</body>
+    <!-- Footer -->
+    <footer>
+        <p>Inspired by Crucial Conversation's various authors</p>
+        <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All Rights Reserved</p>
+    </footer>
 
-
-<!-- Jquery library to make things simpler -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Quiz script -->
-<script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
 var answeredTrue = [];
 var answeredFalse = [];
 var currentQuestion = 0;
-var questionStatus = new Array(33).fill(0); // 0 for unanswered, 1 for true, 2 for false
+var questionStatus = new Array(33).fill(0);
 
-
-//TEST RESULT PERCENTAGES
-//silence
-var masking_pct=0;
-var avoiding_pct=0;
-var look_pct=0;
-var withdrawing_pct=0;
-var heart_pct=0;
-var look_pct=0;
-var safe_pct=0;
-var stories_pct=0;
-//violence
-var controlling_pct=0;
-var labeling_pct=0;
-var attacking_pct=0;
-var state_pct=0;
-var explore_pct=0;
-var action_pct=0;
-
-
-
-/**
- * 
- * Fucntion called when the quiz begins
- * Hides the vbegin button and reveals the 1st Q
- * and TRUE and FALSE buttons
- * 
- */
 function startQuiz() {
-  //HIDE begin button
   document.getElementById("begin-button").style.display = "none";
-
-  //SHOW TRUE and False buttons
-  document.getElementById("true-button").style.display = "block";
-  document.getElementById("false-button").style.display = "block";
-
-
-  // Show the question HR
+  document.getElementById("true-button").style.display = "flex";
+  document.getElementById("false-button").style.display = "flex";
   document.getElementById("question-hr").style.display = "block";
 
-  // Generate the question grid
   const gridContainer = document.getElementById("question-grid");
   for (let i = 1; i <= 33; i++) {
     const button = document.createElement("button");
@@ -821,95 +901,49 @@ function startQuiz() {
     gridContainer.appendChild(button);
   }
 
-  //progress bar style style="width: 100%"
-
-  //first question
   currentQuestion = 1;
   setQuestionText();
-
-
-
-  //DEBUG:
-  console.log(calculatePCT('masking'));
 }
 
-/**
- * 
- * Adds question number to list of
- * 
- * ANSWERED TRUE
- * 
- */
 function setAnsweredTrueText() {
   document.getElementById("answered-true").innerHTML = answeredTrue.toString();
-
 }
 
-/**
- * 
- * Sets question text
- * 
- * 
- */
 function setQuestionText() {
-  //update quiz progress bar
   const answeredQuestions = questionStatus.filter(status => status !== 0).length;
   const percentage = (answeredQuestions / 33) * 100;
   document.getElementById("quiz-progress").style.width = percentage + "%";
   document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
 
-    //update trues
-    setAnsweredTrueText();
-
-  // setQuestionText should only display the current question, not end the quiz
-  document.getElementById("question-text").innerHTML =
-    questions[currentQuestion - 1];
-
-  document.getElementById("question-number").innerHTML =
-    'Question '+currentQuestion;
+  setAnsweredTrueText();
+  document.getElementById("question-text").innerHTML = questions[currentQuestion - 1];
+  document.getElementById("question-number").innerHTML = 'Question ' + currentQuestion;
 }
-//
+
 function pressTrue() {
   questionStatus[currentQuestion - 1] = 1;
   document.getElementById(`grid-btn-${currentQuestion}`).classList.add('true');
   document.getElementById(`grid-btn-${currentQuestion}`).classList.remove('false');
 
-  //push into list
   if (!answeredTrue.includes(currentQuestion)) {
     answeredTrue.push(currentQuestion);
   }
-  
-  //Jquery
+
   answeredTrue.forEach(setCheckboxValueChecked);
-
-  //this method doest work
   document.getElementById("q-"+currentQuestion).checked = true;
-
-  //Checkbox marked
-  //document.getElementById("Q" + currentQuestion + "-answer").checked = true;
-
   findNextQuestion();
 }
 
-/**
- * 
- * Simply proceed to next question 
- * since there are no more computations to be done 
- * for Qs answered FALSE
- * 
- */ 
 function pressFalse() {
   questionStatus[currentQuestion - 1] = 2;
   document.getElementById(`grid-btn-${currentQuestion}`).classList.add('false');
   document.getElementById(`grid-btn-${currentQuestion}`).classList.remove('true');
-  
-  //remove from answeredTrue if it exists
+
   const index = answeredTrue.indexOf(currentQuestion);
   if (index > -1) {
     answeredTrue.splice(index, 1);
   }
   document.getElementById("q-"+currentQuestion).checked = false;
-
   findNextQuestion();
 }
 
@@ -921,7 +955,6 @@ function jumpToQuestion(questionNumber) {
 function findNextQuestion() {
   let nextQuestion = questionStatus.indexOf(0);
   if (nextQuestion === -1) {
-    // All questions answered, update progress bar one last time
     const answeredQuestions = questionStatus.filter(status => status !== 0).length;
     const percentage = (answeredQuestions / 33) * 100;
     document.getElementById("quiz-progress").style.width = percentage + "%";
@@ -933,56 +966,31 @@ function findNextQuestion() {
   }
 }
 
-//JQuery setting checkbox
 function setCheckboxValueChecked(id) {
-  $('#' + id).prop('checked', true);
+  $('#q-' + id).prop('checked', true);
 }
 
-function endQuestion(id){
-  $('#' + id).prop('disabled', true);
-}
-
-
-/**
- * 
- * Removes the T/F buttons from the page
- * 
- **/ 
 function endQuiz() {
-
-  //Make true and false buttons disappear
   document.getElementById("begin-button").style.display = "none";
   document.getElementById("true-button").style.display = "none";
   document.getElementById("false-button").style.display = "none";
-
   document.getElementById("question-hr").style.display = "none";
-  document.getElementById("question-text").innerHTML =  "Please see your results below:"
-  
-  
-  //show the scores calculated
-  calculateResults();
+  document.getElementById("question-text").innerHTML = "Please see your results below:";
 
-  //Display results panel
+  calculateResults();
   document.getElementById("result-card-container").style.display = "block";
 
-  // Disable all checkboxes in the result section
   const resultCheckboxes = document.querySelectorAll("#result-card-container input[type='checkbox']");
   resultCheckboxes.forEach(checkbox => {
     checkbox.disabled = true;
   });
 
-  // Display the scroll to results button
   document.getElementById("scroll-to-results").style.display = "block";
-
 }
 
-// 
 function calculateResults() {
-
-  //show results
   document.getElementById("result-card-container").style.display = "block";
-  
-  //7 silence categories
+
   document.getElementById("masking-pct").innerHTML = calculatePCT("masking");
   document.getElementById("avoiding-pct").innerHTML = calculatePCT('avoiding');
   document.getElementById("withdrawing-pct").innerHTML = calculatePCT('withdrawing');
@@ -990,69 +998,25 @@ function calculateResults() {
   document.getElementById("look-pct").innerHTML = calculatePCT('look');
   document.getElementById("safe-pct").innerHTML = calculatePCT('safe');
   document.getElementById("stories-pct").innerHTML = calculatePCT('stories');
-
-
-  //6 viloence categories
   document.getElementById("controlling-pct").innerHTML = calculatePCT('controlling');
   document.getElementById("labeling-pct").innerHTML = calculatePCT('labeling');
   document.getElementById("attacking-pct").innerHTML = calculatePCT('attacking');
   document.getElementById("state-pct").innerHTML = calculatePCT('state');
   document.getElementById("explore-pct").innerHTML = calculatePCT('explore');
   document.getElementById("action-pct").innerHTML = calculatePCT('action');
-
 }
 
-/**
- * 
- * 
- * 
- * 
- * 
- * @param {*} category 
- * @returns 
- */
 function calculatePCT(category) {
-  // finding the div given the category using jQuery
   const $div = $('#' + category + '-div');
-
-  // count of checked inputs in the given category
   const count = $div.find('input:checked').length;
   const total = $div.find('input').length;
-
-  // Debug
-  console.log('count: ' + count);
-  console.log('total: ' + total);
-
-  // calculate percent of checked boxes
   var pct = (count / total) * 100;
 
-  // RETURNS SCORE FOR GIVEN CATEGORY
-
-  // Debug: log result
-  console.log(pct + '%');
-
-  if(pct < 34){
-    return 'Unlikely';
-  }
-  if(pct >=50 ){
-    return 'Fairly often';
-  }
-  else{
-    return pct + '%';
-  }
+  if(pct < 34) return 'Unlikely';
+  if(pct >= 50) return 'Fairly often';
+  return pct + '%';
 }
 
-
-/**
- * 
- * Event listener to all input elements and listens for the "change" event.
- * When an input is checked or unchecked, it sets or removes the 
- * checked attribute accordingly. It then calls the calculatePCT() function 
- * with the category of the input's parent element (based on the element's ID), 
- * which should recalculate the percent and update the UI.
- * 
- * (Listens for "change" event on all input elements)
- */
 const inputs = document.querySelectorAll("input");
 inputs.forEach(input => {
   input.addEventListener("change", function() {
@@ -1061,12 +1025,10 @@ inputs.forEach(input => {
     } else {
       this.removeAttribute("checked");
     }
-    calculatePCT(this.parentElement.id.split("-")[0]); // Recalculate percent
+    calculatePCT(this.parentElement.id.split("-")[0]);
   });
 });
 
-
-//33 questions
 const questions = [
   "At times I avoid situations that might bring me into contact with people I'm having problems with.",
   "I have put off returning phone calls or emails because I simply didn't want to deal with the person who sent them.",
@@ -1077,12 +1039,12 @@ const questions = [
   "In order to get my point across, I sometimes exaggerate my side of the argument.",
   "If I seem to be losing control of a conversation, I might cut people off or change the subject in order to bring it back to where I think it should be.",
   "When others make points that seem stupid to me, I sometimes let them know it without holding back at all.",
-  "When I'm stunned by a comment, sometimes I say things that others might take as forceful or attack-ing_-comments such as 'Give me a break!' or 'That's ridiculous!'",
+  "When I'm stunned by a comment, sometimes I say things that others might take as forceful or attacking comments such as 'Give me a break!' or 'That's ridiculous!'",
   "Sometimes when things get heated, I move from arguing against others' points to saying things that might hurt them personally.",
   "If I get into a heated discussion, I've been known to be tough on the other person. In fact, the person might feel a bit insulted or hurt.",
   "When I'm discussing an important topic with others, sometimes I move from trying to make my point to trying to win the battle.",
   "In the middle of a tough conversation, I often get so caught up in arguments that I don't see how I'm coming across to others.",
-  "When talking gets tough and I do something hurt-ful, I'm quick to apologize for mistakes.",
+  "When talking gets tough and I do something hurtful, I'm quick to apologize for mistakes.",
   "When I think about a conversation that took a bad turn, I tend to focus first on what I did that was wrong rather than focus on others' mistakes.",
   "When I've got something to say that others might not want to hear, I avoid starting out with tough conclusions, and instead start with facts that help them understand where I'm coming from.",
   "I can tell very quickly when others are holding back or feeling defensive in a conversation.",
@@ -1090,124 +1052,28 @@ const questions = [
   "When conversations aren't working, I step back from the fray, think about what's happening, and take steps to make it better.",
   "When others get defensive because they misunderstand me, I quickly get us back on track by clarifying what I do and don't mean.",
   "There are some people I'm rough on because, to be honest, they need or deserve what I give them",
-  "I sometimes make absolute statements like 'The fact is ___ ' or 'It's obvious that ___ ' to be sure I get my point across.",
+  "I sometimes make absolute statements like 'The fact is ___' or 'It's obvious that ___' to be sure I get my point across.",
   "If others hesitate to share their views, I sincerely invite them to say what's on their mind, no matter what it is.",
   "At times I argue hard for my view--hoping to keep others from bringing up opinions that would be a waste of energy to discuss.",
   "Even when things get tense, I adapt quickly to how others are responding to me and try a new strategy.",
-  "When I find that I'm at cross-purposes with some-one, I often keep trying to win my way rather than looking for common ground.",
+  "When I find that I'm at cross-purposes with someone, I often keep trying to win my way rather than looking for common ground.",
   "When things don't go well, I'm more inclined to see the mistakes others made than notice my own role.",
   "After I share strong opinions, I go out of my way to invite others to share their views, particularly opposing ones.",
   "When others hesitate to share their views, I do whatever I can to make it safe for them to speak honestly.",
   "Sometimes I have to discuss things I thought had been settled because I don't keep track of what was discussed before.",
-  "I find myself in situations where people get their feelings hurt because they thought they would have more of a say in final decisions than they end uphaving.",
+  "I find myself in situations where people get their feelings hurt because they thought they would have more of a say in final decisions than they end up having.",
   "I get frustrated sometimes at how long it takes some groups to make decisions because too many people are involved.",
 ];
+    </script>
 
-
-
-// Show length in log
-console.log(questions.length);
-</script>
-<script>
-  document.getElementById("scroll-to-results").addEventListener("click", function() {
+    <script>
+document.getElementById("scroll-to-results").addEventListener("click", function() {
     document.getElementById("results-header").scrollIntoView({ behavior: 'smooth' });
-  });
-</script>
+});
+    </script>
 
-<script>
-  document.getElementById("copy-results").addEventListener("click", function() {
-    let resultsText = "Style Under Stress Test Results\n\n";
-    resultsText += "***Your score DOES NOT represent an inalterable character trait or a genetic propensity. It's merely a measure of your behavior and you can change that.***\n\n";
-    
-    // Silence Categories
-    resultsText += "--- SILENCE ---\n\n";
-    resultsText += "Masking: " + document.getElementById("masking-pct").textContent + "\n";
-    resultsText += categoryInfo.masking.description + "\n";
-    if (categoryInfo.masking.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.masking.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    resultsText += "Avoiding: " + document.getElementById("avoiding-pct").textContent + "\n";
-    resultsText += categoryInfo.avoiding.description + "\n";
-    if (categoryInfo.avoiding.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.avoiding.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    resultsText += "Withdrawing: " + document.getElementById("withdrawing-pct").textContent + "\n";
-    resultsText += categoryInfo.withdrawing.description + "\n";
-    if (categoryInfo.withdrawing.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.withdrawing.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    // Violence Categories
-    resultsText += "--- VIOLENCE ---\n\n";
-    resultsText += "Controlling: " + document.getElementById("controlling-pct").textContent + "\n";
-    resultsText += categoryInfo.controlling.description + "\n";
-    if (categoryInfo.controlling.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.controlling.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    resultsText += "Labeling: " + document.getElementById("labeling-pct").textContent + "\n";
-    resultsText += categoryInfo.labeling.description + "\n";
-    if (categoryInfo.labeling.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.labeling.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    resultsText += "Attacking: " + document.getElementById("attacking-pct").textContent + "\n";
-    resultsText += categoryInfo.attacking.description + "\n";
-    if (categoryInfo.attacking.fallacies.length > 0) {
-      resultsText += "Common Logical Fallacies: " + categoryInfo.attacking.fallacies.join(", ") + "\n";
-    }
-    resultsText += "\n";
-
-    // Healthy Communication Categories
-    resultsText += "--- HEALTHY COMMUNICATION ---\n\n";
-    resultsText += "Start with the heart: " + document.getElementById("heart-pct").textContent + "\n";
-    resultsText += categoryInfo.heart.description + "\n\n";
-
-    resultsText += "Learn to look: " + document.getElementById("look-pct").textContent + "\n";
-    resultsText += categoryInfo.look.description + "\n\n";
-
-    resultsText += "Make it safe: " + document.getElementById("safe-pct").textContent + "\n";
-    resultsText += categoryInfo.safe.description + "\n\n";
-
-    resultsText += "Master my stories: " + document.getElementById("stories-pct").textContent + "\n";
-    resultsText += categoryInfo.stories.description + "\n\n";
-
-    resultsText += "STATE my path: " + document.getElementById("state-pct").textContent + "\n";
-    resultsText += categoryInfo.state.description + "\n\n";
-
-    resultsText += "Explore Others' Paths: " + document.getElementById("explore-pct").textContent + "\n";
-    resultsText += categoryInfo.explore.description + "\n\n";
-
-    resultsText += "Move to action: " + document.getElementById("action-pct").textContent + "\n";
-    resultsText += categoryInfo.action.description + "\n\n";
-
-    navigator.clipboard.writeText(resultsText).then(function() {
-      alert("Results copied to clipboard!");
-    }, function(err) {
-      alert("Could not copy results to clipboard.");
-    });
-  });
-</script>
-
-  <footer>
-    <p>Inspired by Crucial Conversation's various authors</p>
-    <br>
-    <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All Rights Reserved</p>
-  </footer>
-
-<script>
-  document.getElementById("current-year").textContent = new Date().getFullYear();
-</script>
-
-<script>
-  const fallacyDescriptions = {
+    <script>
+const fallacyDescriptions = {
     "Straw Man": "Misrepresenting or exaggerating an opponent's argument to make it easier to attack.",
     "Equivocation": "Using a word or phrase with multiple meanings to mislead or create confusion.",
     "Red Herring": "Introducing an irrelevant topic into an argument to divert attention from the main issue.",
@@ -1218,206 +1084,233 @@ console.log(questions.length);
     "Ad Hominem": "Attacking the person making the argument rather than the argument itself.",
     "Genetic Fallacy": "Dismissing or validating an argument based on its source or origin, rather than its content.",
     "Appeal to Spite": "Using spite or ill will to support or reject a claim, rather than logic."
-  };
+};
 
-  const categoryInfo = {
+const categoryInfo = {
     masking: {
-      title: "Masking (Silence)",
-      description: "Understating or selectively showing your true opinions. Sarcasm, sugarcoating, and couching are common forms of masking.",
-      fallacies: ["Straw Man", "Equivocation"]
+        title: "Masking (Silence)",
+        description: "Understating or selectively showing your true opinions. Sarcasm, sugarcoating, and couching are common forms of masking.",
+        fallacies: ["Straw Man", "Equivocation"]
     },
     avoiding: {
-      title: "Avoiding (Silence)",
-      description: "Steering completely away from sensitive subjects. You talk, but without addressing the real issues.",
-      fallacies: ["Red Herring", "Changing the Subject"]
+        title: "Avoiding (Silence)",
+        description: "Steering completely away from sensitive subjects. You talk, but without addressing the real issues.",
+        fallacies: ["Red Herring", "Changing the Subject"]
     },
     withdrawing: {
-      title: "Withdrawing (Silence)",
-      description: "Pulling out of a conversation completely. You either exit the conversation or exit the room.",
-      fallacies: ["Appeal to Emotion (Silence)", "Argument from Ignorance"]
+        title: "Withdrawing (Silence)",
+        description: "Pulling out of a conversation completely. You either exit the conversation or exit the room.",
+        fallacies: ["Appeal to Emotion (Silence)", "Argument from Ignorance"]
     },
     heart: {
-      title: "Start with the Heart",
-      description: "This is a healthy communication skill. It means staying focused on what you really want, and not getting sidetracked by wanting to win, punish, or keep the peace.",
-      fallacies: []
+        title: "Start with the Heart",
+        description: "This is a healthy communication skill. It means staying focused on what you really want, and not getting sidetracked by wanting to win, punish, or keep the peace.",
+        fallacies: []
     },
     look: {
-      title: "Learn to Look",
-      description: "This is a healthy communication skill. It means paying attention to when a conversation becomes crucial, and recognizing when safety is at risk.",
-      fallacies: []
+        title: "Learn to Look",
+        description: "This is a healthy communication skill. It means paying attention to when a conversation becomes crucial, and recognizing when safety is at risk.",
+        fallacies: []
     },
     safe: {
-      title: "Make it Safe",
-      description: "This is a healthy communication skill. It means creating an environment of mutual respect and purpose where everyone feels comfortable contributing.",
-      fallacies: []
+        title: "Make it Safe",
+        description: "This is a healthy communication skill. It means creating an environment of mutual respect and purpose where everyone feels comfortable contributing.",
+        fallacies: []
     },
     stories: {
-      title: "Master My Stories",
-      description: "This is a healthy communication skill. It means managing your own emotions and the narratives you create about others.",
-      fallacies: []
+        title: "Master My Stories",
+        description: "This is a healthy communication skill. It means managing your own emotions and the narratives you create about others.",
+        fallacies: []
     },
     controlling: {
-      title: "Controlling (Violence)",
-      description: "Coercing others to your way of thinking. You might do this by either forcing your views on others or dominating the conversation.",
-      fallacies: ["Appeal to Force", "Ad Hominem"]
+        title: "Controlling (Violence)",
+        description: "Coercing others to your way of thinking. You might do this by either forcing your views on others or dominating the conversation.",
+        fallacies: ["Appeal to Force", "Ad Hominem"]
     },
-  labeling: {
-      title: "Labeling (Violence)",
-      description: "Dismissing someone by attaching a label to them. This is a way of stereotyping or categorizing people so you can dismiss them.",
-      fallacies: ["Ad Hominem", "Genetic Fallacy"]
+    labeling: {
+        title: "Labeling (Violence)",
+        description: "Dismissing someone by attaching a label to them. This is a way of stereotyping or categorizing people so you can dismiss them.",
+        fallacies: ["Ad Hominem", "Genetic Fallacy"]
     },
     attacking: {
-      title: "Attacking (Violence)",
-      description: "You move from winning the argument to making the other person suffer. Tactics include belittling and threatening.",
-      fallacies: ["Ad Hominem", "Appeal to Spite"]
+        title: "Attacking (Violence)",
+        description: "You move from winning the argument to making the other person suffer. Tactics include belittling and threatening.",
+        fallacies: ["Ad Hominem", "Appeal to Spite"]
     },
     state: {
-      title: "STATE My Path",
-      description: "This is a healthy communication skill. It's a set of skills for sharing your views, even when they are controversial or unpopular.",
-      fallacies: []
+        title: "STATE My Path",
+        description: "This is a healthy communication skill. It's a set of skills for sharing your views, even when they are controversial or unpopular.",
+        fallacies: []
     },
     explore: {
-      title: "Explore Others' Paths",
-      description: "This is a healthy communication skill. It means actively listening to and understanding others' perspectives.",
-      fallacies: []
+        title: "Explore Others' Paths",
+        description: "This is a healthy communication skill. It means actively listening to and understanding others' perspectives.",
+        fallacies: []
     },
-  action: {
-      title: "Move to Action",
-      description: "This is a healthy communication skill. It means translating discussions into clear decisions and commitments.",
-      fallacies: []
+    action: {
+        title: "Move to Action",
+        description: "This is a healthy communication skill. It means translating discussions into clear decisions and commitments.",
+        fallacies: []
     }
-  };
+};
 
-  const modal = document.getElementById("info-modal");
-  const modalTitle = document.getElementById("modal-title");
-  const modalDescription = document.getElementById("modal-description");
-  const modalFallacies = document.getElementById("modal-fallacies");
-  const closeButton = document.querySelector(".close-button");
+const modal = document.getElementById("info-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalDescription = document.getElementById("modal-description");
+const modalFallacies = document.getElementById("modal-fallacies");
 
-  document.querySelectorAll(".info-icon").forEach(icon => {
+document.querySelectorAll(".info-icon").forEach(icon => {
     icon.addEventListener("click", function() {
-      const category = this.dataset.category;
-      const info = categoryInfo[category];
+        const category = this.dataset.category;
+        const info = categoryInfo[category];
 
-      modalTitle.textContent = info.title;
-      modalDescription.textContent = info.description;
-      
-      modalFallacies.innerHTML = "";
-      if (info.fallacies.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "None";
-        modalFallacies.appendChild(li);
-      } else {
-        info.fallacies.forEach(fallacy => {
-          const li = document.createElement("li");
-          li.innerHTML = `<b>${fallacy}:</b> ${fallacyDescriptions[fallacy]}`;
-          modalFallacies.appendChild(li);
-        });
-      }
+        modalTitle.textContent = info.title;
+        modalDescription.textContent = info.description;
 
-      modal.style.display = "block";
+        modalFallacies.innerHTML = "";
+        if (info.fallacies.length === 0) {
+            const li = document.createElement("li");
+            li.textContent = "None";
+            modalFallacies.appendChild(li);
+        } else {
+            info.fallacies.forEach(fallacy => {
+                const li = document.createElement("li");
+                li.innerHTML = `<b>${fallacy}:</b> ${fallacyDescriptions[fallacy]}`;
+                modalFallacies.appendChild(li);
+            });
+        }
+
+        modal.style.display = "block";
     });
-  });
+});
 
-  closeButton.addEventListener("click", function() {
-    modal.style.display = "none";
-  });
+document.querySelectorAll(".close-button").forEach(btn => {
+    btn.addEventListener("click", function() {
+        this.closest(".modal").style.display = "none";
+    });
+});
 
-  window.addEventListener("click", function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+window.addEventListener("click", function(event) {
+    if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
     }
-  });
-</script>
+});
+    </script>
 
-<script>
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const body = document.body;
-  const darkModeIcon = document.getElementById('darkModeIcon');
+    <script>
+document.getElementById("copy-results").addEventListener("click", function() {
+    let resultsText = "Style Under Stress Test Results\n\n";
+    resultsText += "***Your score DOES NOT represent an inalterable character trait or a genetic propensity. It's merely a measure of your behavior and you can change that.***\n\n";
 
-  // Function to set the icon based on dark mode state
-  function setDarkModeIcon() {
+    resultsText += "--- SILENCE ---\n\n";
+    resultsText += "Masking: " + document.getElementById("masking-pct").textContent + "\n";
+    resultsText += categoryInfo.masking.description + "\n\n";
+    resultsText += "Avoiding: " + document.getElementById("avoiding-pct").textContent + "\n";
+    resultsText += categoryInfo.avoiding.description + "\n\n";
+    resultsText += "Withdrawing: " + document.getElementById("withdrawing-pct").textContent + "\n";
+    resultsText += categoryInfo.withdrawing.description + "\n\n";
+
+    resultsText += "--- VIOLENCE ---\n\n";
+    resultsText += "Controlling: " + document.getElementById("controlling-pct").textContent + "\n";
+    resultsText += categoryInfo.controlling.description + "\n\n";
+    resultsText += "Labeling: " + document.getElementById("labeling-pct").textContent + "\n";
+    resultsText += categoryInfo.labeling.description + "\n\n";
+    resultsText += "Attacking: " + document.getElementById("attacking-pct").textContent + "\n";
+    resultsText += categoryInfo.attacking.description + "\n\n";
+
+    resultsText += "--- HEALTHY COMMUNICATION ---\n\n";
+    resultsText += "Start with the heart: " + document.getElementById("heart-pct").textContent + "\n";
+    resultsText += categoryInfo.heart.description + "\n\n";
+    resultsText += "Learn to look: " + document.getElementById("look-pct").textContent + "\n";
+    resultsText += categoryInfo.look.description + "\n\n";
+    resultsText += "Make it safe: " + document.getElementById("safe-pct").textContent + "\n";
+    resultsText += categoryInfo.safe.description + "\n\n";
+    resultsText += "Master my stories: " + document.getElementById("stories-pct").textContent + "\n";
+    resultsText += categoryInfo.stories.description + "\n\n";
+    resultsText += "STATE my path: " + document.getElementById("state-pct").textContent + "\n";
+    resultsText += categoryInfo.state.description + "\n\n";
+    resultsText += "Explore Others' Paths: " + document.getElementById("explore-pct").textContent + "\n";
+    resultsText += categoryInfo.explore.description + "\n\n";
+    resultsText += "Move to action: " + document.getElementById("action-pct").textContent + "\n";
+    resultsText += categoryInfo.action.description + "\n\n";
+
+    navigator.clipboard.writeText(resultsText).then(function() {
+        alert("Results copied to clipboard!");
+    }, function(err) {
+        alert("Could not copy results to clipboard.");
+    });
+});
+    </script>
+
+    <script>
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+const darkModeIcon = document.getElementById('darkModeIcon');
+
+function setDarkModeIcon() {
     if (body.classList.contains('dark-mode')) {
-      darkModeIcon.classList.remove('fa-moon');
-      darkModeIcon.classList.add('fa-sun');
+        darkModeIcon.classList.remove('fa-moon');
+        darkModeIcon.classList.add('fa-sun');
     } else {
-      darkModeIcon.classList.remove('fa-sun');
-      darkModeIcon.classList.add('fa-moon');
+        darkModeIcon.classList.remove('fa-sun');
+        darkModeIcon.classList.add('fa-moon');
     }
-  }
+}
 
-  // Check for user's preferred mode in localStorage
-  if (localStorage.getItem('darkMode') === null) {
-    // Default to dark mode if no preference is saved
+if (localStorage.getItem('darkMode') === null) {
     localStorage.setItem('darkMode', 'enabled');
     body.classList.add('dark-mode');
     darkModeToggle.checked = true;
-  } else if (localStorage.getItem('darkMode') === 'enabled') {
+} else if (localStorage.getItem('darkMode') === 'enabled') {
     body.classList.add('dark-mode');
     darkModeToggle.checked = true;
-  } else {
+} else {
     body.classList.remove('dark-mode');
     darkModeToggle.checked = false;
-  }
-  setDarkModeIcon(); // Set initial icon
+}
+setDarkModeIcon();
 
-  darkModeToggle.addEventListener('change', () => {
+darkModeToggle.addEventListener('change', () => {
     if (darkModeToggle.checked) {
-      body.classList.add('dark-mode');
-      localStorage.setItem('darkMode', 'enabled');
+        body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'enabled');
     } else {
-      body.classList.remove('dark-mode');
-      localStorage.setItem('darkMode', 'disabled');
+        body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'disabled');
     }
-    setDarkModeIcon(); // Update icon after change
-  });
-</script>
+    setDarkModeIcon();
+});
+    </script>
 
-<script>
-  const whyBenefitModal = document.getElementById("why-benefit-modal");
-  const whyBenefitHeader = document.getElementById("why-benefit-header");
-  const whyBenefitCloseButton = whyBenefitModal.querySelector(".close-button");
+    <script>
+const whyBenefitModal = document.getElementById("why-benefit-modal");
+const whyBenefitHeader = document.getElementById("why-benefit-header");
 
-  whyBenefitHeader.addEventListener("click", function() {
+whyBenefitHeader.addEventListener("click", function() {
     whyBenefitModal.style.display = "block";
-  });
+});
+    </script>
 
-  whyBenefitCloseButton.addEventListener("click", function() {
-    whyBenefitModal.style.display = "none";
-  });
+    <script>
+const exitQuizModal = document.getElementById("exit-quiz-modal");
+const confirmExitButton = document.getElementById("confirm-exit-button");
+const cancelExitButton = document.getElementById("cancel-exit-button");
 
-  window.addEventListener("click", function(event) {
-    if (event.target == whyBenefitModal) {
-      whyBenefitModal.style.display = "none";
-    }
-  });
-</script>
-
-<script>
-  const exitQuizModal = document.getElementById("exit-quiz-modal");
-  const confirmExitButton = document.getElementById("confirm-exit-button");
-  const cancelExitButton = document.getElementById("cancel-exit-button");
-  const exitQuizCloseButton = exitQuizModal.querySelector(".close-button");
-
-  function showExitQuizModal() {
+function showExitQuizModal() {
     exitQuizModal.style.display = "block";
-  }
+}
 
-  confirmExitButton.addEventListener("click", function() {
+confirmExitButton.addEventListener("click", function() {
     window.location.href = "index.html";
-  });
+});
 
-  cancelExitButton.addEventListener("click", function() {
+cancelExitButton.addEventListener("click", function() {
     exitQuizModal.style.display = "none";
-  });
+});
+    </script>
 
-  exitQuizCloseButton.addEventListener("click", function() {
-    exitQuizModal.style.display = "none";
-  });
-
-  window.addEventListener("click", function(event) {
-    if (event.target == exitQuizModal) {
-      exitQuizModal.style.display = "none";
-    }
-  });
-</script>
+    <script>
+document.getElementById("current-year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

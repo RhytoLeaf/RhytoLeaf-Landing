@@ -10,128 +10,114 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
+        /* CSS Variables */
         :root {
-            --rhytoleaf-green: #00CE7C;
+            --rhyto-green: #00CE7C;
+            --rhyto-green-hover: #00b56d;
+            --rhyto-green-dark: #009d5e;
         }
 
         [data-theme="dark"] {
-            --background-rgb: 29, 30, 34;
-            --text-color: white;
-            --primary-rgb: 0, 206, 124;
+            --background-start: #0f2027;
+            --background-mid: #203a43;
+            --background-end: #2c5364;
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.15);
         }
 
         [data-theme="light"] {
-            --background-rgb: 245, 245, 220;
-            --text-color: black;
-            --primary-rgb: 0, 206, 124;
+            --background-start: #e0f7fa;
+            --background-mid: #b2ebf2;
+            --background-end: #80deea;
+            --text-color: #1a1a1a;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: rgb(var(--background-rgb));
+            background: linear-gradient(135deg, var(--background-start), var(--background-mid), var(--background-end));
+            background-attachment: fixed;
             color: var(--text-color);
             font-family: "Montserrat", sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .quiz-container {
-            text-align: center;
-        }
-
-        #quote-display {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        #dictation-board {
-            width: 80%;
-            height: 150px;
-            font-size: 1.2rem;
             padding: 1rem;
-            border-radius: 0.5rem;
-            border: 2px solid rgb(var(--primary-rgb));
-            background-color: rgba(var(--primary-rgb), 0.1);
+            overflow-x: hidden;
+        }
+
+        /* Glass Effect */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header Section */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
             color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
 
-        #timer {
-            font-size: 2rem;
-            margin-top: 2rem;
-            color: var(--rhytoleaf-green);
+        .back-button:hover {
+            color: var(--rhyto-green);
         }
 
-        #start-btn {
-            background-color: var(--rhytoleaf-green);
-            color: white;
-            font-size: 1.2rem;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            margin-top: 2rem;
-        }
-        
-        #pass-btn {
-            background-color: orange;
-            color: white;
-            font-size: 1.2rem;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            margin-top: 2rem;
-            margin-left: 1rem; /* To separate it from the start button */
-        }
-        
-        .correct {
-            color: var(--rhytoleaf-green);
-        }
-
-        #accuracy {
-            font-size: 1.5rem;
-            margin-top: 2rem;
-            color: var(--rhytoleaf-green);
-        }
-
-        #score {
-            font-size: 1.5rem;
-            margin-top: 1rem;
-            color: var(--text-color);
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
         }
 
         .logo-container {
-            padding: 1rem;
+            flex: 1;
+            text-align: center;
         }
 
         .rhyto-logo {
-            width: 50px;
+            width: 60px;
             height: auto;
+            transition: transform 0.3s ease;
+            border-radius: 20%;
         }
 
-        .modal-content {
-            background-color: rgb(var(--background-rgb));
-            color: var(--text-color);
+        .rhyto-logo:hover {
+            transform: scale(1.1);
         }
 
-        .modal-header {
-            border-bottom: 1px solid #444;
-        }
-
-        .modal-footer {
-            border-top: 1px solid #444;
-        }
-
+        /* Theme Switch */
         .theme-switch-wrapper {
             display: flex;
             align-items: center;
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
         }
+
         .theme-switch {
             display: inline-block;
             height: 34px;
@@ -140,7 +126,7 @@
         }
 
         .theme-switch input {
-            display:none;
+            display: none;
         }
 
         .slider {
@@ -151,7 +137,8 @@
             position: absolute;
             right: 0;
             top: 0;
-            transition: .4s;
+            transition: 0.4s;
+            border-radius: 34px;
         }
 
         .slider:before {
@@ -161,128 +148,423 @@
             height: 26px;
             left: 4px;
             position: absolute;
-            transition: .4s;
+            transition: 0.4s;
             width: 26px;
+            border-radius: 50%;
         }
 
         input:checked + .slider {
-            background-color: var(--rhytoleaf-green);
+            background-color: var(--rhyto-green);
         }
 
         input:checked + .slider:before {
             transform: translateX(26px);
         }
 
-        .slider.round {
-            border-radius: 34px;
+        /* Main Quiz Container */
+        .quiz-container {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .slider.round:before {
-            border-radius: 50%;
+        .quiz-container h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: var(--rhyto-green);
+            font-weight: 700;
         }
 
-        a {
-            color: var(--rhytoleaf-green);
+        .quiz-container > p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            margin-bottom: 2rem;
+            color: var(--text-muted);
         }
 
+        .quiz-container > p a {
+            color: var(--rhyto-green);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .quiz-container > p a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Quote Display */
+        #quote-display {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        #quote-display span {
+            transition: color 0.2s ease;
+        }
+
+        .correct {
+            color: var(--rhyto-green) !important;
+            font-weight: 600;
+        }
+
+        /* Dictation Board */
+        #dictation-board {
+            width: 100%;
+            max-width: 800px;
+            height: clamp(120px, 20vh, 180px);
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid var(--rhyto-green);
+            background-color: rgba(0, 206, 124, 0.1);
+            color: var(--text-color);
+            margin: 0 auto 1.5rem;
+            resize: none;
+            font-family: "Montserrat", sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        #dictation-board:focus {
+            outline: none;
+            border-color: var(--rhyto-green-hover);
+            box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.2);
+        }
+
+        #dictation-board:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Stats Display */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        #timer {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--rhyto-green);
+            font-weight: 700;
+        }
+
+        #score {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        #accuracy {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--rhyto-green);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        #start-btn,
+        #pass-btn {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 140px;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        #start-btn {
+            background-color: var(--rhyto-green);
+            color: white;
+        }
+
+        #start-btn:hover:not(:disabled) {
+            background-color: var(--rhyto-green-hover);
+            transform: scale(1.05);
+        }
+
+        #start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #pass-btn {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        #pass-btn:hover:not(:disabled) {
+            background-color: #d97706;
+            transform: scale(1.05);
+        }
+
+        #pass-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .modal-body {
+            color: var(--text-color);
+        }
+
+        .modal-body ul {
+            text-align: left;
+        }
+
+        .btn-primary {
+            background-color: var(--rhyto-green);
+            border-color: var(--rhyto-green);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--rhyto-green-hover);
+            border-color: var(--rhyto-green-hover);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        /* Accessibility */
+        a:focus-visible,
+        button:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid var(--rhyto-green);
+            outline-offset: 4px;
+        }
+
+        /* Responsive Design - Mobile Portrait */
         @media (max-width: 768px) and (orientation: portrait) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .header-container {
+                padding: 0.5rem 0;
+            }
+
+            .back-button span {
+                display: none;
+            }
+
+            .rhyto-logo {
+                width: 50px;
+            }
+
             .quiz-container {
-                padding: 2vmin;
-            }
-
-            h1 {
-                font-size: 8vmin;
-            }
-
-            p {
-                font-size: 3.5vmin;
+                margin: 1rem auto;
             }
 
             #quote-display {
-                font-size: 4vmin;
+                padding: 1.5rem 1rem;
+                min-height: 80px;
             }
 
             #dictation-board {
-                width: 90%;
-                height: 20vh;
-                font-size: 3.5vmin;
+                padding: 1rem;
             }
 
-            #timer {
-                font-size: 6vmin;
+            .stats-container {
+                gap: 1rem;
             }
 
-            #start-btn, #pass-btn {
-                font-size: 4vmin;
-                padding: 2vmin 4vmin;
+            .button-container {
+                gap: 0.75rem;
+            }
+
+            #start-btn,
+            #pass-btn {
+                padding: 0.9rem 2rem;
+                min-width: 120px;
             }
         }
 
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-color);
+        /* Responsive Design - Mobile Landscape */
+        @media (max-width: 896px) and (orientation: landscape) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .header-container {
+                padding: 0.25rem 0;
+            }
+
+            .rhyto-logo {
+                width: 40px;
+            }
+
+            .quiz-container {
+                margin: 0.5rem auto;
+            }
+
+            .quiz-container h1 {
+                margin-bottom: 0.5rem;
+            }
+
+            .quiz-container > p {
+                margin-bottom: 1rem;
+            }
+
+            #quote-display {
+                padding: 1rem;
+                margin-bottom: 1rem;
+                min-height: 60px;
+            }
+
+            #dictation-board {
+                height: 80px;
+                margin-bottom: 1rem;
+                padding: 0.75rem;
+            }
+
+            .stats-container {
+                gap: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .button-container {
+                margin-top: 0.5rem;
+            }
+
+            #start-btn,
+            #pass-btn {
+                padding: 0.7rem 1.8rem;
+                min-width: 110px;
+            }
+
+            footer {
+                padding: 0.75rem 0;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Responsive Design - Desktop */
+        @media (min-width: 1024px) {
+            .header-container {
+                padding: 1.5rem 0;
+            }
+
+            .quiz-container {
+                margin: 3rem auto;
+            }
+
+            #quote-display {
+                padding: 2.5rem;
+            }
+
+            #dictation-board {
+                padding: 2rem;
+            }
+
+            .stats-container {
+                gap: 3rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" />
-            <div class="slider round"></div>
-        </label>
-    </div>
-    <div class="logo-container text-center">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#homeModal">
-            <img src="./images/logo-icon.png" alt="RhytoLeaf Logo" class="rhyto-logo">
+    <!-- Header with Back Button, Logo, and Theme Switch -->
+    <div class="header-container">
+        <a href="index.html" class="back-button" aria-label="Back to home">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span>Back to Home</span>
         </a>
-    </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="homeModal" tabindex="-1" aria-labelledby="homeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="homeModalLabel">Return to Home</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to return to the home page? Your progress will be lost.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="index.html" class="btn btn-primary">Return to Home</a>
-                </div>
-            </div>
+        <div class="logo-container">
+            <img src="./images/logo-icon.png" alt="RhytoLeaf Logo" class="rhyto-logo">
+        </div>
+
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox" aria-label="Toggle theme">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider"></div>
+            </label>
         </div>
     </div>
+
+    <!-- Main Quiz Container -->
     <div class="quiz-container">
         <h1>SpeedScript</h1>
-        <p>Type the following quotes as fast and accurately as you can. <br><a href="#" data-bs-toggle="modal" data-bs-target="#whyModal">Why?</a></p>
-        <div id="quote-display"></div>
-        <textarea id="dictation-board" autofocus></textarea>
-        <div id="timer">90.000</div>
-        <div id="score">Score: 0</div>
-        <button id="start-btn">Start</button>
-        <button id="pass-btn">Pass</button>
+        <p>Type the following quotes as fast and accurately as you can. <a href="#" data-bs-toggle="modal" data-bs-target="#whyModal">Why?</a></p>
+
+        <div id="quote-display" class="glass"></div>
+
+        <textarea id="dictation-board" autofocus aria-label="Type the quote here"></textarea>
+
+        <div class="stats-container">
+            <div id="timer">90.000s</div>
+            <div id="score">Score: 0</div>
+        </div>
+
+        <div class="button-container">
+            <button id="start-btn" aria-label="Start the typing test">Start</button>
+            <button id="pass-btn" aria-label="Skip to next quote">Pass</button>
+        </div>
     </div>
 
     <!-- Why Modal -->
     <div class="modal fade" id="whyModal" tabindex="-1" aria-labelledby="whyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="whyModalLabel">Why SpeedScript?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>This quiz helps you:</p>
+                    <p>This typing test helps you:</p>
                     <ul>
-                        <li>Calculate your typing speed (WPM) in 90 seconds.</li>
-                        <li>Improve typing accuracy and efficiency.</li>
-                        <li>Enhance productivity and communication skills.</li>
-                        <li>Focus on content, not just typing mechanics.</li>
+                        <li>Calculate your typing speed (WPM) in 90 seconds</li>
+                        <li>Improve typing accuracy and efficiency</li>
+                        <li>Enhance productivity and communication skills</li>
+                        <li>Focus on content, not just typing mechanics</li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -291,6 +573,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All rights reserved.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
@@ -320,9 +607,9 @@
         const passBtn = document.getElementById('pass-btn');
         const accuracyDisplay = document.createElement('div');
         accuracyDisplay.id = 'accuracy';
-        document.querySelector('.quiz-container').appendChild(accuracyDisplay);
+        document.querySelector('.stats-container').appendChild(accuracyDisplay);
         const scoreDisplay = document.getElementById('score');
-        passBtn.disabled = true; // Disable pass button initially
+        passBtn.disabled = true;
 
         let timer;
         let timeLeft = 90;
@@ -330,7 +617,7 @@
         let quizQuotes = [];
         let totalChars = 0;
         let correctChars = 0;
-        let score = 0; // Initialize score
+        let score = 0;
         let startTime;
 
         function shuffle(array) {
@@ -355,11 +642,11 @@
             quizQuotes = getQuizQuotes();
             totalChars = 0;
             correctChars = 0;
-            score = 0; // Reset score
-            scoreDisplay.innerText = `Score: ${score}`; // Display initial score
+            score = 0;
+            scoreDisplay.innerText = `Score: ${score}`;
             accuracyDisplay.innerText = '';
             dictationBoard.disabled = false;
-            passBtn.disabled = false; // Enable pass button when game starts
+            passBtn.disabled = false;
             startTime = new Date();
             nextQuote();
             startTimer();
@@ -397,12 +684,14 @@
             clearInterval(timer);
             dictationBoard.disabled = true;
             startBtn.disabled = false;
-            passBtn.disabled = true; // Disable pass button when game ends
+            passBtn.disabled = true;
             if (disqualified) {
-                accuracyDisplay.innerText = "Disqualified for cheating.";
+                accuracyDisplay.innerText = "Disqualified";
+                accuracyDisplay.style.color = '#ef4444';
             } else {
                 const accuracy = totalChars > 0 ? (correctChars / totalChars) * 100 : 0;
                 accuracyDisplay.innerText = `Accuracy: ${accuracy.toFixed(2)}%`;
+                accuracyDisplay.style.color = 'var(--rhyto-green)';
             }
         }
 
@@ -434,15 +723,14 @@
             });
 
             if (dictationBoard.value.length >= quote.length && allCorrect) {
-                score++; // Increment score
-                scoreDisplay.innerText = `Score: ${score}`; // Display updated score
-                quizQuotes.shift(); // Remove the completed quote
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                quizQuotes.shift();
                 nextQuote();
             }
 
-            // WPM calculation
-            const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
-            const wordsTyped = dictationBoard.value.length / 5; // average word length is 5
+            const timeElapsed = (new Date() - startTime) / 1000 / 60;
+            const wordsTyped = dictationBoard.value.length / 5;
             const wpm = wordsTyped / timeElapsed;
             if (wpm > 200) {
                 endGame(true);
@@ -453,7 +741,6 @@
             const input = dictationBoard.value;
             const currentInputLength = input.length;
 
-            // Prevent typing incorrect characters
             const quoteUpToCurrentChar = quote.substring(0, currentInputLength);
             if (input !== quoteUpToCurrentChar) {
                 if (e.key !== 'Backspace') {
@@ -461,7 +748,6 @@
                 }
             }
 
-            // Prevent backspacing over correct characters
             if (e.key === 'Backspace' && currentInputLength > 0) {
                 const charToDelete = input[currentInputLength - 1];
                 const correspondingQuoteChar = quote[currentInputLength - 1];
@@ -476,8 +762,8 @@
 
         passBtn.addEventListener('click', () => {
             if (quizQuotes.length > 0) {
-                const passedQuote = quizQuotes.shift(); // Take the first quote
-                quizQuotes.push(passedQuote); // Add it to the end
+                const passedQuote = quizQuotes.shift();
+                quizQuotes.push(passedQuote);
                 nextQuote();
             }
         });
@@ -487,20 +773,16 @@
         function switchTheme(e) {
             if (e.target.checked) {
                 document.documentElement.setAttribute('data-theme', 'light');
-            }
-            else {
+            } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
             }
         }
 
         toggleSwitch.addEventListener('change', switchTheme, false);
 
-        document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
     </script>
-    <footer>
-        <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All rights reserved.</p>
-    </footer>
 </body>
 </html>

@@ -1,103 +1,369 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wuxi - Collaborative movie discovery and viewing platform. Search and explore movies with enhanced accessibility features.">
 
     <link rel="icon" type="image/png" href="./images/logo-icon.png">
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Wuxi we watch?</title>
+    <title>Wuxi - Collaborative Viewing</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        :root {
+            --rhyto-green: #00CE7C;
+            --rhyto-green-hover: #00b56d;
+            --rhyto-green-dark: #009d5e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: "Montserrat", sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* Glass effect */
+        .glass {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Logo styling */
+        .logo-container img {
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+            border-radius: 20%;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Search input */
+        #search {
+            transition: all 0.3s ease;
+        }
+
+        #search:focus {
+            ring-color: var(--rhyto-green);
+            box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.3);
+        }
+
+        /* Movie cards */
+        .movie-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 206, 124, 0.2);
+        }
+
+        .movie-card img {
+            transition: transform 0.3s ease;
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Rating badges */
+        .rating-high {
+            background-color: var(--rhyto-green);
+        }
+
+        .rating-medium {
+            background-color: #f59e0b;
+        }
+
+        .rating-low {
+            background-color: #ef4444;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--rhyto-green);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--rhyto-green-hover);
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #ef4444;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dc2626;
+            transform: scale(1.05);
+        }
+
+        /* Loading state */
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--rhyto-green);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Overview animation */
+        .overview {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Scrollbar styling */
+        .overview::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .overview::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .overview::-webkit-scrollbar-thumb {
+            background: var(--rhyto-green);
+            border-radius: 10px;
+        }
+
+        /* Accessibility */
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--rhyto-green);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+
+        /* Responsive typography */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.875rem;
+            }
+
+            .logo-container img {
+                max-width: 150px;
+            }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(255, 255, 255, 0.6);
         }
     </style>
 
 </head>
 
-<body class="bg-gray-800 text-white">
+<body class="text-white">
+
+    <!-- Back to home button -->
+    <div class="container mx-auto px-4 pt-6">
+        <a href="index.html" class="inline-flex items-center text-white hover:text-green-400 transition-colors" aria-label="Back to home">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            <span class="font-semibold">Back to Home</span>
+        </a>
+    </div>
 
     <div class="container mx-auto px-4 py-8">
+        <!-- Logo and Header -->
         <div class="text-center mb-8">
-            <img src="./images/wuxi-logo.png" alt="Wuxi Logo" class="w-1/3 mx-auto rounded-[22.5%]">
+            <div class="logo-container inline-block mb-6">
+                <img src="./images/wuxi-logo.png" alt="Wuxi Logo">
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--rhyto-green);">Wuxi</h1>
         </div>
 
-        <header class="flex justify-center mb-8">
-            <form id="form" class="w-full max-w-sm">
-                <input type="text" id="search" placeholder="Search for a movie..." class="w-full bg-gray-700 text-white rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <!-- Search Form -->
+        <header class="flex justify-center mb-12">
+            <form id="form" class="w-full max-w-2xl">
+                <div class="relative">
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search for a movie..."
+                        class="w-full glass text-white rounded-full py-4 px-6 pr-12 focus:outline-none focus:ring-2"
+                        aria-label="Search for movies"
+                    >
+                    <button type="submit" class="absolute right-4 top-1/2 transform -translate-y-1/2" aria-label="Submit search">
+                        <svg class="w-6 h-6 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </div>
             </form>
         </header>
 
-        <h1 class="text-3xl font-bold text-center mb-8">Recent Releases</h1>
+        <!-- Section Title -->
+        <div class="mb-8">
+            <h2 id="section-title" class="text-3xl font-bold text-center">Recent Releases</h2>
+        </div>
 
-        <main id="main" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></main>
+        <!-- Loading State -->
+        <div id="loading" class="flex justify-center items-center py-20 hidden">
+            <div class="loading"></div>
+        </div>
+
+        <!-- Movies Grid -->
+        <main id="main" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></main>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state hidden">
+            <svg class="w-24 h-24 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+            </svg>
+            <p class="text-xl font-semibold">No movies found</p>
+            <p class="mt-2">Try searching for something else</p>
+        </div>
     </div>
 
-    <script>
-        const APIURL =
-            "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1";
-        const IMGPATH = "https://image.tmdb.org/t/p/w1280";
-        const SEARCHAPI =
-            "https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=";
+    <!-- Footer -->
+    <footer class="py-6 mt-12 text-center">
+        <p class="text-gray-400">&copy; 2026 RhytoLeaf Inc. All rights reserved.</p>
+    </footer>
 
+    <script>
+        // API Configuration
+        const APIURL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=1";
+        const IMGPATH = "https://image.tmdb.org/t/p/w500";
+        const SEARCHAPI = "https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=";
+
+        // DOM Elements
         const main = document.getElementById("main");
         const form = document.getElementById("form");
         const search = document.getElementById("search");
+        const loading = document.getElementById("loading");
+        const emptyState = document.getElementById("empty-state");
+        const sectionTitle = document.getElementById("section-title");
 
-        // initially get fav movies
+        // Initialize
         getMovies(APIURL);
 
+        // Fetch movies from API
         async function getMovies(url) {
-            const resp = await fetch(url);
-            const respData = await resp.json();
+            showLoading(true);
+            hideEmptyState();
 
-            console.log(respData);
+            try {
+                const resp = await fetch(url);
+                const respData = await resp.json();
 
-            showMovies(respData.results);
+                showLoading(false);
+
+                if (respData.results && respData.results.length > 0) {
+                    showMovies(respData.results);
+                } else {
+                    showEmptyState();
+                }
+            } catch (error) {
+                showLoading(false);
+                console.error('Error fetching movies:', error);
+                main.innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <p class="text-xl text-red-400">Error loading movies. Please try again later.</p>
+                    </div>
+                `;
+            }
         }
 
+        // Display movies
         function showMovies(movies) {
-            // clear main
             main.innerHTML = "";
 
             movies.forEach((movie) => {
                 const { poster_path, title, vote_average, overview } = movie;
 
+                // Skip movies without posters
+                if (!poster_path) return;
+
                 const movieEl = document.createElement("div");
-                movieEl.classList.add("bg-gray-700", "rounded-lg", "shadow-lg", "overflow-hidden", "relative", "group");
+                movieEl.classList.add(
+                    "movie-card",
+                    "glass",
+                    "rounded-lg",
+                    "overflow-hidden",
+                    "relative",
+                    "group"
+                );
 
                 movieEl.innerHTML = `
-                    <img
-                        src="${IMGPATH + poster_path}"
-                        alt="${title}"
-                        class="w-full"
-                    />
-                    <div class="p-4 flex justify-between items-center">
-                        <h3 class="font-bold">${title}</h3>
-                        <span class="font-bold py-1 px-2 rounded ${getClassByRate(
-                            vote_average
-                        )}">${vote_average}</span>
+                    <div class="overflow-hidden">
+                        <img
+                            src="${IMGPATH + poster_path}"
+                            alt="${title}"
+                            class="w-full h-auto"
+                            loading="lazy"
+                        />
                     </div>
-                    <div class="overview absolute top-0 left-0 w-full h-full bg-gray-800/80 text-white p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
-                        <h3 class="font-bold mb-2">Overview:</h3>
-                        <p>${overview}</p>
-                        <button class="read-aloud-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full mt-4">Read Aloud</button>
-                        <button class="stop-btn bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full mt-4 ml-2">Stop</button>
+                    <div class="p-4 flex justify-between items-center gap-2">
+                        <h3 class="font-bold text-sm md:text-base line-clamp-2 flex-1">${title}</h3>
+                        <span class="font-bold py-1 px-3 rounded-full text-white text-sm whitespace-nowrap ${getRatingClass(vote_average)}">
+                            ${vote_average.toFixed(1)}
+                        </span>
+                    </div>
+                    <div class="overview absolute top-0 left-0 w-full h-full bg-gray-900/95 text-white p-4 md:p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out overflow-y-auto">
+                        <h3 class="font-bold text-lg mb-3" style="color: var(--rhyto-green);">Overview</h3>
+                        <p class="text-sm leading-relaxed mb-4">${overview || 'No overview available.'}</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <button class="read-aloud-btn btn-primary text-white font-semibold py-2 px-4 rounded-full text-sm" aria-label="Read overview aloud">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                </svg>
+                                Read Aloud
+                            </button>
+                            <button class="stop-btn btn-secondary text-white font-semibold py-2 px-4 rounded-full text-sm" aria-label="Stop reading">
+                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                                </svg>
+                                Stop
+                            </button>
+                        </div>
                     </div>
                 `;
 
+                // Read aloud functionality
                 const readAloudBtn = movieEl.querySelector(".read-aloud-btn");
                 readAloudBtn.addEventListener("click", () => {
-                    const utterance = new SpeechSynthesisUtterance(overview);
+                    speechSynthesis.cancel(); // Stop any current speech
+                    const utterance = new SpeechSynthesisUtterance(overview || 'No overview available');
+                    utterance.rate = 0.9; // Slightly slower for clarity
                     speechSynthesis.speak(utterance);
                 });
 
+                // Stop speech functionality
                 const stopBtn = movieEl.querySelector(".stop-btn");
                 stopBtn.addEventListener("click", () => {
                     speechSynthesis.cancel();
@@ -107,26 +373,46 @@
             });
         }
 
-        function getClassByRate(vote) {
-            if (vote >= 8) {
-                return "bg-green-500";
-            } else if (vote >= 5) {
-                return "bg-orange-500";
-            } else {
-                return "bg-red-500";
-            }
+        // Get rating color class
+        function getRatingClass(vote) {
+            if (vote >= 8) return "rating-high";
+            if (vote >= 5) return "rating-medium";
+            return "rating-low";
         }
 
+        // Show/hide loading state
+        function showLoading(show) {
+            loading.classList.toggle("hidden", !show);
+            main.classList.toggle("hidden", show);
+        }
+
+        // Show/hide empty state
+        function showEmptyState() {
+            emptyState.classList.remove("hidden");
+            main.classList.add("hidden");
+        }
+
+        function hideEmptyState() {
+            emptyState.classList.add("hidden");
+            main.classList.remove("hidden");
+        }
+
+        // Form submission
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            const searchTerm = search.value;
+            const searchTerm = search.value.trim();
 
             if (searchTerm) {
+                sectionTitle.textContent = `Search Results for "${searchTerm}"`;
                 getMovies(SEARCHAPI + searchTerm);
-
                 search.value = "";
             }
+        });
+
+        // Clear speech on page unload
+        window.addEventListener("beforeunload", () => {
+            speechSynthesis.cancel();
         });
     </script>
 

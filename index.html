@@ -25,168 +25,389 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
  
  <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
+    /* ============================================
+       GLOBAL STYLES
+       ============================================ */
+    :root {
+      --rhyto-green: #00CE7C;
+      --rhyto-green-hover: #00b56d;
+      --rhyto-green-dark: #009d5e;
     }
 
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       THEME BACKGROUNDS
+       ============================================ */
+    [data-bs-theme="light"] body {
+      background: linear-gradient(135deg, #83a4d4, #b6fbff);
+      background-attachment: fixed;
+    }
+
+    [data-bs-theme="dark"] body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background-attachment: fixed;
+      color: #fff;
+    }
+
+    /* ============================================
+       GLASSMORPHISM EFFECT
+       ============================================ */
+    .glass {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .glass:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    [data-bs-theme="dark"] .glass {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    [data-bs-theme="dark"] .glass:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ============================================
+       LOGO & IMAGES
+       ============================================ */
+    .logo-main {
+      max-width: 180px;
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-main:hover {
+      transform: scale(1.05);
+    }
+
+    .app-logo {
+      width: 80px !important;
+      height: 80px !important;
+      object-fit: cover;
+      border-radius: 20%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .app-logo:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0, 206, 124, 0.3);
     }
 
     @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
+      .logo-main {
+        max-width: 220px;
+      }
+
+      .app-logo {
+        width: 100px !important;
+        height: 100px !important;
       }
     }
 
-    .b-example-vr {
-      flex-shrink: 0;
-      width: 1.5rem;
-      height: 100vh;
+    /* ============================================
+       VIEW SWITCHER
+       ============================================ */
+    .view-switch {
+      display: inline-flex;
+      border: 2px solid var(--rhyto-green);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
-    .bi {
-      vertical-align: -.125em;
-      fill: currentColor;
+    .view-switch i {
+      padding: 12px 16px;
+      cursor: pointer;
+      color: var(--rhyto-green);
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
     }
 
-    .nav-scroller {
-      position: relative;
-      z-index: 2;
-      height: 2.75rem;
-      overflow-y: hidden;
+    .view-switch i:hover:not(.active) {
+      background-color: rgba(0, 206, 124, 0.1);
     }
 
-    .nav-scroller .nav {
-      display: flex;
-      flex-wrap: nowrap;
-      padding-bottom: 1rem;
-      margin-top: -1px;
-      overflow-x: auto;
-      text-align: center;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
+    .view-switch i.active {
+      background-color: var(--rhyto-green);
+      color: white;
     }
 
-    .btn-bd-primary {
-      --bd-violet-bg: #712cf9;
-      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-      --bs-btn-font-weight: 600;
-      --bs-btn-color: var(--bs-white);
-      --bs-btn-bg: var(--bd-violet-bg);
-      --bs-btn-border-color: var(--bd-violet-bg);
-      --bs-btn-hover-color: var(--bs-white);
-      --bs-btn-hover-bg: #6528e0;
-      --bs-btn-hover-border-color: #6528e0;
-      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-      --bs-btn-active-color: var(--bs-btn-hover-color);
-      --bs-btn-active-bg: #5a23c8;
-      --bs-btn-active-border-color: #5a23c8;
-    }
-
-    .bd-mode-toggle {
-      z-index: 1500;
-    }
-  </style>
-
-
-  <style>
+    /* ============================================
+       APP LIST CONTAINER - GRID VIEW
+       ============================================ */
     #app-list-container.grid-view {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+      padding: 0 1rem;
     }
-
-
 
     #app-list-container.grid-view .container {
       margin: 0 !important;
       position: relative;
     }
 
-    #app-list-container.grid-view .text-muted {
-      display: block;
-      font-size: 0.8rem;
-      margin-bottom: 0;
+    #app-list-container.grid-view .text-center {
+      padding: 1.5rem 1rem;
     }
 
     #app-list-container.grid-view .text-body-emphasis {
       display: block;
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-
-
-
-
-    #app-list-container:not(.grid-view) .text-muted {
-      padding-bottom: 1rem;
-    }
-
-    #app-list-container:not(.grid-view) .text-center.bg-body-tertiary.rounded-3 {
-      padding-top: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      margin-top: 0.75rem;
     }
 
     #app-list-container.grid-view .container img {
-      width: 50% !important;
-      height: auto !important;
-      margin-top: 1rem;
+      width: auto !important;
+      margin-top: 0 !important;
     }
 
-    .view-switch {
-      display: inline-flex;
-      border: 1px solid #00CE7C; /* Changed to RhytoLeaf green */
-      border-radius: 5px;
-      overflow: hidden;
+    /* ============================================
+       APP LIST CONTAINER - LIST VIEW
+       ============================================ */
+    #app-list-container:not(.grid-view) {
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    .view-switch i {
-      padding: 10px;
-      cursor: pointer;
-      color: #00CE7C; /* Changed to RhytoLeaf green */
+    #app-list-container:not(.grid-view) .container {
+      margin-bottom: 2rem !important;
     }
 
-    .view-switch i.active {
-      background-color: #00CE7C; /* Changed to RhytoLeaf green */
-      color: white;
-    }
-  </style>
-  <!-- Custom styles for this template -->
-  <style>
-    [data-bs-theme="light"] body {
-      background: linear-gradient(to right, #83a4d4, #b6fbff);
+    #app-list-container:not(.grid-view) .text-center {
+      padding: 2rem;
     }
 
-    [data-bs-theme="dark"] body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #fff;
+    #app-list-container:not(.grid-view) .app-logo {
+      width: 120px !important;
+      height: 120px !important;
+      margin-bottom: 1rem;
     }
-    
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
+
+    #app-list-container:not(.grid-view) .text-body-emphasis {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    .display-5 {
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    #sparkle-word {
+      color: gold;
+      position: relative;
+      display: inline-block;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    /* ============================================
+       STEM ICONS
+       ============================================ */
+    .stem-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .stem-icons i {
+      font-size: 2rem;
+      color: var(--rhyto-green);
+      transition: transform 0.3s ease;
+    }
+
+    .stem-icons i:hover {
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    /* ============================================
+       THEME TOGGLE BUTTON
+       ============================================ */
+    .btn-bd-primary {
+      --bd-violet-bg: var(--rhyto-green);
+      --bd-violet-rgb: 0, 206, 124;
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: var(--rhyto-green-hover);
+      --bs-btn-hover-border-color: var(--rhyto-green-hover);
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: var(--rhyto-green-dark);
+      --bs-btn-active-border-color: var(--rhyto-green-dark);
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+
+    .bd-mode-toggle .btn {
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ============================================
+       SVG ICONS
+       ============================================ */
+    .bi {
+      vertical-align: -0.125em;
+      fill: currentColor;
+    }
+
+    /* ============================================
+       SPARKLE ANIMATION
+       ============================================ */
+    .sparkle {
+      position: absolute;
+      width: 0;
+      height: 0;
+      background: transparent;
+      border-radius: 0;
+      pointer-events: none;
+      border-right: 3px solid transparent;
+      border-bottom: 2px solid gold;
+      border-left: 3px solid transparent;
+      transform: rotate(35deg);
+    }
+
+    .sparkle:before {
+      border-bottom: 3px solid gold;
+      border-left: 1px solid transparent;
+      border-right: 1px solid transparent;
+      position: absolute;
+      height: 0;
+      width: 0;
+      top: -1.5px;
+      left: -2.5px;
+      display: block;
+      content: '';
+      transform: rotate(-35deg);
+    }
+
+    .sparkle:after {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: -3px;
+      width: 0;
+      height: 0;
+      border-right: 3px solid transparent;
+      border-bottom: 2px solid gold;
+      border-left: 3px solid transparent;
+      transform: rotate(-70deg);
+      content: '';
+    }
+
+    /* ============================================
+       FOOTER
+       ============================================ */
+    footer {
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px); /* For Safari */
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      -webkit-backdrop-filter: blur(10px);
     }
-    
-    [data-bs-theme="dark"] .glass {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* ============================================
+       RESPONSIVE DESIGN
+       ============================================ */
+    @media (max-width: 576px) {
+      .display-5 {
+        font-size: 2rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      #app-list-container.grid-view {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+      }
+
+      .view-switch i {
+        padding: 10px 14px;
+        font-size: 1rem;
+      }
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+    .section-spacing {
+      margin: 3rem 0;
+    }
+
+    .transition-smooth {
+      transition: all 0.3s ease;
+    }
+
+    /* ============================================
+       ACCESSIBILITY
+       ============================================ */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--rhyto-green);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--rhyto-green);
+      outline-offset: 2px;
     }
   </style>
   <link href="jumbotrons.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -296,14 +517,14 @@
   </svg>
 
   <!-- MAIN JUMBO  -->
-  <div class="my-5">
+  <div class="section-spacing">
     <div class="p-5 text-center glass">
       <div class="container py-5">
-        <!-- <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100">
-          <use xlink:href="#bootstrap" /></svg> -->
-        <a href="index.html"><img src="./images/logo-icon.png" width="20%" height="auto" alt="RhytoLeaf Logo"></a>
-        <h1 class="text-body-emphasis" style="font-size: 3rem;">RhytoLeaf</h1>
-        <p class="col-lg-8 mx-auto lead">
+        <a href="index.html" aria-label="RhytoLeaf Home">
+          <img src="./images/logo-icon.png" class="logo-main" alt="RhytoLeaf Logo">
+        </a>
+        <h1 class="text-body-emphasis mt-4" style="font-size: clamp(2rem, 5vw, 3.5rem);">RhytoLeaf</h1>
+        <p class="col-lg-8 mx-auto lead mt-3">
           Cultivating Innovators: One <span id="sparkle-word">App</span> at a Time
         </p>
       </div>
@@ -313,214 +534,146 @@
 
 
 
-  <!-- MISSSION STATEMENT -->
-  <div class="my-5">
-
+  <!-- MISSION STATEMENT -->
+  <div class="section-spacing">
     <div class="p-5 text-center glass">
-
       <div class="container py-5">
-
-        <h2 class="display-5 fw-bold text-body-emphasis">WE</h2>
-
-        <p class="lead mb-4">are on a mission to enhance the human experience through the development of applications to
-          apply STEM <br>(Science, Technology,
-          Engineering, and Mathematics) in our daily lives.<br> <i class="fas fa-flask" style="padding: 0.5rem;"></i> <i class="fas fa-microchip" style="padding: 0.5rem;"></i> <i class="fas fa-hard-hat" style="padding: 0.5rem;"></i> <i class="fas fa-calculator" style="padding: 0.5rem;"></i> <br><br>Our goal is to seamlessly integrate STEM concepts,
-          to inspire curiosity and foster
-          understanding. </p>
-
+        <h2 class="display-5 fw-bold text-body-emphasis mb-4">WE</h2>
+        <p class="lead mb-3">
+          are on a mission to enhance the human experience through the development of applications to
+          apply <strong>STEM</strong> (Science, Technology, Engineering, and Mathematics) in our daily lives.
+        </p>
+        <div class="stem-icons">
+          <i class="fas fa-flask" aria-label="Science"></i>
+          <i class="fas fa-microchip" aria-label="Technology"></i>
+          <i class="fas fa-hard-hat" aria-label="Engineering"></i>
+          <i class="fas fa-calculator" aria-label="Mathematics"></i>
+        </div>
+        <p class="lead mt-4">
+          Our goal is to seamlessly integrate STEM concepts, to inspire curiosity and foster understanding.
+        </p>
       </div>
-
     </div>
+  </div>
 
-  <div class="container text-center my-5">
-    <div id="view-switch" class="view-switch">
-      <i class="fas fa-list"></i>
-      <i class="fas fa-th active"></i>
+  <div class="text-center section-spacing">
+    <div id="view-switch" class="view-switch" role="group" aria-label="View switcher">
+      <i class="fas fa-list" role="button" tabindex="0" aria-label="List view"></i>
+      <i class="fas fa-th active" role="button" tabindex="0" aria-label="Grid view"></i>
     </div>
   </div>
 
 <div id="app-list-container" class="grid-view">
 
-
-  <!-- REGULAR JUMBO -->
-      <div class="container my-5">
-        <div class="text-center glass">
-          <a href="zeek.html" >
-            <img src="./images/zeek-logo.jpg" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Zeek">
-          </a>
-          <h2 class="text-body-emphasis">Zeek</h2>
-          <p class="text-muted">
-          </p>
-          <br>
-        </div>
-      </div>
-
-<!-- REGULAR JUMBO -->
-      <div class="container my-5">
-        <div class="text-center glass">
-          <a href="shoganai.html" >
-            <img src="./images/shoganai-logo.jpg" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Shoganai">
-          </a>
-          <h2 class="text-body-emphasis">Shoganai</h2>
-          <p class="text-muted">
-          </p>
-          <br>
-        </div>
-      </div>
-
-    <!-- REGULAR JUMBO -->
-      <div class="container my-5">
-        <div class="text-center glass">
-          <a href="style-under-stress.html" >
-            <img src="./images/styleunderstress-logo.jpg" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Style Under Stress Logo">
-          </a>
-          <h2 class="text-body-emphasis">Style Under Stress</h2>
-          <p class="text-muted">
-          </p>
-          <br>
-        </div>
-      </div>
-
-  <!-- REGULAR JUMBO -->
-  <div class="container my-5">
+  <!-- Zeek -->
+  <div class="container">
     <div class="text-center glass">
-      <a href="speedscript.html">
-        <img src="./images/speedscript-logo.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="SpeedScript Logo">
+      <a href="zeek.html" aria-label="Zeek App">
+        <img src="./images/zeek-logo.jpg" class="app-logo" alt="Zeek">
+      </a>
+      <h2 class="text-body-emphasis">Zeek</h2>
+    </div>
+  </div>
+
+  <!-- Shoganai -->
+  <div class="container">
+    <div class="text-center glass">
+      <a href="shoganai.html" aria-label="Shoganai App">
+        <img src="./images/shoganai-logo.jpg" class="app-logo" alt="Shoganai">
+      </a>
+      <h2 class="text-body-emphasis">Shoganai</h2>
+    </div>
+  </div>
+
+  <!-- Style Under Stress -->
+  <div class="container">
+    <div class="text-center glass">
+      <a href="style-under-stress.html" aria-label="Style Under Stress App">
+        <img src="./images/styleunderstress-logo.jpg" class="app-logo" alt="Style Under Stress">
+      </a>
+      <h2 class="text-body-emphasis">Style Under Stress</h2>
+    </div>
+  </div>
+
+  <!-- SpeedScript -->
+  <div class="container">
+    <div class="text-center glass">
+      <a href="speedscript.html" aria-label="SpeedScript App">
+        <img src="./images/speedscript-logo.png" class="app-logo" alt="SpeedScript">
       </a>
       <h2 class="text-body-emphasis">SpeedScript</h2>
-      <p class="text-muted">
-      </p>
-      <br>
     </div>
   </div>
 
-    <!-- REGULAR JUMBO -->
-  <div class="container my-5">
+  <!-- Cache Hax -->
+  <div class="container">
     <div class="text-center glass">
-      <a href="cachehax.html">
-        <img src="./images/cache-hax-logo.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Cache Hax Logo">
+      <a href="cachehax.html" aria-label="Cache Hax App">
+        <img src="./images/cache-hax-logo.png" class="app-logo" alt="Cache Hax">
       </a>
       <h2 class="text-body-emphasis">Cache Hax</h2>
-      <p class="text-muted">
-      </p>
-      <br>
     </div>
   </div>
 
-  <!-- REGULAR JUMBO -->
-  <div class="container my-5">
+  <!-- Beebs -->
+  <div class="container">
     <div class="text-center glass">
-      <a href='https://appadvice.com/app/beebs/1247188870'>
-        <img src="./images/beebs.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Beebs App Logo">
+      <a href="https://appadvice.com/app/beebs/1247188870" target="_blank" rel="noopener noreferrer" aria-label="Beebs App">
+        <img src="./images/beebs.png" class="app-logo" alt="Beebs">
       </a>
       <h2 class="text-body-emphasis">Beebs</h2>
-      <p class="text-muted">
-      </p>
-      <br>
-
-
-
     </div>
-
   </div>
 
-  <!-- REGULAR JUMBO -->
-  <div class="container my-5">
-
+  <!-- Superchat -->
+  <div class="container">
     <div class="text-center glass">
-      <a href="https://rhyto-superchat.web.app">
-        <img src="./images/superchat-logo.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Superchat Logo">
+      <a href="https://rhyto-superchat.web.app" target="_blank" rel="noopener noreferrer" aria-label="Superchat App">
+        <img src="./images/superchat-logo.png" class="app-logo" alt="Superchat">
       </a>
       <h2 class="text-body-emphasis">Superchat</h2>
-      <p class="text-muted">
-      </p>
-      <br>
     </div>
-
   </div>
 
-  <!-- REGULAR JUMBO -->
-  <div class="container my-5">
+  <!-- Wuxi -->
+  <div class="container">
     <div class="text-center glass">
-      <a href="wuxi-we-watch.html">
-        <img src="./images/wuxi-logo.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Wuxi We Watch Logo">
+      <a href="wuxi-we-watch.html" aria-label="Wuxi We Watch App">
+        <img src="./images/wuxi-logo.png" class="app-logo" alt="Wuxi We Watch">
       </a>
       <h2 class="text-body-emphasis">Wuxi</h2>
-      <p class="text-muted">
-      </p>
-      <br>
-
     </div>
   </div>
 
-
-
-
-  <!-- REGULAR JUMBO -->
-  <div class="container my-5">
+  <!-- BMI Calculator -->
+  <div class="container">
     <div class="text-center glass">
-      <a href="https://rhytoleaf.github.io/Rhyto-BMI/">
-        <img src="./images/bmi-calc-logo.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="BMI Calculator Logo">
+      <a href="https://rhytoleaf.github.io/Rhyto-BMI/" target="_blank" rel="noopener noreferrer" aria-label="BMI Calculator App">
+        <img src="./images/bmi-calc-logo.png" class="app-logo" alt="BMI Calculator">
       </a>
       <h2 class="text-body-emphasis">BMI Calculator</h2>
-      <p class="text-muted">
-      </p>
-      <br>
     </div>
   </div>
 
-
-
-
-  <!-- REGULAR JUMBO 
-  <div class="container my-5">
-    <div class="text-center glass">
-      <a href="androne18.html">
-        <img src="./images/androne18.png" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Androne 18 Logo">
-      </a>
-      <h2 class="text-body-emphasis">Androne 18</h2>
-      <p class="text-muted">
-      </p>
-      <br>
--->
-    </div>
-  </div>
-  <!-- REGULAR JUMBO 
-  <div class="container my-5">
-    <div class="text-center glass">
-      <a href="basic-calculator.html">
-        <img src="./images/basic-calc-logo.jpg" width="20%" height="auto" style="border-radius: 22.5%; object-fit: cover;" alt="Basic Calculator Logo">
-      </a>
-      <h2 class="text-body-emphasis">Basic Calculator</h2>
-      <p class="text-muted">
-      </p>
-      <br>
-    </div>
-  </div>
 </div>
-  <div class="container my-5">
--->
 
     <!-- CALL TO ACTION -->
-    <div class="position-relative p-5 text-center text-muted glass">
-
-      <svg class="bi mt-5 mb-3" width="48" height="48">
-        <use xlink:href="#check2-circle" /></svg>
-      <h2 class="text-body-emphasis">Your vision</h2>
-      <p class="col-lg-6 mx-auto mb-4">
-        Transform this blank canvas into your innovation playground! This jumbotron serves as a canvas for your ideas.
-        Instead of fading into the background, let's fill it with the vibrant colors of your <span style="color: #00CE7C;">STEM</span>-inspired application
-        project.
-        <br>
-        <br>
-        Take action—share your proposal details in the form below and let's bring your vision to
-        life!
-
-        <br><br>
-
-        <p>~ Coming Soon ~</p>
-
-      </p>
+    <div class="section-spacing">
+      <div class="position-relative p-5 text-center glass">
+        <svg class="bi mt-5 mb-3" width="48" height="48" aria-hidden="true">
+          <use xlink:href="#check2-circle" />
+        </svg>
+        <h2 class="text-body-emphasis display-5 fw-bold">Your Vision</h2>
+        <p class="col-lg-8 mx-auto lead mb-4">
+          Transform this blank canvas into your innovation playground! Instead of fading into the background,
+          let's fill it with the vibrant colors of your <span style="color: var(--rhyto-green); font-weight: 700;">STEM</span>-inspired application project.
+        </p>
+        <p class="lead mb-4">
+          Take action—share your proposal details and let's bring your vision to life!
+        </p>
+        <p class="text-muted fst-italic">~ Coming Soon ~</p>
+      </div>
+    </div>
 
 
 
@@ -594,21 +747,43 @@
 
 
   <script src="./assets/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const viewSwitch = document.getElementById('view-switch');
-    const appListContainer = document.getElementById('app-list-container');
-    const listIcon = viewSwitch.querySelector('.fa-list');
-    const gridIcon = viewSwitch.querySelector('.fa-th');
 
-    viewSwitch.addEventListener('click', (e) => {
-      if (e.target.tagName === 'I') {
-        if (!e.target.classList.contains('active')) {
+  <script>
+    // View Switcher with Keyboard Support
+    (function() {
+      const viewSwitch = document.getElementById('view-switch');
+      const appListContainer = document.getElementById('app-list-container');
+      const listIcon = viewSwitch.querySelector('.fa-list');
+      const gridIcon = viewSwitch.querySelector('.fa-th');
+
+      function toggleView(target) {
+        if (target.tagName === 'I' && !target.classList.contains('active')) {
           appListContainer.classList.toggle('grid-view');
           listIcon.classList.toggle('active');
           gridIcon.classList.toggle('active');
+
+          // Update ARIA attributes
+          const isGridView = appListContainer.classList.contains('grid-view');
+          gridIcon.setAttribute('aria-pressed', isGridView);
+          listIcon.setAttribute('aria-pressed', !isGridView);
         }
       }
-    });
+
+      // Click handler
+      viewSwitch.addEventListener('click', (e) => toggleView(e.target));
+
+      // Keyboard handler
+      viewSwitch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleView(e.target);
+        }
+      });
+
+      // Initialize ARIA attributes
+      gridIcon.setAttribute('aria-pressed', 'true');
+      listIcon.setAttribute('aria-pressed', 'false');
+    })();
   </script>
 
 <script>
@@ -625,85 +800,53 @@
   });
 </script>
 
-  <footer class="py-3 my-4">
-    <p class="text-center text-body-secondary">&copy; 2026 RhytoLeaf Inc. All rights reserved.</p>
+  <footer class="py-4 mt-5">
+    <p class="text-center text-body-secondary mb-0">&copy; 2026 RhytoLeaf Inc. All rights reserved.</p>
   </footer>
+
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <style>
-    #sparkle-word {
-      color: gold;
-      position: relative;
-      display: inline-block;
-    }
-    .sparkle {
-      position: absolute;
-      width: 0;
-      height: 0;
-      background: transparent;
-      border-radius: 0;
-      pointer-events: none;
-      border-right: 3px solid transparent;
-      border-bottom: 2px solid gold;
-      border-left: 3px solid transparent;
-      transform: rotate(35deg);
-    }
-    .sparkle:before {
-      border-bottom: 3px solid gold;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
-      position: absolute;
-      height: 0;
-      width: 0;
-      top: -1.5px;
-      left: -2.5px;
-      display: block;
-      content: '';
-      transform: rotate(-35deg);
-    }
-    .sparkle:after {
-      position: absolute;
-      display: block;
-      top: 0;
-      left: -3px;
-      width: 0;
-      height: 0;
-      border-right: 3px solid transparent;
-      border-bottom: 2px solid gold;
-      border-left: 3px solid transparent;
-      transform: rotate(-70deg);
-      content: '';
-    }
-  </style>
   <script>
-    const sparkleWord = document.getElementById('sparkle-word');
+    // Sparkle Animation (Optimized)
+    (function() {
+      const sparkleWord = document.getElementById('sparkle-word');
+      let lastSparkleTime = 0;
+      const SPARKLE_THROTTLE = 100; // milliseconds
 
-    function createSparkle(e) {
-      const rect = sparkleWord.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      function createSparkle(e) {
+        const now = Date.now();
+        if (now - lastSparkleTime < SPARKLE_THROTTLE) return;
+        lastSparkleTime = now;
 
-      for (let i = 0; i < 5; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.classList.add('sparkle');
-        sparkle.style.left = x + 'px';
-        sparkle.style.top = y + 'px';
-        sparkleWord.appendChild(sparkle);
+        const rect = sparkleWord.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-        anime({
-          targets: sparkle,
-          translateX: anime.random(-25, 25),
-          translateY: anime.random(-25, 25),
-          scale: anime.random(0.5, 1.5),
-          opacity: [1, 0],
-          duration: anime.random(500, 1000),
-          easing: 'easeOutExpo',
-          complete: () => sparkle.remove()
-        });
+        // Create fewer sparkles for better performance
+        for (let i = 0; i < 3; i++) {
+          const sparkle = document.createElement('div');
+          sparkle.classList.add('sparkle');
+          sparkle.style.left = x + 'px';
+          sparkle.style.top = y + 'px';
+          sparkle.setAttribute('aria-hidden', 'true');
+          sparkleWord.appendChild(sparkle);
+
+          anime({
+            targets: sparkle,
+            translateX: anime.random(-25, 25),
+            translateY: anime.random(-25, 25),
+            scale: anime.random(0.5, 1.5),
+            opacity: [1, 0],
+            duration: anime.random(500, 1000),
+            easing: 'easeOutExpo',
+            complete: () => sparkle.remove()
+          });
+        }
       }
-    }
 
-    sparkleWord.addEventListener('mouseenter', createSparkle);
-    sparkleWord.addEventListener('mousemove', createSparkle);
+      sparkleWord.addEventListener('mouseenter', createSparkle);
+      sparkleWord.addEventListener('mousemove', createSparkle);
+    })();
   </script>
 </body>
 
