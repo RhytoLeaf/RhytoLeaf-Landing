@@ -885,6 +885,8 @@ var answeredFalse = [];
 var currentQuestion = 0;
 var questionStatus = new Array(33).fill(0);
 
+var questionUpdateInterval = null;
+
 function startQuiz() {
   document.getElementById("begin-button").style.display = "none";
   document.getElementById("true-button").style.display = "flex";
@@ -892,6 +894,7 @@ function startQuiz() {
   document.getElementById("question-hr").style.display = "block";
 
   const gridContainer = document.getElementById("question-grid");
+  gridContainer.innerHTML = "";
   for (let i = 1; i <= 33; i++) {
     const button = document.createElement("button");
     button.innerHTML = i;
@@ -902,7 +905,32 @@ function startQuiz() {
   }
 
   currentQuestion = 1;
-  setQuestionText();
+  document.getElementById("question-text").innerHTML = questions[0];
+  document.getElementById("question-number").innerHTML = 'Question 1';
+
+  if (questionUpdateInterval) {
+    clearInterval(questionUpdateInterval);
+  }
+  questionUpdateInterval = setInterval(updateQuestionPanel, 500);
+}
+
+function updateQuestionPanel() {
+  $.ajax({
+    url: window.location.href,
+    method: 'GET',
+    cache: false,
+    success: function() {
+      if (currentQuestion >= 1 && currentQuestion <= 33) {
+        document.getElementById("question-text").innerHTML = questions[currentQuestion - 1];
+        document.getElementById("question-number").innerHTML = 'Question ' + currentQuestion;
+      }
+
+      const answeredQuestions = questionStatus.filter(status => status !== 0).length;
+      const percentage = (answeredQuestions / 33) * 100;
+      document.getElementById("quiz-progress").style.width = percentage + "%";
+      document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
+    }
+  });
 }
 
 function setAnsweredTrueText() {
@@ -910,14 +938,8 @@ function setAnsweredTrueText() {
 }
 
 function setQuestionText() {
-  const answeredQuestions = questionStatus.filter(status => status !== 0).length;
-  const percentage = (answeredQuestions / 33) * 100;
-  document.getElementById("quiz-progress").style.width = percentage + "%";
-  document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
-
   setAnsweredTrueText();
-  document.getElementById("question-text").innerHTML = questions[currentQuestion - 1];
-  document.getElementById("question-number").innerHTML = 'Question ' + currentQuestion;
+  updateQuestionPanel();
 }
 
 function pressTrue() {
@@ -971,6 +993,11 @@ function setCheckboxValueChecked(id) {
 }
 
 function endQuiz() {
+  if (questionUpdateInterval) {
+    clearInterval(questionUpdateInterval);
+    questionUpdateInterval = null;
+  }
+
   document.getElementById("begin-button").style.display = "none";
   document.getElementById("true-button").style.display = "none";
   document.getElementById("false-button").style.display = "none";
