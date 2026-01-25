@@ -600,6 +600,161 @@
             border-color: rgba(255, 255, 255, 0.2);
             margin: 2rem 0;
         }
+
+        /* ============================================
+           VIEW MODE TOGGLE
+           ============================================ */
+        .view-toggle-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .view-toggle-wrapper i {
+            font-size: 1.5rem;
+            color: var(--rhyto-green);
+        }
+
+        /* ============================================
+           MOBILE PORTRAIT MODE STYLES
+           ============================================ */
+        body.mobile-mode {
+            padding: 0.5rem;
+        }
+
+        body.mobile-mode .header-container {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        body.mobile-mode .back-button span {
+            display: none;
+        }
+
+        body.mobile-mode .logo-center img {
+            width: 40px;
+        }
+
+        body.mobile-mode h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body.mobile-mode #why-benefit-header {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body.mobile-mode #question-grid {
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+            padding: 0 0.5rem;
+        }
+
+        body.mobile-mode .grid-button {
+            width: 28px;
+            height: 28px;
+            font-size: 0.65rem;
+            border-width: 1px;
+        }
+
+        body.mobile-mode #question-number {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body.mobile-mode .question-card {
+            padding: 1rem 0.75rem;
+            min-height: 120px;
+            margin: 0.75rem auto;
+            border-radius: 15px;
+        }
+
+        body.mobile-mode #question-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        body.mobile-mode #question-hr {
+            margin: 0.75rem 0;
+        }
+
+        body.mobile-mode .button-container {
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        body.mobile-mode #true-button,
+        body.mobile-mode #false-button {
+            width: 120px;
+            height: 120px;
+            font-size: 1.2rem;
+            border-radius: 15px;
+        }
+
+        body.mobile-mode #begin-button {
+            font-size: 1.3rem;
+            padding: 1.2rem 2.5rem;
+        }
+
+        body.mobile-mode .progress {
+            height: 30px;
+            margin: 1rem auto;
+        }
+
+        body.mobile-mode #quiz-progress-text {
+            font-size: 0.9rem;
+        }
+
+        body.mobile-mode #scroll-to-results {
+            width: 45px;
+            height: 45px;
+            font-size: 1.2rem;
+        }
+
+        body.mobile-mode footer {
+            padding: 1rem 0;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        body.mobile-mode .theme-toggle-wrapper i,
+        body.mobile-mode .view-toggle-wrapper i {
+            font-size: 1rem;
+        }
+
+        body.mobile-mode .form-check-input {
+            width: 2.5em;
+            height: 1.25em;
+        }
+
+        /* Mobile mode results section */
+        body.mobile-mode #result-card-container {
+            margin-top: 1.5rem;
+        }
+
+        body.mobile-mode #results-header {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        body.mobile-mode .result-card {
+            max-width: 100%;
+            border-radius: 15px;
+        }
+
+        body.mobile-mode .result-card .card-body {
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        body.mobile-mode .modal-content {
+            margin: 10% auto;
+            padding: 1.5rem;
+            width: 95%;
+        }
     </style>
 </head>
 
@@ -621,6 +776,13 @@
             <i id="darkModeIcon" class="fas fa-sun"></i>
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="darkModeToggle" checked aria-label="Toggle dark mode">
+            </div>
+        </div>
+
+        <div class="view-toggle-wrapper">
+            <i id="viewModeIcon" class="fas fa-desktop"></i>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="viewModeToggle" checked aria-label="Toggle view mode">
             </div>
         </div>
     </div>
@@ -1338,6 +1500,43 @@ cancelExitButton.addEventListener("click", function() {
 
     <script>
 document.getElementById("current-year").textContent = new Date().getFullYear();
+    </script>
+
+    <script>
+const viewModeToggle = document.getElementById('viewModeToggle');
+const viewModeIcon = document.getElementById('viewModeIcon');
+
+function setViewModeUI() {
+    if (document.body.classList.contains('mobile-mode')) {
+        viewModeIcon.classList.remove('fa-desktop');
+        viewModeIcon.classList.add('fa-mobile-alt');
+        viewModeToggle.checked = false;
+    } else {
+        viewModeIcon.classList.remove('fa-mobile-alt');
+        viewModeIcon.classList.add('fa-desktop');
+        viewModeToggle.checked = true;
+    }
+}
+
+if (localStorage.getItem('viewMode') === 'mobile') {
+    document.body.classList.add('mobile-mode');
+    viewModeToggle.checked = false;
+} else {
+    document.body.classList.remove('mobile-mode');
+    viewModeToggle.checked = true;
+}
+setViewModeUI();
+
+viewModeToggle.addEventListener('change', () => {
+    if (viewModeToggle.checked) {
+        document.body.classList.remove('mobile-mode');
+        localStorage.setItem('viewMode', 'desktop');
+    } else {
+        document.body.classList.add('mobile-mode');
+        localStorage.setItem('viewMode', 'mobile');
+    }
+    setViewModeUI();
+});
     </script>
 </body>
 </html>
