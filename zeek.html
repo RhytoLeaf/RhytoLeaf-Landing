@@ -139,18 +139,83 @@
       animation: slideUp 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .zeek-logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
+    /* ── Blinking Eye Logo ── */
+    .eye-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
       margin-bottom: 1.25rem;
-      box-shadow: 0 8px 32px rgba(230, 57, 70, 0.15);
-      transition: transform 0.3s ease;
     }
 
-    .zeek-logo:hover {
-      transform: scale(1.06);
+    .eye-wrap {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      margin: 0;
+      cursor: pointer;
     }
+
+    .eye-wrap:hover { transform: scale(1.06); }
+
+    .eye-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Top eyelid */
+    .eyelid-top,
+    .eyelid-bottom {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: var(--bg);
+      z-index: 2;
+      transform: scaleY(0);
+      transition: transform 0.08s ease-in;
+    }
+
+    .eyelid-top {
+      top: 0;
+      border-radius: 18px 18px 0 0;
+      transform-origin: top center;
+    }
+
+    .eyelid-bottom {
+      bottom: 0;
+      border-radius: 0 0 18px 18px;
+      transform-origin: bottom center;
+    }
+
+    /* Blink animation */
+    .eye-wrap.blink .eyelid-top,
+    .eye-wrap.blink .eyelid-bottom {
+      animation: blink-lid 0.18s ease-in-out forwards;
+    }
+
+    @keyframes blink-lid {
+      0%   { transform: scaleY(0); }
+      40%  { transform: scaleY(1); }
+      60%  { transform: scaleY(1); }
+      100% { transform: scaleY(0); }
+    }
+
+    /* Ambient glow behind the eye */
+    .eye-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 24px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      z-index: -1;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .eye-wrap:hover::after { opacity: 0.8; }
 
     .input-header h1 {
       font-family: var(--font-display);
@@ -940,7 +1005,10 @@
        ============================================= */
     @media (max-width: 480px) {
       .input-header h1 { font-size: 2.75rem; }
-      .zeek-logo { width: 56px; height: 56px; border-radius: 14px; }
+      .eye-wrap { width: 56px; height: 56px; }
+      .eye-img { border-radius: 14px; }
+      .eyelid-top { border-radius: 14px 14px 0 0; }
+      .eyelid-bottom { border-radius: 0 0 14px 14px; }
       .textarea-wrap textarea { height: 170px; padding: 1rem 1rem 3.5rem; }
     }
 
@@ -956,7 +1024,18 @@
     <div class="input-glow" aria-hidden="true"></div>
 
     <header class="input-header">
-      <img src="./images/zeek-logo.jpg" alt="Zeek" class="zeek-logo">
+      <div class="eye-row">
+        <div class="eye-wrap eye-blinker">
+          <div class="eyelid-top"></div>
+          <img src="./images/zeek-logo.jpg" alt="Zeek" class="eye-img">
+          <div class="eyelid-bottom"></div>
+        </div>
+        <div class="eye-wrap eye-blinker">
+          <div class="eyelid-top"></div>
+          <img src="./images/zeek-logo.jpg" alt="Zeek" class="eye-img">
+          <div class="eyelid-bottom"></div>
+        </div>
+      </div>
       <h1>Z<span class="accent-letter">e</span>ek</h1>
       <p class="subtitle">RSVP Speed Reader</p>
     </header>
@@ -1604,9 +1683,39 @@
       setupArcDial();
     }
 
+    /* ── Eye Blink ── */
+    function initEyeBlink() {
+      const eyes = document.querySelectorAll('.eye-blinker');
+      if (!eyes.length) return;
+
+      function blink() {
+        eyes.forEach(eye => {
+          eye.classList.add('blink');
+          eye.addEventListener('animationend', () => {
+            eye.classList.remove('blink');
+          }, { once: true });
+        });
+      }
+
+      // Blink every 3-6 seconds (randomized for a natural feel)
+      function scheduleBlink() {
+        const delay = 3000 + Math.random() * 3000;
+        setTimeout(() => {
+          blink();
+          scheduleBlink();
+        }, delay);
+      }
+
+      // Also blink on click (either eye triggers both)
+      eyes.forEach(eye => eye.addEventListener('click', blink));
+
+      // Initial blink after 1.5s, then start the loop
+      setTimeout(() => { blink(); scheduleBlink(); }, 1500);
+    }
+
     document.readyState === 'loading'
-      ? document.addEventListener('DOMContentLoaded', init)
-      : init();
+      ? document.addEventListener('DOMContentLoaded', () => { init(); initEyeBlink(); })
+      : (init(), initEyeBlink());
   </script>
 </body>
 </html>
