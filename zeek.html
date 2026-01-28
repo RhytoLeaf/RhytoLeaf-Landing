@@ -2,447 +2,1151 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Zeek — RSVP Speed Reader</title>
-  <link rel="icon" type="image/png" href="data:image/png;base64,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">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="./images/zeek-logo.jpg">
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            'serif': ['Libre Baskerville', 'Georgia', 'serif'],
-            'mono': ['Space Mono', 'monospace'],
-          },
-          colors: {
-            'zeek': {
-              'bg': '#0a0a0a',
-              'surface': '#141414',
-              'border': '#2a2a2a',
-              'text': '#e8e8e8',
-              'muted': '#6b6b6b',
-              'accent': '#e63946',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { 
-      background: #0a0a0a; 
-      color: #e8e8e8;
-      font-family: 'Space Mono', monospace;
+    /* =============================================
+       VARIABLES
+       ============================================= */
+    :root {
+      --bg: #060608;
+      --surface: #0e0e12;
+      --elevated: #16161c;
+      --border: #222230;
+      --border-subtle: #1a1a24;
+      --text: #eaeaf0;
+      --text-dim: #6e6e80;
+      --text-muted: #44445a;
+      --accent: #e63946;
+      --accent-hover: #ff4d5a;
+      --accent-dim: rgba(230, 57, 70, 0.12);
+      --accent-glow: rgba(230, 57, 70, 0.25);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+      --font-body: 'Inter', system-ui, sans-serif;
     }
-    
-    /* Safe area insets for notch/home indicator */
+
+    /* =============================================
+       RESET
+       ============================================= */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    button { cursor: pointer; border: none; background: none; color: inherit; font-family: inherit; }
+    a { text-decoration: none; color: inherit; }
+
+    /* =============================================
+       SCROLLBAR
+       ============================================= */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* =============================================
+       NOISE OVERLAY
+       ============================================= */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.018;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* =============================================
+       UTILITIES
+       ============================================= */
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .flex-1 { flex: 1; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .text-center { text-align: center; }
+    .hidden { display: none !important; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .fixed { position: fixed; }
+    .inset-0 { inset: 0; }
+    .w-full { width: 100%; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+
+    /* =============================================
+       INPUT VIEW
+       ============================================= */
+    #inputView {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    /* Ambient red glow behind logo */
+    .input-glow {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .input-header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: slideUp 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .zeek-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 8px 32px rgba(230, 57, 70, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .zeek-logo:hover {
+      transform: scale(1.06);
+    }
+
+    .input-header h1 {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 400;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-header h1 .accent-letter {
+      color: var(--accent);
+    }
+
+    .input-header .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .input-form {
+      width: 100%;
+      max-width: 620px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: slideUp 0.7s 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .textarea-wrap {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .textarea-wrap textarea {
+      width: 100%;
+      height: 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.25rem 3.5rem;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      resize: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .textarea-wrap textarea::placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .textarea-wrap textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim), 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .paste-btn {
+      position: absolute;
+      bottom: 0.85rem;
+      right: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+
+    .paste-btn:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+      background: var(--border);
+    }
+
+    .paste-btn svg { width: 14px; height: 14px; }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      .action-row { grid-template-columns: 1fr; }
+    }
+
+    .btn-scan {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-scan:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .btn-scan svg { width: 18px; height: 18px; }
+
+    .btn-zeek {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.5rem;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+    }
+
+    .btn-zeek:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px var(--accent-glow);
+    }
+
+    .btn-zeek:active { transform: translateY(0); }
+
+    .input-footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0;
+      animation: slideUp 0.7s 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .input-footer .tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .input-footer .tagline span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .input-footer .copyright {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* =============================================
+       CAMERA MODAL
+       ============================================= */
+    #cameraModal {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 50;
+      flex-direction: column;
+    }
+
+    .camera-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .camera-topbar h2 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .camera-close {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s ease;
+    }
+
+    .camera-close:hover { background: var(--elevated); }
+    .camera-close svg { width: 20px; height: 20px; }
+
+    .camera-feed-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .camera-feed-wrap video,
+    .camera-feed-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .viewfinder-guide {
+      border: 2px dashed rgba(230, 57, 70, 0.5);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+      border-radius: var(--radius-sm);
+      width: 85%;
+      height: 40%;
+    }
+
+    .processing-overlay {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .processing-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1.25rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .processing-overlay p {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+
+    .processing-overlay .percent {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 0.5rem;
+    }
+
+    .camera-bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .cam-btn-round {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .cam-btn-round:hover { background: var(--border); }
+    .cam-btn-round svg { width: 20px; height: 20px; }
+    .cam-btn-round.active { background: var(--accent); border-color: var(--accent); }
+
+    .cam-btn-capture {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid rgba(255,255,255,0.2);
+      transition: all 0.2s ease;
+    }
+
+    .cam-btn-capture:hover { background: var(--accent-hover); transform: scale(1.05); }
+    .cam-btn-capture svg { width: 26px; height: 26px; }
+
+    .preview-bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .preview-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+
+    .preview-btn.secondary {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .preview-btn.secondary:hover { background: var(--border); color: var(--text); }
+
+    .preview-btn.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .preview-btn.primary:hover { background: var(--accent-hover); }
+    .preview-btn svg { width: 16px; height: 16px; }
+
+    /* =============================================
+       READER VIEW
+       ============================================= */
+    #readerView {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      flex-direction: column;
+      z-index: 40;
+    }
+
+    .reader-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .reader-topbar-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-xs);
+      transition: background 0.2s ease;
+    }
+
+    .reader-topbar-btn:hover { background: var(--elevated); }
+    .reader-topbar-btn svg { width: 20px; height: 20px; color: var(--text-dim); }
+
+    .word-counter {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* Main reading stage */
+    .reading-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* Focus crosshair lines */
+    .focus-line {
+      position: absolute;
+      background: var(--border-subtle);
+    }
+
+    .focus-line-top {
+      width: 1px;
+      height: 32px;
+      top: 1.5rem;
+      left: 50%;
+    }
+
+    .focus-line-bottom {
+      width: 1px;
+      height: 32px;
+      bottom: 1.5rem;
+      left: 50%;
+    }
+
+    /* Ambient glow behind current word */
+    .word-glow {
+      position: absolute;
+      width: 300px;
+      height: 120px;
+      background: radial-gradient(ellipse, var(--accent-dim) 0%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* Word display */
+    .orp-word {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 6rem);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      user-select: none;
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.08s ease;
+    }
+
+    .orp-letter {
+      color: var(--accent);
+    }
+
+    /* WPM badge */
+    .wpm-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--radius-xs);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Word queue */
+    .queue-bar {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .queue-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      overflow-x: auto;
+    }
+
+    .queue-word {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .queue-word:hover { color: var(--text); background: var(--elevated); }
+    .queue-word.current {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.78rem;
+      cursor: default;
+    }
+
+    .queue-word.current:hover { background: transparent; }
+
+    /* Progress bar */
+    .progress-section {
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: var(--elevated);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.08s linear;
+    }
+
+    .progress-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      background: var(--accent);
+      border: 2.5px solid var(--bg);
+      border-radius: 50%;
+      cursor: grab;
+      box-shadow: 0 2px 8px var(--accent-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .progress-thumb:hover { transform: translateY(-50%) scale(1.15); }
+    .progress-thumb:active { cursor: grabbing; }
+
+    /* Controls bar */
+    .controls-bar {
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
     @supports (padding: env(safe-area-inset-bottom)) {
-      .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+      .controls-bar { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
     }
-    
-    /* Portrait mode optimizations */
-    .portrait-mode .reader-controls {
-      flex-direction: column-reverse;
+
+    .controls-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 1rem;
     }
-    .portrait-mode .speed-dial-container {
-      width: 100%;
-      padding: 0 1rem;
+
+    .playback-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.75rem;
     }
-    .portrait-mode .volume-bar-wrapper {
+
+    .skip-btn {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      color: var(--text-dim);
+    }
+
+    .skip-btn:hover { background: var(--elevated); color: var(--text); }
+    .skip-btn svg { width: 22px; height: 22px; }
+
+    .play-btn {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .play-btn:hover {
+      background: var(--accent-hover);
+      transform: scale(1.06);
+      box-shadow: 0 6px 28px rgba(230, 57, 70, 0.35);
+    }
+
+    .play-btn:active { transform: scale(1); }
+    .play-btn svg { width: 24px; height: 24px; color: #fff; }
+
+    /* Speed dial */
+    .speed-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .speed-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    .speed-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       width: 100%;
     }
-    .portrait-mode #volumeBarTrack {
+
+    .speed-bound {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      min-width: 28px;
+    }
+
+    .speed-track {
+      position: relative;
       flex: 1;
-      width: auto;
+      height: 6px;
+      background: var(--elevated);
+      border-radius: 3px;
+      cursor: pointer;
     }
-    .portrait-mode .playback-controls {
-      justify-content: space-around;
+
+    .speed-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+      border-radius: 3px;
+      transition: width 0.05s ease;
+    }
+
+    .speed-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      cursor: grab;
+      box-shadow: 0 2px 8px var(--accent-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .speed-thumb:hover { transform: translateY(-50%) scale(1.15); }
+    .speed-thumb:active { cursor: grabbing; }
+
+    .speed-value {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .controls-copyright {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+
+    /* =============================================
+       PORTRAIT MODE OVERRIDES
+       ============================================= */
+    .portrait-mode .controls-inner {
+      flex-direction: column-reverse;
+      gap: 1.25rem;
+    }
+
+    .portrait-mode .speed-section {
+      max-width: 100%;
+    }
+
+    .portrait-mode .playback-row {
       width: 100%;
-      padding: 0.5rem 0;
+      justify-content: space-around;
     }
+
+    .portrait-mode .orp-word {
+      font-size: clamp(2.5rem, 14vw, 4.5rem);
+    }
+
+    .portrait-mode .play-btn {
+      width: 68px;
+      height: 68px;
+    }
+
+    .portrait-mode .play-btn svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    .portrait-mode .skip-btn {
+      width: 52px;
+      height: 52px;
+    }
+
+    .portrait-mode .skip-btn svg {
+      width: 26px;
+      height: 26px;
+    }
+
     .portrait-mode .queue-word {
-      padding: 0.5rem 0.75rem;
+      padding: 0.4rem 0.6rem;
       min-width: 44px;
       min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .portrait-mode #wordQueue {
+
+    .portrait-mode .queue-inner {
       gap: 0.5rem;
       padding: 0.75rem 1rem;
     }
-    .portrait-mode #wpmDisplay {
+
+    .portrait-mode .wpm-badge {
       position: static;
       text-align: center;
-      font-size: 1.25rem;
+      font-size: 1rem;
+      font-weight: 700;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
       margin-top: 1rem;
     }
-    .portrait-mode .orp-word {
-      font-size: clamp(2rem, 12vw, 4rem);
-    }
-    .portrait-mode #playPauseBtn {
-      width: 72px;
-      height: 72px;
-    }
-    .portrait-mode #playPauseBtn svg {
-      width: 36px;
-      height: 36px;
-    }
-    .portrait-mode #rewindBtn,
-    .portrait-mode #forwardBtn {
-      padding: 1rem;
-    }
-    .portrait-mode #rewindBtn svg,
-    .portrait-mode #forwardBtn svg {
-      width: 28px;
-      height: 28px;
-    }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #141414; }
-    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
-    
-    /* ORP word display */
-    .orp-word {
-      font-family: 'Libre Baskerville', serif;
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-    }
-    
-    .orp-letter { color: #e63946; }
-    
-    /* Focus guides */
-    .focus-line {
-      position: absolute;
-      background: #2a2a2a;
-    }
-    .focus-line-v { width: 1px; height: 40px; }
-    .focus-line-h { height: 1px; width: 100%; }
-    
-    /* Word queue */
-    .queue-word {
-      transition: all 0.15s ease-out;
-    }
-    .queue-word:hover {
-      color: #e8e8e8;
-    }
-    
-    /* Volume bar dial */
-    #volumeBarTrack {
-      background: #2a2a2a;
-    }
-    #volumeBarFill {
-      background: linear-gradient(90deg, #e63946 0%, #ff6b6b 100%);
-      transition: width 0.05s ease-out;
-    }
-    #volumeBarThumb {
-      transition: transform 0.1s ease;
-      box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
-    }
-    #volumeBarThumb:hover {
-      transform: translateY(-50%) scale(1.1);
-    }
-    
-    /* Camera viewfinder */
-    .viewfinder-guide {
-      border: 2px dashed rgba(230, 57, 70, 0.6);
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+
+    /* =============================================
+       ANIMATIONS
+       ============================================= */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-    .animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
-    
-    /* Progress bar */
-    .progress-track { background: #2a2a2a; }
-    .progress-fill { background: #e63946; transition: width 0.1s linear; }
-    
-    /* Textarea */
-    textarea::placeholder { color: #4a4a4a; }
-    textarea:focus { outline: none; border-color: #e63946; }
-    
-    /* Button states */
-    .btn-primary {
-      background: #e63946;
-      transition: all 0.2s ease;
+
+    /* =============================================
+       FOCUS / A11Y
+       ============================================= */
+    button:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
-    .btn-primary:hover { background: #ff4d5a; transform: translateY(-1px); }
-    .btn-primary:active { transform: translateY(0); }
-    
-    .btn-secondary {
-      background: #2a2a2a;
-      transition: all 0.2s ease;
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 480px) {
+      .input-header h1 { font-size: 2.75rem; }
+      .zeek-logo { width: 56px; height: 56px; border-radius: 14px; }
+      .textarea-wrap textarea { height: 170px; padding: 1rem 1rem 3.5rem; }
     }
-    .btn-secondary:hover { background: #3a3a3a; }
+
+    @media (min-width: 768px) {
+      .textarea-wrap textarea { height: 240px; }
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
   <!-- ==================== INPUT VIEW ==================== -->
-  <div id="inputView" class="flex-1 flex flex-col items-center justify-center p-6">
-    <header class="mb-8 text-center animate-fade-in">
-      <img 
-        src="./images/zeek-logo.jpg"
-        alt="Zeek Logo" 
-        class="w-14 h-14 mx-auto mb-3"
-      >
-      <h1 class="text-4xl md:text-5xl font-serif font-bold tracking-tight mb-2">
-        Z<span class="text-zeek-accent">e</span>ek
-      </h1>
-      <p class="text-zeek-muted text-sm">RSVP Speed Reader</p>
+  <div id="inputView">
+    <div class="input-glow" aria-hidden="true"></div>
+
+    <header class="input-header">
+      <img src="./images/zeek-logo.jpg" alt="Zeek" class="zeek-logo">
+      <h1>Z<span class="accent-letter">e</span>ek</h1>
+      <p class="subtitle">RSVP Speed Reader</p>
     </header>
-    
-    <div class="w-full max-w-2xl animate-fade-in" style="animation-delay: 0.1s;">
-      <div class="relative">
-        <textarea 
+
+    <div class="input-form">
+      <div class="textarea-wrap">
+        <textarea
           id="textInput"
-          class="w-full h-48 md:h-64 bg-zeek-surface border border-zeek-border rounded-lg p-4 pb-12 text-zeek-text font-mono text-sm resize-none"
-          placeholder="Paste your text here..."
+          placeholder="Paste or type your text here..."
+          spellcheck="false"
         ></textarea>
-        <button 
-          id="pasteBtn"
-          class="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 bg-zeek-border hover:bg-zeek-muted/40 rounded-md text-zeek-muted hover:text-zeek-text transition-colors text-xs font-mono"
-          title="Paste from clipboard"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="pasteBtn" class="paste-btn" title="Paste from clipboard">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
           </svg>
           Paste
         </button>
       </div>
-      
-      <div class="flex flex-col sm:flex-row gap-3 mt-4">
-        <button 
-          id="scanBtn"
-          class="btn-secondary flex-1 py-3 px-6 rounded-lg font-mono text-sm flex items-center justify-center gap-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+      <div class="action-row">
+        <button id="scanBtn" class="btn-scan">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
           Scan Text
         </button>
-        
-        <button 
-          id="zeekBtn"
-          class="btn-primary flex-1 py-3 px-6 rounded-lg font-mono text-sm font-bold"
-        >
-          Zeek →
+        <button id="zeekBtn" class="btn-zeek">
+          Zeek
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
         </button>
       </div>
-      
-      <p class="text-zeek-muted text-xs text-center mt-4">
-        Designed to help with dyslexia, ADHD & visual processing
-      </p>
     </div>
-    
-    <footer class="py-4 text-center">
-      <p class="text-zeek-muted text-xs">&copy; RhytoLeaf Inc. All Rights Reserved</p>
+
+    <footer class="input-footer">
+      <p class="tagline">Built for <span>dyslexia</span>, <span>ADHD</span> & visual processing support</p>
+      <p class="copyright">&copy; RhytoLeaf Inc.</p>
     </footer>
   </div>
 
   <!-- ==================== CAMERA MODAL ==================== -->
-  <div id="cameraModal" class="fixed inset-0 bg-black z-50 hidden flex-col">
-    <div class="flex items-center justify-between p-4 bg-zeek-surface border-b border-zeek-border">
-      <h2 class="font-mono text-sm">Scan Document</h2>
-      <button id="closeCameraBtn" class="p-2 hover:bg-zeek-border rounded-lg transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div id="cameraModal" class="hidden flex-col">
+    <div class="camera-topbar">
+      <h2>Scan Document</h2>
+      <button id="closeCameraBtn" class="camera-close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
     </div>
-    
-    <div class="flex-1 relative overflow-hidden">
-      <video id="cameraFeed" class="w-full h-full object-cover" autoplay playsinline></video>
-      
-      <!-- Captured image preview -->
-      <img id="capturePreview" class="absolute inset-0 w-full h-full object-cover hidden" alt="Captured preview">
-      
-      <!-- Viewfinder guide -->
-      <div id="viewfinderGuide" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div class="viewfinder-guide w-[85%] h-[40%] rounded-lg"></div>
+
+    <div class="camera-feed-wrap flex-1 relative">
+      <video id="cameraFeed" autoplay playsinline></video>
+      <img id="capturePreview" class="hidden absolute inset-0" alt="Captured preview">
+
+      <div id="viewfinderGuide" class="absolute inset-0 flex items-center justify-center" style="pointer-events: none;">
+        <div class="viewfinder-guide"></div>
       </div>
-      
-      <!-- Processing overlay -->
-      <div id="processingOverlay" class="absolute inset-0 bg-black/80 hidden flex-col items-center justify-center">
-        <div class="w-16 h-16 border-4 border-zeek-accent border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p id="processingStatus" class="font-mono text-sm text-zeek-muted">Initializing OCR...</p>
-        <p id="processingPercent" class="font-mono text-2xl text-zeek-accent mt-2">0%</p>
+
+      <div id="processingOverlay" class="processing-overlay hidden absolute inset-0 flex-col items-center justify-center">
+        <div class="processing-spinner"></div>
+        <p id="processingStatus">Initializing OCR...</p>
+        <p id="processingPercent" class="percent">0%</p>
       </div>
     </div>
-    
-    <!-- Camera controls (live mode) -->
-    <div id="cameraControls" class="p-4 bg-zeek-surface border-t border-zeek-border flex items-center justify-center gap-4">
-      <button id="torchBtn" class="p-3 bg-zeek-border rounded-full hover:bg-zeek-muted/30 transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+    <div id="cameraControls" class="camera-bottombar">
+      <button id="torchBtn" class="cam-btn-round" title="Toggle torch">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
         </svg>
       </button>
-      
-      <button id="captureBtn" class="p-4 bg-zeek-accent rounded-full hover:bg-red-500 transition-colors">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="captureBtn" class="cam-btn-capture" title="Capture photo">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
       </button>
-      
-      <button id="switchCameraBtn" class="p-3 bg-zeek-border rounded-full hover:bg-zeek-muted/30 transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="switchCameraBtn" class="cam-btn-round" title="Switch camera">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
       </button>
     </div>
-    
-    <!-- Preview controls (after capture) -->
-    <div id="previewControls" class="p-4 bg-zeek-surface border-t border-zeek-border hidden items-center justify-center gap-4">
-      <button id="retakeBtn" class="px-6 py-3 bg-zeek-border rounded-lg hover:bg-zeek-muted/30 transition-colors font-mono text-sm flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+    <div id="previewControls" class="preview-bottombar hidden">
+      <button id="retakeBtn" class="preview-btn secondary">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
         Retake
       </button>
-      
-      <button id="scanTextBtn" class="px-6 py-3 bg-zeek-accent rounded-lg hover:bg-red-500 transition-colors font-mono text-sm flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button id="scanTextBtn" class="preview-btn primary">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
         Scan Text
       </button>
     </div>
-    
-    <!-- Hidden canvas for capture -->
+
     <canvas id="captureCanvas" class="hidden"></canvas>
   </div>
 
   <!-- ==================== READER VIEW ==================== -->
-  <div id="readerView" class="fixed inset-0 bg-zeek-bg hidden flex-col">
+  <div id="readerView" class="hidden flex-col">
     <!-- Top bar -->
-    <div class="flex items-center justify-between p-4 border-b border-zeek-border">
-      <button id="backBtn" class="p-2 hover:bg-zeek-border rounded-lg transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="reader-topbar">
+      <button id="backBtn" class="reader-topbar-btn" title="Back to input">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
         </svg>
       </button>
-      
-      <div class="flex items-center gap-2">
-        <span id="wordCounter" class="font-mono text-xs text-zeek-muted">0 / 0</span>
-      </div>
-      
-      <button id="portraitToggle" class="p-2 hover:bg-zeek-border rounded-lg transition-colors" title="Toggle portrait mode">
-        <svg id="portraitIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <span id="wordCounter" class="word-counter">0 / 0</span>
+      <button id="portraitToggle" class="reader-topbar-btn" title="Toggle portrait mode">
+        <svg id="portraitIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
         </svg>
-        <svg id="landscapeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg id="landscapeIcon" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
         </svg>
       </button>
     </div>
-    
-    <!-- Main reading area -->
-    <div id="swipeArea" class="flex-1 flex flex-col items-center justify-center relative px-4">
-      <!-- Focus guides -->
-      <div class="focus-line focus-line-v absolute top-4" style="left: 50%;"></div>
-      <div class="focus-line focus-line-v absolute bottom-4" style="left: 50%;"></div>
-      
-      <!-- Word display -->
-      <div id="wordDisplay" class="orp-word text-zeek-text text-center select-none">
-        Ready
-      </div>
-      
-      <!-- WPM indicator -->
-      <div id="wpmDisplay" class="absolute bottom-8 right-8 font-mono text-sm text-zeek-muted">
-        200 wpm
-      </div>
+
+    <!-- Reading stage -->
+    <div id="swipeArea" class="reading-stage">
+      <div class="focus-line focus-line-top absolute" aria-hidden="true"></div>
+      <div class="focus-line focus-line-bottom absolute" aria-hidden="true"></div>
+      <div class="word-glow" aria-hidden="true"></div>
+      <div id="wordDisplay" class="orp-word">Ready</div>
+      <div id="wpmDisplay" class="wpm-badge">200 wpm</div>
     </div>
-    
+
     <!-- Word queue -->
-    <div class="border-t border-zeek-border bg-zeek-surface">
-      <div id="wordQueue" class="flex items-center justify-center gap-3 py-3 px-4 overflow-x-auto">
-        <!-- Queue words will be inserted here -->
+    <div class="queue-bar">
+      <div id="wordQueue" class="queue-inner"></div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section">
+      <div id="progressTrack" class="progress-track">
+        <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+        <div id="progressThumb" class="progress-thumb" style="left: 0%;"></div>
       </div>
     </div>
-    
-    <!-- Progress bar (draggable) -->
-    <div class="px-4 py-2 bg-zeek-surface border-t border-zeek-border">
-      <div 
-        id="progressTrack" 
-        class="progress-track h-2 rounded-full cursor-pointer relative"
-      >
-        <div id="progressFill" class="progress-fill h-full rounded-full" style="width: 0%;"></div>
-        <div 
-          id="progressThumb" 
-          class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-zeek-accent rounded-full shadow-lg cursor-grab active:cursor-grabbing"
-          style="left: 0%;"
-        ></div>
-      </div>
-    </div>
-    
+
     <!-- Controls -->
-    <div class="p-4 bg-zeek-surface border-t border-zeek-border safe-bottom">
-      <div class="reader-controls flex flex-col items-center gap-4">
-        <div class="playback-controls flex items-center justify-center gap-6">
-          <!-- Rewind -->
-          <button id="rewindBtn" class="p-2 hover:bg-zeek-border rounded-lg transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="controls-bar">
+      <div class="controls-inner">
+        <div class="playback-row">
+          <button id="rewindBtn" class="skip-btn" title="Rewind 10 words">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/>
             </svg>
           </button>
-          
-          <!-- Play/Pause -->
-          <button id="playPauseBtn" class="p-4 bg-zeek-accent rounded-full hover:bg-red-500 transition-colors flex items-center justify-center">
-            <svg id="playIcon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+          <button id="playPauseBtn" class="play-btn" title="Play / Pause">
+            <svg id="playIcon" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z"/>
             </svg>
-            <svg id="pauseIcon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 24 24">
+            <svg id="pauseIcon" class="hidden" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
             </svg>
           </button>
-          
-          <!-- Forward -->
-          <button id="forwardBtn" class="p-2 hover:bg-zeek-border rounded-lg transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button id="forwardBtn" class="skip-btn" title="Forward 10 words">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"/>
             </svg>
           </button>
         </div>
-        
-        <!-- Speed dial - Volume Bar -->
-        <div class="speed-dial-container flex flex-col items-center justify-center gap-2">
-          <span class="font-mono text-xs text-zeek-muted">WPM</span>
-          <div class="volume-bar-wrapper flex items-center gap-3">
-            <span class="font-mono text-xs text-zeek-muted w-8 text-right">200</span>
-            <div id="volumeBarTrack" class="relative w-48 h-3 bg-zeek-border rounded-full cursor-pointer">
-              <div id="volumeBarFill" class="absolute left-0 top-0 h-full bg-zeek-accent rounded-full" style="width: 0%;"></div>
-              <div id="volumeBarThumb" class="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-zeek-accent rounded-full shadow-lg cursor-grab active:cursor-grabbing border-2 border-zeek-bg" style="left: 0%;"></div>
+
+        <div class="speed-section">
+          <span class="speed-label">Speed</span>
+          <div class="speed-slider-row">
+            <span class="speed-bound" style="text-align: right;">200</span>
+            <div id="volumeBarTrack" class="speed-track">
+              <div id="volumeBarFill" class="speed-fill" style="width: 0%;"></div>
+              <div id="volumeBarThumb" class="speed-thumb" style="left: 0%;"></div>
             </div>
-            <span class="font-mono text-xs text-zeek-muted w-8">900</span>
+            <span class="speed-bound">900</span>
           </div>
-          <span id="dialValueText" class="font-mono text-lg text-zeek-text font-bold">200</span>
+          <span id="dialValueText" class="speed-value">200</span>
         </div>
       </div>
-      
-      <p class="text-zeek-muted text-xs text-center mt-4">&copy; RhytoLeaf Inc. All Rights Reserved</p>
+
+      <p class="controls-copyright text-center">&copy; RhytoLeaf Inc.</p>
     </div>
   </div>
 
+  <!-- ==================== JAVASCRIPT ==================== -->
   <script>
     // ==================== STATE ====================
     const state = {
@@ -461,18 +1165,13 @@
 
     // ==================== DOM REFS ====================
     const dom = {
-      // Views
       inputView: document.getElementById('inputView'),
       cameraModal: document.getElementById('cameraModal'),
       readerView: document.getElementById('readerView'),
-      
-      // Input view
       textInput: document.getElementById('textInput'),
       scanBtn: document.getElementById('scanBtn'),
       zeekBtn: document.getElementById('zeekBtn'),
       pasteBtn: document.getElementById('pasteBtn'),
-      
-      // Camera modal
       cameraFeed: document.getElementById('cameraFeed'),
       captureCanvas: document.getElementById('captureCanvas'),
       capturePreview: document.getElementById('capturePreview'),
@@ -488,8 +1187,6 @@
       processingOverlay: document.getElementById('processingOverlay'),
       processingStatus: document.getElementById('processingStatus'),
       processingPercent: document.getElementById('processingPercent'),
-      
-      // Reader view
       backBtn: document.getElementById('backBtn'),
       wordDisplay: document.getElementById('wordDisplay'),
       wpmDisplay: document.getElementById('wpmDisplay'),
@@ -507,7 +1204,6 @@
       volumeBarFill: document.getElementById('volumeBarFill'),
       volumeBarThumb: document.getElementById('volumeBarThumb'),
       dialValueText: document.getElementById('dialValueText'),
-      // Portrait
       portraitToggle: document.getElementById('portraitToggle'),
       portraitIcon: document.getElementById('portraitIcon'),
       landscapeIcon: document.getElementById('landscapeIcon'),
@@ -515,10 +1211,6 @@
     };
 
     // ==================== ORP CALCULATION ====================
-    /**
-     * Calculate Optimal Recognition Point for a word.
-     * Research shows eyes fixate ~20-35% from left.
-     */
     function getORPIndex(word) {
       const len = word.length;
       if (len <= 1) return 0;
@@ -528,10 +1220,6 @@
       return 4;
     }
 
-    /**
-     * Render word with ORP letter highlighted in red.
-     * Returns HTML string with the ORP letter wrapped in span.
-     */
     function renderORPWord(word) {
       if (!word) return '';
       const orpIndex = getORPIndex(word);
@@ -549,24 +1237,17 @@
 
     // ==================== TEXT PROCESSING ====================
     function parseText(text) {
-      // Split on whitespace first
       const rawWords = text.trim().split(/\s+/).filter(w => w.length > 0);
-      
-      // Further split words containing dashes
       const words = [];
       for (const word of rawWords) {
         if (word.includes('-')) {
-          // Split on dash, keeping dash with preceding part
           const parts = word.split(/(-)/);
           let current = '';
           for (let i = 0; i < parts.length; i++) {
             if (parts[i] === '-') {
               current += '-';
             } else if (parts[i]) {
-              if (current) {
-                words.push(current);
-                current = '';
-              }
+              if (current) { words.push(current); current = ''; }
               current = parts[i];
             }
           }
@@ -581,56 +1262,49 @@
     // ==================== VIEW MANAGEMENT ====================
     function showInputView() {
       stopPlayback();
-      dom.inputView.classList.remove('hidden');
-      dom.inputView.classList.add('flex');
+      dom.inputView.style.display = 'flex';
       dom.readerView.classList.add('hidden');
+      dom.readerView.style.display = '';
       dom.cameraModal.classList.add('hidden');
+      dom.cameraModal.style.display = '';
     }
 
     function showReaderView() {
-      dom.inputView.classList.add('hidden');
-      dom.inputView.classList.remove('flex');
+      dom.inputView.style.display = 'none';
       dom.readerView.classList.remove('hidden');
-      dom.readerView.classList.add('flex');
+      dom.readerView.style.display = 'flex';
       dom.cameraModal.classList.add('hidden');
+      dom.cameraModal.style.display = '';
     }
 
     function showCameraModal() {
       dom.cameraModal.classList.remove('hidden');
-      dom.cameraModal.classList.add('flex');
+      dom.cameraModal.style.display = 'flex';
       resetCameraToLive();
       startCamera();
     }
 
     function hideCameraModal() {
       dom.cameraModal.classList.add('hidden');
-      dom.cameraModal.classList.remove('flex');
+      dom.cameraModal.style.display = '';
       stopCamera();
       resetCameraToLive();
     }
-    
+
     function resetCameraToLive() {
-      // Show live camera, hide preview
       dom.cameraFeed.classList.remove('hidden');
       dom.capturePreview.classList.add('hidden');
       dom.viewfinderGuide.classList.remove('hidden');
-      // Show camera controls, hide preview controls
-      dom.cameraControls.classList.remove('hidden');
-      dom.cameraControls.classList.add('flex');
-      dom.previewControls.classList.add('hidden');
-      dom.previewControls.classList.remove('flex');
+      dom.cameraControls.style.display = 'flex';
+      dom.previewControls.style.display = 'none';
     }
-    
+
     function showCapturePreview() {
-      // Hide live camera, show preview
       dom.cameraFeed.classList.add('hidden');
       dom.capturePreview.classList.remove('hidden');
       dom.viewfinderGuide.classList.add('hidden');
-      // Hide camera controls, show preview controls
-      dom.cameraControls.classList.add('hidden');
-      dom.cameraControls.classList.remove('flex');
-      dom.previewControls.classList.remove('hidden');
-      dom.previewControls.classList.add('flex');
+      dom.cameraControls.style.display = 'none';
+      dom.previewControls.style.display = 'flex';
     }
 
     // ==================== READER LOGIC ====================
@@ -650,45 +1324,30 @@
     function updateDisplay() {
       const word = state.words[state.currentIndex] || '';
       dom.wordDisplay.innerHTML = renderORPWord(word);
-      
-      // Update counter
       dom.wordCounter.textContent = `${state.currentIndex + 1} / ${state.words.length}`;
-      
-      // Update progress
-      const progress = state.words.length > 1 
-        ? (state.currentIndex / (state.words.length - 1)) * 100 
+      const progress = state.words.length > 1
+        ? (state.currentIndex / (state.words.length - 1)) * 100
         : 0;
       dom.progressFill.style.width = `${progress}%`;
-      dom.progressThumb.style.left = `calc(${progress}% - 8px)`;
-      
-      // Update queue
+      dom.progressThumb.style.left = `calc(${progress}% - 7px)`;
       updateWordQueue();
     }
 
     function updateWordQueue() {
       const queueSize = 4;
       let html = '';
-      
-      // Previous words
       for (let i = state.currentIndex - queueSize; i < state.currentIndex; i++) {
         if (i >= 0 && state.words[i]) {
-          html += `<span class="queue-word font-mono text-xs text-zeek-muted cursor-pointer hover:text-zeek-text" data-index="${i}">${escapeHtml(state.words[i])}</span>`;
+          html += `<span class="queue-word" data-index="${i}">${escapeHtml(state.words[i])}</span>`;
         }
       }
-      
-      // Current word
-      html += `<span class="queue-word font-mono text-sm text-zeek-accent font-bold">${escapeHtml(state.words[state.currentIndex] || '')}</span>`;
-      
-      // Next words
+      html += `<span class="queue-word current">${escapeHtml(state.words[state.currentIndex] || '')}</span>`;
       for (let i = state.currentIndex + 1; i <= state.currentIndex + queueSize; i++) {
         if (i < state.words.length && state.words[i]) {
-          html += `<span class="queue-word font-mono text-xs text-zeek-muted cursor-pointer hover:text-zeek-text" data-index="${i}">${escapeHtml(state.words[i])}</span>`;
+          html += `<span class="queue-word" data-index="${i}">${escapeHtml(state.words[i])}</span>`;
         }
       }
-      
       dom.wordQueue.innerHTML = html;
-      
-      // Add click handlers to queue words
       dom.wordQueue.querySelectorAll('[data-index]').forEach(el => {
         el.addEventListener('click', () => {
           state.currentIndex = parseInt(el.dataset.index, 10);
@@ -702,7 +1361,6 @@
       state.isPlaying = true;
       dom.playIcon.classList.add('hidden');
       dom.pauseIcon.classList.remove('hidden');
-      
       const msPerWord = 60000 / state.wpm;
       state.intervalId = setInterval(() => {
         if (state.currentIndex < state.words.length - 1) {
@@ -725,18 +1383,12 @@
     }
 
     function togglePlayback() {
-      if (state.isPlaying) {
-        stopPlayback();
-      } else {
-        startPlayback();
-      }
+      state.isPlaying ? stopPlayback() : startPlayback();
     }
 
     function updateWPM(wpm) {
       state.wpm = parseInt(wpm, 10);
       dom.wpmDisplay.textContent = `${state.wpm} wpm`;
-      
-      // Restart playback with new speed if playing
       if (state.isPlaying) {
         stopPlayback();
         startPlayback();
@@ -746,15 +1398,9 @@
     // ==================== CAMERA / OCR ====================
     async function startCamera() {
       try {
-        const constraints = {
-          video: {
-            facingMode: state.facingMode,
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-          }
-        };
-        
-        state.cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        state.cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } }
+        });
         dom.cameraFeed.srcObject = state.cameraStream;
       } catch (err) {
         console.error('Camera error:', err);
@@ -773,21 +1419,12 @@
 
     async function toggleTorch() {
       if (!state.cameraStream) return;
-      
       const track = state.cameraStream.getVideoTracks()[0];
       const capabilities = track.getCapabilities();
-      
-      if (!capabilities.torch) {
-        alert('Torch not available on this device');
-        return;
-      }
-      
+      if (!capabilities.torch) { alert('Torch not available on this device'); return; }
       state.torchEnabled = !state.torchEnabled;
-      await track.applyConstraints({
-        advanced: [{ torch: state.torchEnabled }]
-      });
-      
-      dom.torchBtn.classList.toggle('bg-zeek-accent', state.torchEnabled);
+      await track.applyConstraints({ advanced: [{ torch: state.torchEnabled }] });
+      dom.torchBtn.classList.toggle('active', state.torchEnabled);
     }
 
     async function switchCamera() {
@@ -797,231 +1434,123 @@
     }
 
     function capturePhoto() {
-      // Capture frame to canvas
       const video = dom.cameraFeed;
       const canvas = dom.captureCanvas;
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0);
-      
-      // Set preview image from canvas
+      canvas.getContext('2d').drawImage(video, 0, 0);
       dom.capturePreview.src = canvas.toDataURL('image/jpeg', 0.9);
-      
-      // Show preview mode
       showCapturePreview();
     }
-    
+
     async function scanText() {
-      // Show processing overlay
       dom.processingOverlay.classList.remove('hidden');
-      dom.processingOverlay.classList.add('flex');
+      dom.processingOverlay.style.display = 'flex';
       dom.processingStatus.textContent = 'Initializing OCR...';
       dom.processingPercent.textContent = '0%';
-      
       try {
-        // Run Tesseract OCR on the captured canvas
-        const result = await Tesseract.recognize(
-          dom.captureCanvas,
-          'eng',
-          {
-            logger: m => {
-              if (m.status === 'recognizing text') {
-                const percent = Math.round(m.progress * 100);
-                dom.processingPercent.textContent = `${percent}%`;
-                dom.processingStatus.textContent = 'Recognizing text...';
-              } else if (m.status === 'loading language traineddata') {
-                dom.processingStatus.textContent = 'Loading language data...';
-              }
+        const result = await Tesseract.recognize(dom.captureCanvas, 'eng', {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              dom.processingPercent.textContent = `${Math.round(m.progress * 100)}%`;
+              dom.processingStatus.textContent = 'Recognizing text...';
+            } else if (m.status === 'loading language traineddata') {
+              dom.processingStatus.textContent = 'Loading language data...';
             }
           }
-        );
-        
+        });
         const text = result.data.text.trim();
-        
-        if (text) {
-          dom.textInput.value = text;
-          hideCameraModal();
-        } else {
-          alert('No text detected. Try adjusting lighting or position.');
-          resetCameraToLive();
-        }
+        if (text) { dom.textInput.value = text; hideCameraModal(); }
+        else { alert('No text detected. Try adjusting lighting or position.'); resetCameraToLive(); }
       } catch (err) {
         console.error('OCR error:', err);
         alert('OCR failed. Please try again.');
         resetCameraToLive();
       } finally {
         dom.processingOverlay.classList.add('hidden');
-        dom.processingOverlay.classList.remove('flex');
+        dom.processingOverlay.style.display = '';
       }
     }
 
     // ==================== PROGRESS BAR DRAGGING ====================
     function setupProgressDrag() {
       let isDragging = false;
-      
       function updateFromPosition(clientX) {
         const rect = dom.progressTrack.getBoundingClientRect();
-        let percent = (clientX - rect.left) / rect.width;
-        percent = Math.max(0, Math.min(1, percent));
+        let percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
         state.currentIndex = Math.round(percent * (state.words.length - 1));
         updateDisplay();
       }
-      
-      dom.progressTrack.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateFromPosition(e.clientX);
-      });
-      
-      dom.progressThumb.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        e.stopPropagation();
-      });
-      
-      document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          updateFromPosition(e.clientX);
-        }
-      });
-      
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-      
-      // Touch support
-      dom.progressTrack.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        updateFromPosition(e.touches[0].clientX);
-      });
-      
-      dom.progressThumb.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        e.stopPropagation();
-      });
-      
-      document.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-          updateFromPosition(e.touches[0].clientX);
-        }
-      });
-      
-      document.addEventListener('touchend', () => {
-        isDragging = false;
-      });
+      dom.progressTrack.addEventListener('mousedown', e => { isDragging = true; updateFromPosition(e.clientX); });
+      dom.progressThumb.addEventListener('mousedown', e => { isDragging = true; e.stopPropagation(); });
+      document.addEventListener('mousemove', e => { if (isDragging) updateFromPosition(e.clientX); });
+      document.addEventListener('mouseup', () => { isDragging = false; });
+      dom.progressTrack.addEventListener('touchstart', e => { isDragging = true; updateFromPosition(e.touches[0].clientX); });
+      dom.progressThumb.addEventListener('touchstart', e => { isDragging = true; e.stopPropagation(); });
+      document.addEventListener('touchmove', e => { if (isDragging) updateFromPosition(e.touches[0].clientX); });
+      document.addEventListener('touchend', () => { isDragging = false; });
     }
 
-    // ==================== VOLUME BAR DIAL ====================
+    // ==================== SPEED DIAL ====================
     function updateVolumeBar(wpm) {
       const percent = ((wpm - 200) / 700) * 100;
       dom.volumeBarFill.style.width = `${percent}%`;
-      dom.volumeBarThumb.style.left = `calc(${percent}% - 10px)`;
+      dom.volumeBarThumb.style.left = `calc(${percent}% - 9px)`;
       dom.dialValueText.textContent = wpm;
     }
-    
+
     function setupArcDial() {
       let isDragging = false;
-      
       function getWPMFromPosition(clientX) {
         const rect = dom.volumeBarTrack.getBoundingClientRect();
-        let percent = (clientX - rect.left) / rect.width;
-        percent = Math.max(0, Math.min(1, percent));
+        let percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
         return Math.round(200 + percent * 700);
       }
-      
       function handleDrag(e) {
         if (!isDragging) return;
         e.preventDefault();
-        
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const wpm = getWPMFromPosition(clientX);
-        
         state.wpm = wpm;
         updateWPM(wpm);
         updateVolumeBar(wpm);
       }
-      
-      // Mouse events
-      dom.volumeBarTrack.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        handleDrag(e);
-      });
-      
-      dom.volumeBarThumb.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        e.stopPropagation();
-      });
-      
+      dom.volumeBarTrack.addEventListener('mousedown', e => { isDragging = true; handleDrag(e); });
+      dom.volumeBarThumb.addEventListener('mousedown', e => { isDragging = true; e.stopPropagation(); });
       document.addEventListener('mousemove', handleDrag);
       document.addEventListener('mouseup', () => { isDragging = false; });
-      
-      // Touch events
-      dom.volumeBarTrack.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        handleDrag(e);
-      });
-      
-      dom.volumeBarThumb.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        e.stopPropagation();
-      });
-      
-      document.addEventListener('touchmove', (e) => {
-        if (isDragging) handleDrag(e);
-      }, { passive: false });
-      
+      dom.volumeBarTrack.addEventListener('touchstart', e => { isDragging = true; handleDrag(e); });
+      dom.volumeBarThumb.addEventListener('touchstart', e => { isDragging = true; e.stopPropagation(); });
+      document.addEventListener('touchmove', e => { if (isDragging) handleDrag(e); }, { passive: false });
       document.addEventListener('touchend', () => { isDragging = false; });
-      
-      // Initialize
       updateVolumeBar(state.wpm);
     }
 
     // ==================== PORTRAIT MODE ====================
     function togglePortraitMode() {
       state.portraitMode = !state.portraitMode;
-      
-      if (state.portraitMode) {
-        dom.readerView.classList.add('portrait-mode');
-        dom.portraitIcon.classList.add('hidden');
-        dom.landscapeIcon.classList.remove('hidden');
-      } else {
-        dom.readerView.classList.remove('portrait-mode');
-        dom.portraitIcon.classList.remove('hidden');
-        dom.landscapeIcon.classList.add('hidden');
-      }
+      dom.readerView.classList.toggle('portrait-mode', state.portraitMode);
+      dom.portraitIcon.classList.toggle('hidden', state.portraitMode);
+      dom.landscapeIcon.classList.toggle('hidden', !state.portraitMode);
     }
-    
+
     // ==================== SWIPE GESTURES ====================
     function setupSwipeGestures() {
       const minSwipeDistance = 50;
-      
-      dom.swipeArea.addEventListener('touchstart', (e) => {
+      dom.swipeArea.addEventListener('touchstart', e => {
         state.touchStartX = e.touches[0].clientX;
         state.touchStartY = e.touches[0].clientY;
       }, { passive: true });
-      
-      dom.swipeArea.addEventListener('touchend', (e) => {
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        
-        const deltaX = touchEndX - state.touchStartX;
-        const deltaY = touchEndY - state.touchStartY;
-        
-        // Only register horizontal swipes (ignore vertical scrolling)
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
-          if (deltaX > 0) {
-            // Swipe right - previous word
-            state.currentIndex = Math.max(0, state.currentIndex - 1);
-          } else {
-            // Swipe left - next word
-            state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 1);
-          }
+      dom.swipeArea.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - state.touchStartX;
+        const dy = e.changedTouches[0].clientY - state.touchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > minSwipeDistance) {
+          if (dx > 0) state.currentIndex = Math.max(0, state.currentIndex - 1);
+          else state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 1);
           updateDisplay();
         }
       }, { passive: true });
-      
-      // Tap to play/pause
-      dom.swipeArea.addEventListener('click', (e) => {
-        // Only toggle if not dragging progress
+      dom.swipeArea.addEventListener('click', e => {
         if (e.target === dom.swipeArea || e.target === dom.wordDisplay || e.target.closest('#wordDisplay')) {
           togglePlayback();
         }
@@ -1030,107 +1559,54 @@
 
     // ==================== KEYBOARD SHORTCUTS ====================
     function setupKeyboardShortcuts() {
-      document.addEventListener('keydown', (e) => {
+      document.addEventListener('keydown', e => {
         if (dom.readerView.classList.contains('hidden')) return;
         if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-        
         switch (e.code) {
-          case 'Space':
-            e.preventDefault();
-            togglePlayback();
-            break;
-          case 'ArrowLeft':
-            e.preventDefault();
-            state.currentIndex = Math.max(0, state.currentIndex - 1);
-            updateDisplay();
-            break;
-          case 'ArrowRight':
-            e.preventDefault();
-            state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 1);
-            updateDisplay();
-            break;
-          case 'ArrowUp':
-            e.preventDefault();
-            state.wpm = Math.min(900, state.wpm + 1);
-            updateWPM(state.wpm);
-            updateVolumeBar(state.wpm);
-            break;
-          case 'ArrowDown':
-            e.preventDefault();
-            state.wpm = Math.max(200, state.wpm - 1);
-            updateWPM(state.wpm);
-            updateVolumeBar(state.wpm);
-            break;
-          case 'KeyP':
-            e.preventDefault();
-            togglePortraitMode();
-            break;
-          case 'Escape':
-            showInputView();
-            break;
+          case 'Space': e.preventDefault(); togglePlayback(); break;
+          case 'ArrowLeft': e.preventDefault(); state.currentIndex = Math.max(0, state.currentIndex - 1); updateDisplay(); break;
+          case 'ArrowRight': e.preventDefault(); state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 1); updateDisplay(); break;
+          case 'ArrowUp': e.preventDefault(); state.wpm = Math.min(900, state.wpm + 1); updateWPM(state.wpm); updateVolumeBar(state.wpm); break;
+          case 'ArrowDown': e.preventDefault(); state.wpm = Math.max(200, state.wpm - 1); updateWPM(state.wpm); updateVolumeBar(state.wpm); break;
+          case 'KeyP': e.preventDefault(); togglePortraitMode(); break;
+          case 'Escape': showInputView(); break;
         }
       });
     }
 
-    // ==================== EVENT LISTENERS ====================
+    // ==================== INIT ====================
     function init() {
-      // Input view
-      dom.zeekBtn.addEventListener('click', () => {
-        initReader(dom.textInput.value);
-      });
-      
+      dom.zeekBtn.addEventListener('click', () => initReader(dom.textInput.value));
       dom.scanBtn.addEventListener('click', showCameraModal);
-      
       dom.pasteBtn.addEventListener('click', async () => {
         try {
-          const text = await navigator.clipboard.readText();
-          dom.textInput.value = text;
+          dom.textInput.value = await navigator.clipboard.readText();
           dom.textInput.focus();
         } catch (err) {
-          // Fallback: focus textarea and prompt manual paste
           dom.textInput.focus();
           alert('Clipboard access denied. Please use Ctrl+V / Cmd+V to paste.');
         }
       });
-      
-      // Camera modal
       dom.closeCameraBtn.addEventListener('click', hideCameraModal);
       dom.torchBtn.addEventListener('click', toggleTorch);
       dom.switchCameraBtn.addEventListener('click', switchCamera);
       dom.captureBtn.addEventListener('click', capturePhoto);
       dom.retakeBtn.addEventListener('click', resetCameraToLive);
       dom.scanTextBtn.addEventListener('click', scanText);
-      
-      // Reader view
       dom.backBtn.addEventListener('click', showInputView);
       dom.playPauseBtn.addEventListener('click', togglePlayback);
-      
-      dom.rewindBtn.addEventListener('click', () => {
-        state.currentIndex = Math.max(0, state.currentIndex - 10);
-        updateDisplay();
-      });
-      
-      dom.forwardBtn.addEventListener('click', () => {
-        state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 10);
-        updateDisplay();
-      });
-      
+      dom.rewindBtn.addEventListener('click', () => { state.currentIndex = Math.max(0, state.currentIndex - 10); updateDisplay(); });
+      dom.forwardBtn.addEventListener('click', () => { state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 10); updateDisplay(); });
       dom.portraitToggle.addEventListener('click', togglePortraitMode);
-      
       setupProgressDrag();
       setupKeyboardShortcuts();
       setupSwipeGestures();
       setupArcDial();
-      
-      // Sample text removed - textarea starts empty
     }
 
-    // Initialize on DOM ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', init)
+      : init();
   </script>
 </body>
 </html>
