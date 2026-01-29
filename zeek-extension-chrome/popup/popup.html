@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeek</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="popup-header">
+    <img src="../images/zeek-logo.jpg" alt="Zeek" class="popup-logo">
+    <div>
+      <h1>Z<span class="accent">e</span>ek</h1>
+      <p class="subtitle">RSVP Speed Reader</p>
+    </div>
+  </header>
+
+  <!-- Selection detected banner -->
+  <div id="selectionBanner" class="selection-banner hidden">
+    <p class="selection-label">Selected text detected:</p>
+    <p id="selectionPreview" class="selection-preview"></p>
+    <button id="readSelectionBtn" class="btn-primary">
+      Read Selected Text
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </button>
+    <div class="divider">
+      <span>or paste your own</span>
+    </div>
+  </div>
+
+  <!-- Text input -->
+  <div class="popup-form">
+    <div class="textarea-wrap">
+      <textarea
+        id="textInput"
+        placeholder="Paste or type your text here..."
+        spellcheck="false"
+        rows="5"
+      ></textarea>
+      <button id="pasteBtn" class="paste-btn" title="Paste from clipboard">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        Paste
+      </button>
+    </div>
+    <button id="zeekBtn" class="btn-primary">
+      Zeek
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+      </svg>
+    </button>
+  </div>
+
+  <footer class="popup-footer">
+    <p>&copy; RhytoLeaf Inc.</p>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

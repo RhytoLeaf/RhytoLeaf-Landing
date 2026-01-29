@@ -1063,6 +1063,12 @@
       font-size: clamp(2.5rem, 14vw, 4.5rem);
     }
 
+    /* Text size overrides */
+    .text-sm .orp-word { font-size: clamp(2rem, 7vw, 3.5rem); }
+    .text-lg .orp-word { font-size: clamp(4rem, 14vw, 8rem); }
+    .text-sm.portrait-mode .orp-word { font-size: clamp(1.5rem, 10vw, 2.5rem); }
+    .text-lg.portrait-mode .orp-word { font-size: clamp(3.5rem, 18vw, 6rem); }
+
     .portrait-mode .play-btn {
       width: 68px;
       height: 68px;
@@ -1493,6 +1499,9 @@
         </svg>
       </button>
       <span id="wordCounter" class="word-counter">0 / 0</span>
+      <button id="textSizeBtn" class="reader-topbar-btn" title="Text size">
+        <span id="textSizeLabel" style="font-weight:700;font-size:13px;font-family:var(--font-mono);color:var(--text-dim);">M</span>
+      </button>
       <button id="portraitToggle" class="reader-topbar-btn" title="Toggle portrait mode">
         <svg id="portraitIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -1701,6 +1710,7 @@
       torchEnabled: false,
       facingMode: 'environment',
       portraitMode: false,
+      textSize: 'md',
       touchStartX: 0,
       touchStartY: 0
     };
@@ -1749,7 +1759,9 @@
       portraitToggle: document.getElementById('portraitToggle'),
       portraitIcon: document.getElementById('portraitIcon'),
       landscapeIcon: document.getElementById('landscapeIcon'),
-      swipeArea: document.getElementById('swipeArea')
+      swipeArea: document.getElementById('swipeArea'),
+      textSizeBtn: document.getElementById('textSizeBtn'),
+      textSizeLabel: document.getElementById('textSizeLabel')
     };
 
     // ==================== ORP CALCULATION ====================
@@ -2076,6 +2088,35 @@
       dom.landscapeIcon.classList.toggle('hidden', !state.portraitMode);
     }
 
+    // ==================== TEXT SIZE ====================
+    const TEXT_SIZES = ['md', 'lg', 'sm'];
+    const TEXT_SIZE_LABELS = { sm: 'S', md: 'M', lg: 'L' };
+
+    function cycleTextSize() {
+      const idx = TEXT_SIZES.indexOf(state.textSize);
+      state.textSize = TEXT_SIZES[(idx + 1) % TEXT_SIZES.length];
+      applyTextSize();
+      try { localStorage.setItem('zeek-text-size', state.textSize); } catch (e) {}
+    }
+
+    function applyTextSize() {
+      dom.readerView.classList.remove('text-sm', 'text-lg');
+      if (state.textSize !== 'md') {
+        dom.readerView.classList.add(`text-${state.textSize}`);
+      }
+      dom.textSizeLabel.textContent = TEXT_SIZE_LABELS[state.textSize];
+    }
+
+    function loadTextSize() {
+      try {
+        const saved = localStorage.getItem('zeek-text-size');
+        if (saved && TEXT_SIZES.includes(saved)) {
+          state.textSize = saved;
+          applyTextSize();
+        }
+      } catch (e) {}
+    }
+
     // ==================== SWIPE GESTURES ====================
     function setupSwipeGestures() {
       const minSwipeDistance = 50;
@@ -2140,6 +2181,8 @@
       dom.rewindBtn.addEventListener('click', () => { state.currentIndex = Math.max(0, state.currentIndex - 10); updateDisplay(); });
       dom.forwardBtn.addEventListener('click', () => { state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 10); updateDisplay(); });
       dom.portraitToggle.addEventListener('click', togglePortraitMode);
+      dom.textSizeBtn.addEventListener('click', cycleTextSize);
+      loadTextSize();
       setupProgressDrag();
       setupKeyboardShortcuts();
       setupSwipeGestures();
