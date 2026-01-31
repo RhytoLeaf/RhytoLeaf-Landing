@@ -525,6 +525,55 @@
     }
 
     /* =============================================
+       DONATE SECTION
+       ============================================= */
+    .donate-section {
+      position: relative;
+      z-index: 1;
+      margin-top: 1.75rem;
+      text-align: center;
+      opacity: 0;
+      animation: slideUp 0.7s 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .donate-section p {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    .donate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      transition: all 0.25s ease;
+    }
+
+    .donate-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--accent-dim);
+    }
+
+    .donate-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* =============================================
        CAMERA MODAL
        ============================================= */
     #cameraModal {
@@ -1418,6 +1467,16 @@
           </svg>
         </button>
       </div>
+    </div>
+
+    <div class="donate-section">
+      <p>Zeek is free — help keep it that way</p>
+      <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="donate-btn">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>
+        Donate via Stripe
+      </a>
     </div>
 
     <footer class="input-footer">
