@@ -888,6 +888,97 @@
     }
 
     /* =============================================
+       DONATE SECTION
+       ============================================= */
+    .donate-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: clamp(2.5rem, 6vw, 4rem) clamp(2rem, 6vw, 4rem);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .donate-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+
+    .donate-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, var(--green-dim) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .donate-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.5rem;
+      color: var(--green);
+      position: relative;
+      z-index: 1;
+    }
+
+    .donate-card h2 {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .donate-card p {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-donate {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--green);
+      color: var(--dark-base);
+      padding: 0.85rem 2rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      font-family: var(--font-body);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-donate:hover {
+      background: var(--green-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--green-glow);
+      color: var(--dark-base);
+    }
+
+    /* =============================================
        CTA SECTION
        ============================================= */
     .cta-section {
@@ -1142,6 +1233,7 @@
       <ul class="nav-links" id="nav-links">
         <li><a href="#mission">Mission</a></li>
         <li><a href="#apps">Apps</a></li>
+        <li><a href="#donate">Donate</a></li>
         <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
       </ul>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
@@ -1403,6 +1495,26 @@
           </div>
         </a>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       DONATE
+       ========================================== -->
+  <section class="section" id="donate">
+    <div class="container">
+      <div class="donate-card reveal">
+        <div class="donate-icon"><i class="fas fa-heart"></i></div>
+        <h2>Support Our Free Tools</h2>
+        <p>
+          Our apps like Zeek are free for everyone. Your donation helps cover hosting,
+          development, and maintenance so we can keep building accessible STEM tools.
+        </p>
+        <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="btn-donate">
+          <i class="fas fa-heart"></i>
+          Donate via Stripe
+        </a>
       </div>
     </div>
   </section>

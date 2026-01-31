@@ -1164,6 +1164,84 @@
     }
 
     /* =============================================
+       SENTENCE VIEW
+       ============================================= */
+    .sentence-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+    }
+
+    .sentence-display {
+      font-family: var(--font-body);
+      font-size: clamp(1.25rem, 4vw, 1.75rem);
+      line-height: 2;
+      text-align: center;
+      max-width: 680px;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .sentence-display .s-word {
+      display: inline;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .sentence-display .s-word.s-future {
+      color: var(--text);
+    }
+
+    .sentence-display .s-word.s-current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sentence-display .s-word .orp-letter {
+      color: var(--accent);
+    }
+
+    .sentence-display .s-word.s-past {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .sentence-wpm-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--radius-xs);
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Active toggle styling for sentence mode button */
+    .reader-topbar-btn.active-mode {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .reader-topbar-btn.active-mode:hover {
+      background: var(--accent-dim);
+    }
+
+    .reader-topbar-btn.active-mode svg {
+      color: var(--accent);
+    }
+
+    /* =============================================
        ANIMATIONS
        ============================================= */
     @keyframes slideUp {
@@ -1569,6 +1647,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
         </svg>
       </button>
+      <button id="sentenceToggle" class="reader-topbar-btn" title="Toggle sentence view">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Reading stage -->
@@ -1578,6 +1661,12 @@
       <div class="word-glow" aria-hidden="true"></div>
       <div id="wordDisplay" class="orp-word">Ready</div>
       <div id="wpmDisplay" class="wpm-badge">200 wpm</div>
+    </div>
+
+    <!-- Sentence stage (hidden by default) -->
+    <div id="sentenceStage" class="sentence-stage hidden">
+      <div id="sentenceDisplay" class="sentence-display"></div>
+      <div id="sentenceWpm" class="sentence-wpm-badge">200 wpm</div>
     </div>
 
     <!-- Word queue -->
@@ -1771,7 +1860,9 @@
       portraitMode: false,
       textSize: 'md',
       touchStartX: 0,
-      touchStartY: 0
+      touchStartY: 0,
+      sentenceMode: false,
+      sentences: []
     };
 
     // ==================== DOM REFS ====================
@@ -1820,7 +1911,11 @@
       landscapeIcon: document.getElementById('landscapeIcon'),
       swipeArea: document.getElementById('swipeArea'),
       textSizeBtn: document.getElementById('textSizeBtn'),
-      textSizeLabel: document.getElementById('textSizeLabel')
+      textSizeLabel: document.getElementById('textSizeLabel'),
+      sentenceToggle: document.getElementById('sentenceToggle'),
+      sentenceStage: document.getElementById('sentenceStage'),
+      sentenceDisplay: document.getElementById('sentenceDisplay'),
+      sentenceWpm: document.getElementById('sentenceWpm')
     };
 
     // ==================== ORP CALCULATION ====================
@@ -1846,6 +1941,61 @@
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    }
+
+    // ==================== SENTENCE LOGIC ====================
+    function buildSentences(words) {
+      const sentences = [];
+      let current = { start: 0, end: 0 };
+      for (let i = 0; i < words.length; i++) {
+        current.end = i;
+        const w = words[i];
+        if (/[.!?]$/.test(w) || /[.!?]["'\u201D\u2019)\]]$/.test(w)) {
+          sentences.push({ start: current.start, end: current.end });
+          current = { start: i + 1, end: i + 1 };
+        }
+      }
+      if (current.start < words.length) {
+        sentences.push({ start: current.start, end: words.length - 1 });
+      }
+      return sentences;
+    }
+
+    function getSentenceForIndex(index) {
+      for (const s of state.sentences) {
+        if (index >= s.start && index <= s.end) return s;
+      }
+      return state.sentences[state.sentences.length - 1] || { start: 0, end: state.words.length - 1 };
+    }
+
+    function updateSentenceDisplay() {
+      if (!state.sentenceMode) return;
+      const sentence = getSentenceForIndex(state.currentIndex);
+      let html = '';
+      for (let i = sentence.start; i <= sentence.end; i++) {
+        const word = state.words[i];
+        let cls = 's-word';
+        if (i < state.currentIndex) cls += ' s-past';
+        else if (i === state.currentIndex) cls += ' s-current';
+        else cls += ' s-future';
+
+        if (i === state.currentIndex) {
+          html += `<span class="${cls}">${renderORPWord(word)}</span> `;
+        } else {
+          html += `<span class="${cls}">${escapeHtml(word)}</span> `;
+        }
+      }
+      dom.sentenceDisplay.innerHTML = html;
+    }
+
+    function toggleSentenceMode() {
+      state.sentenceMode = !state.sentenceMode;
+      dom.sentenceToggle.classList.toggle('active-mode', state.sentenceMode);
+      dom.swipeArea.classList.toggle('hidden', state.sentenceMode);
+      dom.sentenceStage.classList.toggle('hidden', !state.sentenceMode);
+      if (state.sentenceMode) {
+        updateSentenceDisplay();
+      }
     }
 
     // ==================== TEXT PROCESSING ====================
@@ -1927,6 +2077,7 @@
         alert('Please enter some text to read.');
         return;
       }
+      state.sentences = buildSentences(state.words);
       state.currentIndex = 0;
       state.isPlaying = false;
       updateDisplay();
@@ -1944,6 +2095,7 @@
       dom.progressFill.style.width = `${progress}%`;
       dom.progressThumb.style.left = `calc(${progress}% - 7px)`;
       updateWordQueue();
+      updateSentenceDisplay();
     }
 
     function updateWordQueue() {
@@ -2002,6 +2154,7 @@
     function updateWPM(wpm) {
       state.wpm = parseInt(wpm, 10);
       dom.wpmDisplay.textContent = `${state.wpm} wpm`;
+      dom.sentenceWpm.textContent = `${state.wpm} wpm`;
       if (state.isPlaying) {
         stopPlayback();
         startPlayback();
@@ -2211,6 +2364,7 @@
           case 'ArrowUp': e.preventDefault(); state.wpm = Math.min(900, state.wpm + 1); updateWPM(state.wpm); updateVolumeBar(state.wpm); break;
           case 'ArrowDown': e.preventDefault(); state.wpm = Math.max(200, state.wpm - 1); updateWPM(state.wpm); updateVolumeBar(state.wpm); break;
           case 'KeyP': e.preventDefault(); togglePortraitMode(); break;
+          case 'KeyS': e.preventDefault(); toggleSentenceMode(); break;
           case 'Escape': showInputView(); break;
         }
       });
@@ -2241,6 +2395,8 @@
       dom.forwardBtn.addEventListener('click', () => { state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 10); updateDisplay(); });
       dom.portraitToggle.addEventListener('click', togglePortraitMode);
       dom.textSizeBtn.addEventListener('click', cycleTextSize);
+      dom.sentenceToggle.addEventListener('click', toggleSentenceMode);
+      dom.sentenceStage.addEventListener('click', togglePlayback);
       loadTextSize();
       setupProgressDrag();
       setupKeyboardShortcuts();
