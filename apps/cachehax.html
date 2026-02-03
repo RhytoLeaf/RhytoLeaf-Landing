@@ -10,7 +10,7 @@
 
     <title>Cache Hax - Smart Money Management</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -32,38 +32,36 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            background-attachment: fixed;
+            background-color: #0a1014; /* Let the particle canvas handle the background */
             min-height: 100vh;
             color: #fff;
             overflow-x: hidden;
         }
 
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
         /* Hero Section */
         .hero {
             position: relative;
-            height: 60vh;
-            min-height: 500px;
+            height: 65vh;
+            min-height: 520px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
-                        url('https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1600&q=80') center/cover;
-            z-index: 0;
+            z-index: 1; /* Ensure hero content is above particles */
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 4;
             text-align: center;
             padding: 2rem;
         }
@@ -73,32 +71,41 @@
         }
 
         .app-logo {
-            width: 150px;
-            height: 150px;
-            border-radius: 30%;
-            box-shadow: 0 20px 60px rgba(0, 206, 124, 0.3);
-            transition: transform 0.3s ease;
+            width: 140px;
+            height: 140px;
+            border-radius: 28%;
+            box-shadow:
+                0 16px 48px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 0 80px rgba(0, 206, 124, 0.15);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
         }
 
         .app-logo:hover {
-            transform: scale(1.05);
+            transform: scale(1.06) translateY(-2px);
+            box-shadow:
+                0 24px 64px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 0 100px rgba(0, 206, 124, 0.2);
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--rhyto-green), #00ffaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+            color: #fff;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
         }
 
         .hero p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-            margin: 0 auto 2rem;
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            color: rgba(255, 255, 255, 0.65);
+            max-width: 460px;
+            margin: 0 auto 2.25rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
         }
 
         /* Back Button */
@@ -194,22 +201,28 @@
 
         /* Disclaimer Button */
         .disclaimer-btn {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            background: var(--rhyto-green);
-            color: white;
-            border: none;
-            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.75rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.02em;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .disclaimer-btn:hover {
-            background: var(--rhyto-green-hover);
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 206, 124, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
         /* Chart Section */
@@ -300,8 +313,68 @@
 
         .budget-card-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 140px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .budget-card-image i {
+            font-size: 2.8rem;
+            position: relative;
+            z-index: 2;
+            opacity: 0.7;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .budget-card-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .budget-card-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            opacity: 0.4;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Per-category card illustrations */
+        .budget-card-image.img-fixed::before {
+            background:
+                radial-gradient(circle 80px at 30% 50%, rgba(255, 99, 132, 0.2) 0%, transparent 70%),
+                radial-gradient(circle 60px at 70% 40%, rgba(255, 64, 129, 0.15) 0%, transparent 60%),
+                linear-gradient(135deg, rgba(255, 99, 132, 0.08) 0%, rgba(15, 32, 39, 0.6) 100%);
+        }
+
+        .budget-card-image.img-guilt::before {
+            background:
+                radial-gradient(circle 80px at 70% 50%, rgba(54, 162, 235, 0.2) 0%, transparent 70%),
+                radial-gradient(circle 60px at 25% 60%, rgba(30, 136, 229, 0.15) 0%, transparent 60%),
+                linear-gradient(135deg, rgba(54, 162, 235, 0.08) 0%, rgba(15, 32, 39, 0.6) 100%);
+        }
+
+        .budget-card-image.img-savings::before {
+            background:
+                radial-gradient(circle 80px at 50% 40%, rgba(255, 206, 86, 0.2) 0%, transparent 70%),
+                radial-gradient(circle 60px at 30% 70%, rgba(255, 167, 38, 0.15) 0%, transparent 60%),
+                linear-gradient(135deg, rgba(255, 206, 86, 0.08) 0%, rgba(15, 32, 39, 0.6) 100%);
+        }
+
+        .budget-card-image.img-invest::before {
+            background:
+                radial-gradient(circle 80px at 60% 55%, rgba(75, 192, 192, 0.2) 0%, transparent 70%),
+                radial-gradient(circle 60px at 35% 35%, rgba(38, 166, 154, 0.15) 0%, transparent 60%),
+                linear-gradient(135deg, rgba(75, 192, 192, 0.08) 0%, rgba(15, 32, 39, 0.6) 100%);
         }
 
         .budget-card-body {
@@ -410,6 +483,396 @@
             transform: scale(1.05);
         }
 
+        /* ============ QUIZ SECTION ============ */
+        .quiz-section {
+            margin: -5rem auto 4rem;
+            max-width: 640px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem 2.5rem 2.5rem;
+            box-shadow:
+                0 4px 24px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(0, 206, 124, 0.05) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle decorative gradient wash across top */
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--fixed-costs), var(--guilt-free), var(--savings), var(--investments));
+            opacity: 0.8;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2.25rem;
+        }
+
+        .quiz-header h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.01em;
+        }
+
+        .quiz-header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* ---- Progress Bar (segmented) ---- */
+        .quiz-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 2.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .quiz-progress-seg {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .quiz-progress-seg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            background: var(--rhyto-green);
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .quiz-progress-seg.completed::after { width: 100%; }
+        .quiz-progress-seg.active::after {
+            width: 100%;
+            background: linear-gradient(90deg, var(--rhyto-green), rgba(0, 206, 124, 0.4));
+            animation: progressPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ---- Step Counter ---- */
+        .quiz-step-label {
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1.75rem;
+        }
+
+        .quiz-step-label span {
+            color: var(--rhyto-green);
+        }
+
+        /* ---- Question ---- */
+        .quiz-question-wrap {
+            animation: quizFadeSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes quizFadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quiz-question {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* ---- Options ---- */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .quiz-option {
+            position: relative;
+            padding: 1rem 1.25rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity: 0;
+            transform: translateY(8px);
+            animation: optionReveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .quiz-option:nth-child(1) { animation-delay: 0.08s; }
+        .quiz-option:nth-child(2) { animation-delay: 0.14s; }
+        .quiz-option:nth-child(3) { animation-delay: 0.20s; }
+        .quiz-option:nth-child(4) { animation-delay: 0.26s; }
+
+        @keyframes optionReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Letter badge */
+        .quiz-option::before {
+            content: attr(data-letter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            background: rgba(0, 206, 124, 0.06);
+            border-color: rgba(0, 206, 124, 0.25);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-option:hover::before {
+            background: rgba(0, 206, 124, 0.12);
+            border-color: rgba(0, 206, 124, 0.3);
+            color: var(--rhyto-green);
+        }
+
+        .quiz-option.selected {
+            background: rgba(0, 206, 124, 0.1);
+            border-color: var(--rhyto-green);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 206, 124, 0.1);
+        }
+
+        .quiz-option.selected::before {
+            background: var(--rhyto-green);
+            border-color: var(--rhyto-green);
+            color: #fff;
+        }
+
+        /* ---- Results Screen ---- */
+        .quiz-results {
+            text-align: center;
+            animation: quizFadeSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .quiz-results h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+
+        .quiz-results-subtitle {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 2.25rem;
+            font-weight: 500;
+        }
+
+        /* Result ring grid */
+        .results-ring-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .result-ring-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: ringReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .result-ring-item:nth-child(1) { animation-delay: 0.1s; }
+        .result-ring-item:nth-child(2) { animation-delay: 0.2s; }
+        .result-ring-item:nth-child(3) { animation-delay: 0.3s; }
+        .result-ring-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes ringReveal {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-ring-svg {
+            width: 90px;
+            height: 90px;
+            transform: rotate(-90deg);
+        }
+
+        .result-ring-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 5;
+        }
+
+        .result-ring-fill {
+            fill: none;
+            stroke-width: 5;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .result-ring-pct {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .result-ring-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Bars as thin accent under rings */
+        .results-bars-mini {
+            display: flex;
+            gap: 4px;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .results-bar-seg {
+            height: 100%;
+            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 3px;
+        }
+
+        .results-bar-seg.fixed { background: var(--fixed-costs); }
+        .results-bar-seg.guilt-free { background: var(--guilt-free); }
+        .results-bar-seg.savings { background: var(--savings); }
+        .results-bar-seg.investments { background: var(--investments); }
+
+        /* Buttons */
+        .quiz-apply-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2.25rem;
+            background: var(--rhyto-green);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 4px 16px rgba(0, 206, 124, 0.25);
+        }
+
+        .quiz-apply-btn:hover {
+            background: var(--rhyto-green-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 206, 124, 0.3);
+        }
+
+        .retake-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1.25rem;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 0.75rem;
+        }
+
+        .retake-btn:hover {
+            color: var(--rhyto-green);
+            border-color: rgba(0, 206, 124, 0.3);
+            background: rgba(0, 206, 124, 0.04);
+        }
+
+        .budget-content { display: none; }
+        .budget-content.visible { display: block; }
+
+        @media (max-width: 768px) {
+            .quiz-card { padding: 2rem 1.5rem 2rem; }
+
+            .results-ring-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.25rem;
+            }
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -430,8 +893,13 @@
             }
 
             .hero {
-                height: 50vh;
-                min-height: 400px;
+                height: 55vh;
+                min-height: 420px;
+            }
+
+            .hero-glow {
+                width: 280px;
+                height: 280px;
             }
 
             .budget-cards {
@@ -448,6 +916,8 @@
 
 <body>
 
+    <div id="particles-js"></div>
+
     <!-- Back to Home Button -->
     <a href="../index.html" class="back-btn" aria-label="Back to home">
         <i class="fas fa-arrow-left"></i>
@@ -456,13 +926,12 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-bg"></div>
         <div class="hero-content">
             <div class="logo-container">
                 <img src="../images/cache-hax-logo.png" alt="Cache Hax Logo" class="app-logo">
             </div>
             <h1>Cache Hax</h1>
-            <p>Master your finances with the proven 50/35/5/10 budgeting rule</p>
+            <p>Master your finances with a personalized budgeting plan</p>
             <button class="disclaimer-btn" onclick="openModal()">
                 <i class="fas fa-info-circle"></i> Important Disclaimer
             </button>
@@ -470,6 +939,22 @@
     </section>
 
     <div class="container">
+        <!-- Quiz Section -->
+        <section class="quiz-section" id="quizSection">
+            <div class="quiz-card">
+                <div class="quiz-header">
+                    <h2>Budget Profile Quiz</h2>
+                    <p>5 questions. Your personalized budget split.</p>
+                </div>
+                <div class="quiz-progress" id="quizProgress"></div>
+                <div class="quiz-step-label" id="quizStepLabel"></div>
+                <div id="quizBody"></div>
+            </div>
+        </section>
+
+        <!-- Budget Content (hidden until quiz complete) -->
+        <div class="budget-content" id="budgetContent">
+
         <!-- Input Section -->
         <section class="input-section">
             <div class="glass-card">
@@ -497,7 +982,7 @@
                 <div class="budget-card-header fixed-costs">
                     <span id="fixedCostsHeader">Fixed Costs (50%)</span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80" alt="Fixed costs illustration" class="budget-card-image">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80" alt="Fixed costs illustration" class="budget-card-image">
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-credit-card"></i> Debt payments</li>
@@ -513,7 +998,7 @@
                 <div class="budget-card-header guilt-free">
                     <span id="guiltFreeSpendingHeader">Guilt-free Spending (35%)</span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80" alt="Guilt-free spending illustration" class="budget-card-image">
+                <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80" alt="Guilt-free spending illustration" class="budget-card-image">
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-heart"></i> Passion projects</li>
@@ -528,7 +1013,7 @@
                 <div class="budget-card-header savings">
                     <span id="savingsHeader">Savings (5%)</span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80" alt="Savings illustration" class="budget-card-image">
+                <img src="https://images.unsplash.com/photo-1518458028785-8b391fee5d26?w=800&q=80" alt="Savings illustration" class="budget-card-image">
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-life-ring"></i> Emergency fund</li>
@@ -543,7 +1028,7 @@
                 <div class="budget-card-header investments">
                     <span id="investmentsHeader">Investments (10%)</span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Investments illustration" class="budget-card-image">
+                <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80" alt="Investments illustration" class="budget-card-image">
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-chart-line"></i> ETF selection</li>
@@ -553,6 +1038,8 @@
                 </div>
             </div>
         </section>
+
+        </div><!-- /budget-content -->
     </div>
 
     <!-- Modal -->
@@ -595,64 +1082,294 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
     <script>
-        // Modal functions
+        // ============ MODAL ============
         function openModal() {
             document.getElementById('myModal').style.display = 'block';
         }
-
         function closeModal() {
             document.getElementById('myModal').style.display = 'none';
         }
-
         window.onclick = function(event) {
-            const modal = document.getElementById('myModal');
-            if (event.target === modal) {
-                closeModal();
+            if (event.target === document.getElementById('myModal')) closeModal();
+        }
+
+        // ============ QUIZ DATA ============
+        const quizData = [
+            {
+                question: "What best describes your current living situation?",
+                options: [
+                    { text: "I rent and live alone", deltas: { fixed: 5, guiltFree: 0, savings: -3, investments: -2 } },
+                    { text: "I rent with roommates or shared housing", deltas: { fixed: 0, guiltFree: 2, savings: 0, investments: -2 } },
+                    { text: "I own my home (with a mortgage)", deltas: { fixed: 3, guiltFree: -2, savings: -2, investments: 1 } },
+                    { text: "I live with family / no housing costs", deltas: { fixed: -12, guiltFree: 4, savings: 4, investments: 4 } }
+                ]
+            },
+            {
+                question: "How would you describe your current debt?",
+                options: [
+                    { text: "Significant debt (student loans, credit cards, car payments)", deltas: { fixed: 8, guiltFree: -4, savings: -2, investments: -2 } },
+                    { text: "Some manageable debt (one loan or small balance)", deltas: { fixed: 3, guiltFree: -1, savings: -1, investments: -1 } },
+                    { text: "Minimal or no debt", deltas: { fixed: -5, guiltFree: 1, savings: 2, investments: 2 } }
+                ]
+            },
+            {
+                question: "What\u2019s your top financial priority right now?",
+                options: [
+                    { text: "Paying off debt as fast as possible", deltas: { fixed: 5, guiltFree: -3, savings: -1, investments: -1 } },
+                    { text: "Building an emergency fund", deltas: { fixed: -2, guiltFree: -2, savings: 6, investments: -2 } },
+                    { text: "Enjoying life and experiences", deltas: { fixed: -2, guiltFree: 6, savings: -2, investments: -2 } },
+                    { text: "Growing wealth long-term", deltas: { fixed: -2, guiltFree: -3, savings: -1, investments: 6 } }
+                ]
+            },
+            {
+                question: "How do you typically handle extra money at the end of the month?",
+                options: [
+                    { text: "I usually spend it on things I enjoy", deltas: { fixed: 0, guiltFree: 5, savings: -3, investments: -2 } },
+                    { text: "I save it for a rainy day", deltas: { fixed: 0, guiltFree: -2, savings: 5, investments: -3 } },
+                    { text: "I invest or put it toward financial goals", deltas: { fixed: 0, guiltFree: -2, savings: -3, investments: 5 } },
+                    { text: "It usually goes to bills or catching up", deltas: { fixed: 5, guiltFree: -2, savings: -2, investments: -1 } }
+                ]
+            },
+            {
+                question: "How comfortable are you with investing your money?",
+                options: [
+                    { text: "Very comfortable \u2014 I\u2019d invest aggressively", deltas: { fixed: 0, guiltFree: -2, savings: -3, investments: 5 } },
+                    { text: "Somewhat comfortable \u2014 balanced approach", deltas: { fixed: 0, guiltFree: 0, savings: -1, investments: 1 } },
+                    { text: "Not very \u2014 I prefer keeping money safe", deltas: { fixed: 0, guiltFree: 0, savings: 4, investments: -4 } },
+                    { text: "I haven\u2019t started thinking about it yet", deltas: { fixed: 0, guiltFree: 0, savings: 0, investments: 0 } }
+                ]
+            }
+        ];
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+        const CATEGORY_META = [
+            { key: 'fixed',       label: 'Fixed Costs', color: '#FF6384' },
+            { key: 'guiltFree',   label: 'Guilt-free',  color: '#36A2EB' },
+            { key: 'savings',     label: 'Savings',      color: '#FFCE56' },
+            { key: 'investments', label: 'Investments',  color: '#4BC0C0' }
+        ];
+
+        // ============ QUIZ STATE ============
+        let currentQuestionIndex = 0;
+        let quizAnswers = [];
+        let budgetWeights = { fixed: 50, guiltFree: 30, savings: 10, investments: 10 };
+
+        // ============ QUIZ FUNCTIONS ============
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            quizAnswers = [];
+            document.getElementById('quizSection').style.display = '';
+            document.getElementById('budgetContent').classList.remove('visible');
+            renderProgress();
+            renderStepLabel();
+            renderQuestion();
+        }
+
+        function renderProgress() {
+            const container = document.getElementById('quizProgress');
+            container.innerHTML = '';
+            for (let i = 0; i < quizData.length; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'quiz-progress-seg';
+                if (i < currentQuestionIndex) seg.classList.add('completed');
+                if (i === currentQuestionIndex) seg.classList.add('active');
+                container.appendChild(seg);
             }
         }
 
-        // Chart setup
+        function renderStepLabel() {
+            const label = document.getElementById('quizStepLabel');
+            if (currentQuestionIndex < quizData.length) {
+                label.innerHTML = `Question <span>${currentQuestionIndex + 1}</span> of ${quizData.length}`;
+                label.style.display = '';
+            } else {
+                label.style.display = 'none';
+            }
+        }
+
+        function renderQuestion() {
+            const body = document.getElementById('quizBody');
+            const q = quizData[currentQuestionIndex];
+
+            let html = '<div class="quiz-question-wrap">';
+            html += `<div class="quiz-question">${q.question}</div>`;
+            html += '<div class="quiz-options">';
+            q.options.forEach((opt, i) => {
+                html += `<button class="quiz-option" data-letter="${LETTERS[i]}" onclick="selectAnswer(${i})">${opt.text}</button>`;
+            });
+            html += '</div></div>';
+
+            body.innerHTML = html;
+        }
+
+        function selectAnswer(answerIndex) {
+            quizAnswers[currentQuestionIndex] = answerIndex;
+
+            const options = document.querySelectorAll('.quiz-option');
+            options[answerIndex].classList.add('selected');
+
+            // Disable all buttons after selection
+            options.forEach(btn => btn.style.pointerEvents = 'none');
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                renderProgress();
+                renderStepLabel();
+                if (currentQuestionIndex < quizData.length) {
+                    renderQuestion();
+                } else {
+                    showResults();
+                }
+            }, 300);
+        }
+
+        function calculateWeights() {
+            const base = { fixed: 50, guiltFree: 30, savings: 10, investments: 10 };
+            const minimums = { fixed: 30, guiltFree: 10, savings: 5, investments: 5 };
+            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
+
+            quizAnswers.forEach((ansIdx, qIdx) => {
+                const d = quizData[qIdx].options[ansIdx].deltas;
+                keys.forEach(k => base[k] += d[k]);
+            });
+
+            keys.forEach(k => { if (base[k] < minimums[k]) base[k] = minimums[k]; });
+
+            const total = keys.reduce((s, k) => s + base[k], 0);
+            keys.forEach(k => base[k] = Math.round((base[k] / total) * 100));
+
+            const rTotal = keys.reduce((s, k) => s + base[k], 0);
+            if (rTotal !== 100) {
+                const largest = keys.reduce((a, b) => base[a] >= base[b] ? a : b);
+                base[largest] += (100 - rTotal);
+            }
+            return base;
+        }
+
+        // SVG ring helper
+        function makeRing(pct, color) {
+            const r = 38;
+            const circ = 2 * Math.PI * r;
+            const offset = circ - (pct / 100) * circ;
+            return `<svg class="result-ring-svg" viewBox="0 0 90 90">
+                <circle class="result-ring-bg" cx="45" cy="45" r="${r}"/>
+                <circle class="result-ring-fill" cx="45" cy="45" r="${r}"
+                    stroke="${color}"
+                    stroke-dasharray="${circ}"
+                    stroke-dashoffset="${circ}"
+                    data-target="${offset}"/>
+            </svg>`;
+        }
+
+        function showResults() {
+            budgetWeights = calculateWeights();
+            renderProgress();
+            renderStepLabel();
+
+            const body = document.getElementById('quizBody');
+            let ringsHtml = '';
+            CATEGORY_META.forEach(cat => {
+                const pct = budgetWeights[cat.key];
+                ringsHtml += `
+                    <div class="result-ring-item">
+                        ${makeRing(pct, cat.color)}
+                        <span class="result-ring-pct" style="color:${cat.color}" data-target="${pct}">0</span>
+                        <span class="result-ring-label">${cat.label}</span>
+                    </div>`;
+            });
+
+            let barsHtml = '';
+            CATEGORY_META.forEach(cat => {
+                const cls = cat.key === 'guiltFree' ? 'guilt-free' : cat.key;
+                barsHtml += `<div class="results-bar-seg ${cls}" style="width:0%" data-target="${budgetWeights[cat.key]}"></div>`;
+            });
+
+            body.innerHTML = `
+                <div class="quiz-results">
+                    <h3>Your Budget Blueprint</h3>
+                    <p class="quiz-results-subtitle">Based on your lifestyle & goals</p>
+                    <div class="results-ring-grid">${ringsHtml}</div>
+                    <div class="results-bars-mini">${barsHtml}</div>
+                    <button class="quiz-apply-btn" onclick="applyWeights()">
+                        Apply & Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <br>
+                    <button class="retake-btn" onclick="initQuiz()">
+                        <i class="fas fa-redo"></i> Retake Quiz
+                    </button>
+                </div>`;
+
+            // Animate rings
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.result-ring-fill').forEach(circle => {
+                    circle.style.strokeDashoffset = circle.getAttribute('data-target');
+                });
+                // Animate bar segments
+                document.querySelectorAll('.results-bar-seg').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-target') + '%';
+                });
+                // Animate percentage counters
+                document.querySelectorAll('.result-ring-pct').forEach(el => {
+                    animateCounter(el, 0, parseInt(el.getAttribute('data-target')), 800);
+                });
+            });
+        }
+
+        function animateCounter(el, from, to, duration) {
+            const start = performance.now();
+            function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease out cubic
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(from + (to - from) * eased) + '%';
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        function applyWeights() {
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('budgetContent').classList.add('visible');
+
+            pieChart.data.labels = CATEGORY_META.map(c =>
+                `${c.label === 'Guilt-free' ? 'Guilt-free Spending' : c.label} (${budgetWeights[c.key]}%)`
+            );
+            pieChart.data.datasets[0].data = CATEGORY_META.map(c => budgetWeights[c.key]);
+            pieChart.update();
+
+            updateCardHeaders(0);
+            salaryProfitInput.value = '';
+        }
+
+        // ============ BUDGET LOGIC ============
         const salaryProfitInput = document.getElementById('salaryProfit');
         const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
-
-        const budgetColors = [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4BC0C0'
-        ];
+        const budgetColors = CATEGORY_META.map(c => c.color);
 
         function formatCurrency(amount) {
             return `$${amount.toFixed(2)}`;
         }
 
         function updateCardHeaders(salaryProfit) {
-            const fixedCostsAmount = (50 / 100) * salaryProfit;
-            const guiltFreeSpendingAmount = (35 / 100) * salaryProfit;
-            const savingsAmount = (5 / 100) * salaryProfit;
-            const investmentsAmount = (10 / 100) * salaryProfit;
+            const w = budgetWeights;
+            const ids = ['fixedCostsHeader', 'guiltFreeSpendingHeader', 'savingsHeader', 'investmentsHeader'];
+            const names = ['Fixed Costs', 'Guilt-free Spending', 'Savings', 'Investments'];
+            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
 
-            document.getElementById('fixedCostsHeader').textContent =
-                `Fixed Costs - ${formatCurrency(fixedCostsAmount)}`;
-            document.getElementById('guiltFreeSpendingHeader').textContent =
-                `Guilt-free Spending - ${formatCurrency(guiltFreeSpendingAmount)}`;
-            document.getElementById('savingsHeader').textContent =
-                `Savings - ${formatCurrency(savingsAmount)}`;
-            document.getElementById('investmentsHeader').textContent =
-                `Investments - ${formatCurrency(investmentsAmount)}`;
+            keys.forEach((k, i) => {
+                const amt = (w[k] / 100) * salaryProfit;
+                document.getElementById(ids[i]).textContent =
+                    salaryProfit > 0 ? `${names[i]} - ${formatCurrency(amt)}` : `${names[i]} (${w[k]}%)`;
+            });
         }
 
         const pieChart = new Chart(pieChartCanvas, {
             type: 'doughnut',
             data: {
-                labels: [
-                    'Fixed Costs (50%)',
-                    'Guilt-free Spending (35%)',
-                    'Savings (5%)',
-                    'Investments (10%)'
-                ],
+                labels: CATEGORY_META.map(c => `${c.label} (${budgetWeights[c.key]}%)`),
                 datasets: [{
-                    data: [50, 35, 5, 10],
+                    data: CATEGORY_META.map(c => budgetWeights[c.key]),
                     backgroundColor: budgetColors,
                     borderWidth: 0,
                     hoverOffset: 15
@@ -666,42 +1383,26 @@
                         position: 'bottom',
                         labels: {
                             color: '#fff',
-                            font: {
-                                size: 14,
-                                family: 'Montserrat'
-                            },
+                            font: { size: 14, family: 'Montserrat' },
                             padding: 20
                         }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleFont: {
-                            size: 16,
-                            family: 'Montserrat'
-                        },
-                        bodyFont: {
-                            size: 14,
-                            family: 'Montserrat'
-                        },
+                        titleFont: { size: 16, family: 'Montserrat' },
+                        bodyFont: { size: 14, family: 'Montserrat' },
                         padding: 12,
                         cornerRadius: 8
                     },
                     datalabels: {
                         color: '#fff',
-                        font: {
-                            weight: 'bold',
-                            size: 14,
-                            family: 'Montserrat'
-                        },
+                        font: { weight: 'bold', size: 14, family: 'Montserrat' },
                         formatter: (value, context) => {
-                            return value + '%';
+                            return budgetWeights[CATEGORY_META[context.dataIndex].key] + '%';
                         }
                     }
                 },
-                animation: {
-                    animateRotate: true,
-                    animateScale: true
-                }
+                animation: { animateRotate: true, animateScale: true }
             }
         });
 
@@ -709,22 +1410,110 @@
             const salaryProfit = parseFloat(salaryProfitInput.value) || 0;
             updateCardHeaders(salaryProfit);
 
-            const fixedCosts = (50 / 100) * salaryProfit;
-            const guiltFreeSpending = (35 / 100) * salaryProfit;
-            const savings = (5 / 100) * salaryProfit;
-            const investments = (10 / 100) * salaryProfit;
-
-            pieChart.data.datasets[0].data = [
-                fixedCosts || 50,
-                guiltFreeSpending || 35,
-                savings || 5,
-                investments || 10
-            ];
+            const w = budgetWeights;
+            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
+            pieChart.data.datasets[0].data = keys.map(k => {
+                const val = (w[k] / 100) * salaryProfit;
+                return val || w[k];
+            });
             pieChart.update();
         });
 
+        // Add retake button to the input section
+        (function() {
+            const inputSection = document.querySelector('.input-section .glass-card');
+            if (inputSection) {
+                const div = document.createElement('div');
+                div.style.textAlign = 'center';
+                div.innerHTML = '<button class="retake-btn" onclick="initQuiz()"><i class="fas fa-redo"></i> Retake Quiz</button>';
+                inputSection.appendChild(div);
+            }
+        })();
+
         // Initialize
-        updateCardHeaders(0);
+        initQuiz();
+    </script>
+
+    <!-- tsParticles lib -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+    <!-- tsParticles config -->
+    <script>
+    tsParticles.load("particles-js", {
+        "particles": {
+            "number": {
+                "value": 80, // Adjusted particle count
+                "density": {
+                    "enable": true,
+                    "area": 800
+                }
+            },
+            "color": {
+                "value": ["#00CE7C", "#FFFFFF", "#FF6384", "#FFCE56", "#36A2EB"]
+            },
+            "shape": {
+                "type": "image",
+                "image": {
+                    "src": "data:image/svg+xml;utf8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 64 64%22%3E%3Cpath data-name%3D%22layer1%22 d%3D%22M49 41.6a14.4 14.4 0 0 0-7-12.3 12.6 12.6 0 0 0-7-21.1V4h-6v4h-4V4h-6v4h-4v48h4v4h6v-4h4v4h6v-4a14.2 14.2 0 0 0 14-14.4zm-9.5-21a6.6 6.6 0 0 1-6.6 6.6H21V14h11.9a6.6 6.6 0 0 1 6.6 6.6zM34.6 50H21V33.2h14a8.6 8.6 0 0 1 8.2 8.4 8.6 8.6 0 0 1-8.6 8.4z%22 fill%3D%22%2300CE7C%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E",
+                    "width": 100,
+                    "height": 100
+                }
+            },
+            "opacity": {
+                "value": 0.7,
+                "random": {
+                    "enable": true,
+                    "minimumValue": 0.2
+                },
+                "animation": {
+                    "enable": true,
+                    "speed": 0.8,
+                    "minimumValue": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": { "min": 15, "max": 25 } // Adjusted size for icons
+            },
+
+            "rotate": {
+                "value": { "min": 0, "max": 0 },
+                "random": true,
+                "direction": "clockwise",
+                "animation": {
+                    "enable": true,
+                    "speed": 4,
+                    "sync": false
+                }
+            },
+            "tilt": {
+                "enable": true,
+                "value": { "min": 0, "max": 360 },
+                "direction": "random",
+                "animation": {
+                    "enable": true,
+                    "speed": 20,
+                    "sync": false
+                }
+            },
+            "move": {
+                "enable": true,
+                "speed": 2,
+                "direction": "bottom",
+                "straight": true,
+                "outModes": {
+                    "default": "out"
+                }
+            }
+        },
+        "interactivity": {
+            "detectsOn": "canvas",
+            "events": {
+                "resize": true
+            }
+        },
+        "detectRetina": true
+    });
     </script>
 
 </body>
