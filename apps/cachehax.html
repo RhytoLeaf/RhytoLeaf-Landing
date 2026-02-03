@@ -272,11 +272,13 @@
         .budget-card-header {
             padding: 1.5rem;
             color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
             text-align: center;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .budget-card-header::before {
@@ -287,12 +289,52 @@
             right: 0;
             bottom: 0;
             opacity: 0.9;
-            z-index: 0;
+            z-index: -1;
+        }
+        
+        .category-title {
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
-        .budget-card-header span {
-            position: relative;
+        .category-amount {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            min-height: 1.2em; /* Prevent layout shift */
+        }
+
+        .percentage-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(0,0,0,0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
             z-index: 1;
+        }
+
+        .percentage-input {
+            width: 45px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            -moz-appearance: textfield;
+        }
+        
+        .percentage-input::-webkit-outer-spin-button,
+        .percentage-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .percentage-sign {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
         }
 
         .budget-card-header.fixed-costs::before {
@@ -980,13 +1022,20 @@
             <!-- Fixed Costs -->
             <div class="budget-card">
                 <div class="budget-card-header fixed-costs">
-                    <span id="fixedCostsHeader">Fixed Costs (50%)</span>
+                    <span class="category-title">Fixed Costs</span>
+                    <div class="percentage-input-wrapper">
+                        <input type="number" class="percentage-input" data-key="fixed" min="0" max="100">
+                        <span class="percentage-sign">%</span>
+                    </div>
+                    <span class="category-amount" id="fixed-amount"></span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80" alt="Fixed costs illustration" class="budget-card-image">
+                <div class="budget-card-image img-fixed">
+                    <i class="fas fa-home"></i>
+                </div>
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-credit-card"></i> Debt payments</li>
-                        <li><i class="fas fa-home"></i> Mortgage / Rent</li>
+                        <li><i class="fas fa-file-invoice-dollar"></i> Bills & Utilities</li>
                         <li><i class="fas fa-shield-alt"></i> Insurance</li>
                         <li><i class="fas fa-shopping-cart"></i> Groceries</li>
                     </ul>
@@ -996,14 +1045,22 @@
             <!-- Guilt-free Spending -->
             <div class="budget-card">
                 <div class="budget-card-header guilt-free">
-                    <span id="guiltFreeSpendingHeader">Guilt-free Spending (35%)</span>
+                    <span class="category-title">Guilt-free</span>
+                    <div class="percentage-input-wrapper">
+                        <input type="number" class="percentage-input" data-key="guiltFree" min="0" max="100">
+                        <span class="percentage-sign">%</span>
+                    </div>
+                    <span class="category-amount" id="guiltFree-amount"></span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80" alt="Guilt-free spending illustration" class="budget-card-image">
+                <div class="budget-card-image img-guilt">
+                    <i class="fas fa-gift"></i>
+                </div>
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-heart"></i> Passion projects</li>
-                        <li><i class="fas fa-gift"></i> Things you love</li>
                         <li><i class="fas fa-utensils"></i> Dining out</li>
+                        <li><i class="fas fa-film"></i> Entertainment</li>
+                        <li><i class="fas fa-tag"></i> Shopping</li>
                     </ul>
                 </div>
             </div>
@@ -1011,14 +1068,22 @@
             <!-- Savings -->
             <div class="budget-card">
                 <div class="budget-card-header savings">
-                    <span id="savingsHeader">Savings (5%)</span>
+                    <span class="category-title">Savings</span>
+                     <div class="percentage-input-wrapper">
+                        <input type="number" class="percentage-input" data-key="savings" min="0" max="100">
+                        <span class="percentage-sign">%</span>
+                    </div>
+                    <span class="category-amount" id="savings-amount"></span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1518458028785-8b391fee5d26?w=800&q=80" alt="Savings illustration" class="budget-card-image">
+                <div class="budget-card-image img-savings">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
                 <div class="budget-card-body">
                     <ul>
                         <li><i class="fas fa-life-ring"></i> Emergency fund</li>
-                        <li><i class="fas fa-home"></i> Down payment</li>
+                        <li><i class="fas fa-car"></i> Large purchases</li>
                         <li><i class="fas fa-plane"></i> Vacation plans</li>
+                        <li><i class="fas fa-school"></i> Education</li>
                     </ul>
                 </div>
             </div>
@@ -1026,14 +1091,22 @@
             <!-- Investments -->
             <div class="budget-card">
                 <div class="budget-card-header investments">
-                    <span id="investmentsHeader">Investments (10%)</span>
+                    <span class="category-title">Investments</span>
+                     <div class="percentage-input-wrapper">
+                        <input type="number" class="percentage-input" data-key="investments" min="0" max="100">
+                        <span class="percentage-sign">%</span>
+                    </div>
+                    <span class="category-amount" id="investments-amount"></span>
                 </div>
-                <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80" alt="Investments illustration" class="budget-card-image">
+                <div class="budget-card-image img-invest">
+                    <i class="fas fa-chart-line"></i>
+                </div>
                 <div class="budget-card-body">
                     <ul>
-                        <li><i class="fas fa-chart-line"></i> ETF selection</li>
-                        <li><i class="fas fa-percentage"></i> Low cost funds</li>
-                        <li><i class="fas fa-sync"></i> Auto-invest</li>
+                        <li><i class="fas fa-chart-pie"></i> Index Funds (ETFs)</li>
+                        <li><i class="fas fa-building"></i> Real Estate</li>
+                        <li><i class="fas fa-hand-holding-usd"></i> Retirement Accounts</li>
+                        <li><i class="fas fa-seedling"></i> Stock Market</li>
                     </ul>
                 </div>
             </div>
@@ -1143,16 +1216,17 @@
 
         const LETTERS = ['A', 'B', 'C', 'D'];
         const CATEGORY_META = [
-            { key: 'fixed',       label: 'Fixed Costs', color: '#FF6384' },
-            { key: 'guiltFree',   label: 'Guilt-free',  color: '#36A2EB' },
-            { key: 'savings',     label: 'Savings',      color: '#FFCE56' },
-            { key: 'investments', label: 'Investments',  color: '#4BC0C0' }
+            { key: 'fixed', name: 'Fixed Costs', color: '#FF6384' },
+            { key: 'guiltFree', name: 'Guilt-free Spending', color: '#36A2EB' },
+            { key: 'savings', name: 'Savings', color: '#FFCE56' },
+            { key: 'investments', name: 'Investments', color: '#4BC0C0' }
         ];
 
         // ============ QUIZ STATE ============
         let currentQuestionIndex = 0;
         let quizAnswers = [];
         let budgetWeights = { fixed: 50, guiltFree: 30, savings: 10, investments: 10 };
+        const MIN_PERCENTAGE = 5;
 
         // ============ QUIZ FUNCTIONS ============
         function initQuiz() {
@@ -1190,7 +1264,6 @@
         function renderQuestion() {
             const body = document.getElementById('quizBody');
             const q = quizData[currentQuestionIndex];
-
             let html = '<div class="quiz-question-wrap">';
             html += `<div class="quiz-question">${q.question}</div>`;
             html += '<div class="quiz-options">';
@@ -1204,13 +1277,9 @@
 
         function selectAnswer(answerIndex) {
             quizAnswers[currentQuestionIndex] = answerIndex;
-
             const options = document.querySelectorAll('.quiz-option');
             options[answerIndex].classList.add('selected');
-
-            // Disable all buttons after selection
             options.forEach(btn => btn.style.pointerEvents = 'none');
-
             setTimeout(() => {
                 currentQuestionIndex++;
                 renderProgress();
@@ -1226,7 +1295,7 @@
         function calculateWeights() {
             const base = { fixed: 50, guiltFree: 30, savings: 10, investments: 10 };
             const minimums = { fixed: 30, guiltFree: 10, savings: 5, investments: 5 };
-            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
+            const keys = CATEGORY_META.map(c => c.key);
 
             quizAnswers.forEach((ansIdx, qIdx) => {
                 const d = quizData[qIdx].options[ansIdx].deltas;
@@ -1246,44 +1315,24 @@
             return base;
         }
 
-        // SVG ring helper
-        function makeRing(pct, color) {
-            const r = 38;
-            const circ = 2 * Math.PI * r;
-            const offset = circ - (pct / 100) * circ;
-            return `<svg class="result-ring-svg" viewBox="0 0 90 90">
-                <circle class="result-ring-bg" cx="45" cy="45" r="${r}"/>
-                <circle class="result-ring-fill" cx="45" cy="45" r="${r}"
-                    stroke="${color}"
-                    stroke-dasharray="${circ}"
-                    stroke-dashoffset="${circ}"
-                    data-target="${offset}"/>
-            </svg>`;
-        }
-
         function showResults() {
             budgetWeights = calculateWeights();
             renderProgress();
             renderStepLabel();
-
             const body = document.getElementById('quizBody');
             let ringsHtml = '';
             CATEGORY_META.forEach(cat => {
                 const pct = budgetWeights[cat.key];
-                ringsHtml += `
-                    <div class="result-ring-item">
+                ringsHtml += `<div class="result-ring-item">
                         ${makeRing(pct, cat.color)}
                         <span class="result-ring-pct" style="color:${cat.color}" data-target="${pct}">0</span>
-                        <span class="result-ring-label">${cat.label}</span>
+                        <span class="result-ring-label">${cat.name}</span>
                     </div>`;
             });
-
             let barsHtml = '';
             CATEGORY_META.forEach(cat => {
-                const cls = cat.key === 'guiltFree' ? 'guilt-free' : cat.key;
-                barsHtml += `<div class="results-bar-seg ${cls}" style="width:0%" data-target="${budgetWeights[cat.key]}"></div>`;
+                barsHtml += `<div class="results-bar-seg ${cat.key === 'guiltFree' ? 'guilt-free' : cat.key}" style="width:0%" data-target="${budgetWeights[cat.key]}"></div>`;
             });
-
             body.innerHTML = `
                 <div class="quiz-results">
                     <h3>Your Budget Blueprint</h3>
@@ -1292,134 +1341,177 @@
                     <div class="results-bars-mini">${barsHtml}</div>
                     <button class="quiz-apply-btn" onclick="applyWeights()">
                         Apply & Continue <i class="fas fa-arrow-right"></i>
-                    </button>
-                    <br>
-                    <button class="retake-btn" onclick="initQuiz()">
-                        <i class="fas fa-redo"></i> Retake Quiz
-                    </button>
+                    </button><br>
+                    <button class="retake-btn" onclick="initQuiz()"><i class="fas fa-redo"></i> Retake Quiz</button>
                 </div>`;
 
-            // Animate rings
             requestAnimationFrame(() => {
-                document.querySelectorAll('.result-ring-fill').forEach(circle => {
-                    circle.style.strokeDashoffset = circle.getAttribute('data-target');
+                document.querySelectorAll('.result-ring-fill').forEach(c => {
+                    const target = c.getAttribute('data-target');
+                    c.style.strokeDashoffset = target;
                 });
-                // Animate bar segments
-                document.querySelectorAll('.results-bar-seg').forEach(bar => {
-                    bar.style.width = bar.getAttribute('data-target') + '%';
+                document.querySelectorAll('.results-bar-seg').forEach(b => {
+                    b.style.width = b.getAttribute('data-target') + '%';
                 });
-                // Animate percentage counters
                 document.querySelectorAll('.result-ring-pct').forEach(el => {
                     animateCounter(el, 0, parseInt(el.getAttribute('data-target')), 800);
                 });
             });
         }
+        
+        function makeRing(pct, color) {
+            const r = 38;
+            const circ = 2 * Math.PI * r;
+            const offset = circ - (pct / 100) * circ;
+            return `<svg class="result-ring-svg" viewBox="0 0 90 90"><circle class="result-ring-bg" cx="45" cy="45" r="${r}"/><circle class="result-ring-fill" cx="45" cy="45" r="${r}" stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" data-target="${offset}"/></svg>`;
+        }
 
         function animateCounter(el, from, to, duration) {
             const start = performance.now();
-            function tick(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                // Ease out cubic
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.round(from + (to - from) * eased) + '%';
-                if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
+            (function tick(now) {
+                const p = Math.min((now - start) / duration, 1);
+                el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))) + '%';
+                if (p < 1) requestAnimationFrame(tick);
+            })(start);
         }
 
         function applyWeights() {
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('budgetContent').classList.add('visible');
-
-            pieChart.data.labels = CATEGORY_META.map(c =>
-                `${c.label === 'Guilt-free' ? 'Guilt-free Spending' : c.label} (${budgetWeights[c.key]}%)`
-            );
-            pieChart.data.datasets[0].data = CATEGORY_META.map(c => budgetWeights[c.key]);
-            pieChart.update();
-
-            updateCardHeaders(0);
             salaryProfitInput.value = '';
+            updateUI();
+            addPercentageInputListeners();
         }
 
-        // ============ BUDGET LOGIC ============
+        // ============ BUDGET LOGIC & UI UPDATES ============
         const salaryProfitInput = document.getElementById('salaryProfit');
-        const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
-        const budgetColors = CATEGORY_META.map(c => c.color);
+        let pieChart;
 
         function formatCurrency(amount) {
             return `$${amount.toFixed(2)}`;
         }
+        
+        function rebalanceWeights(changedKey, newValue) {
+            newValue = Math.round(Math.max(0, Math.min(100, newValue)));
+            let oldValue = budgetWeights[changedKey];
+            let diff = newValue - oldValue;
+            
+            if (diff === 0) return;
 
-        function updateCardHeaders(salaryProfit) {
-            const w = budgetWeights;
-            const ids = ['fixedCostsHeader', 'guiltFreeSpendingHeader', 'savingsHeader', 'investmentsHeader'];
-            const names = ['Fixed Costs', 'Guilt-free Spending', 'Savings', 'Investments'];
-            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
+            budgetWeights[changedKey] = newValue;
+            
+            let otherKeys = CATEGORY_META.map(c => c.key).filter(k => k !== changedKey);
+            let totalOtherWeights = otherKeys.reduce((sum, k) => sum + budgetWeights[k], 0);
+            
+            let remainderToDistribute = -diff;
+            
+            if (totalOtherWeights > 0) {
+                for (let key of otherKeys) {
+                    let proportion = budgetWeights[key] / totalOtherWeights;
+                    budgetWeights[key] += remainderToDistribute * proportion;
+                }
+            } else if (otherKeys.length > 0) {
+                let equalShare = remainderToDistribute / otherKeys.length;
+                for (let key of otherKeys) {
+                    budgetWeights[key] += equalShare;
+                }
+            }
+            
+            let currentTotal = CATEGORY_META.reduce((sum, c) => sum + budgetWeights[c.key], 0);
+            let roundingError = 100 - currentTotal;
+            
+            if (roundingError !== 0) {
+                const largestOtherKey = otherKeys.reduce((a, b) => budgetWeights[a] > budgetWeights[b] ? a : b, otherKeys[0]);
+                if (largestOtherKey) {
+                    budgetWeights[largestOtherKey] += roundingError;
+                } else {
+                    budgetWeights[changedKey] += roundingError;
+                }
+            }
 
-            keys.forEach((k, i) => {
-                const amt = (w[k] / 100) * salaryProfit;
-                document.getElementById(ids[i]).textContent =
-                    salaryProfit > 0 ? `${names[i]} - ${formatCurrency(amt)}` : `${names[i]} (${w[k]}%)`;
+            CATEGORY_META.forEach(cat => {
+                budgetWeights[cat.key] = Math.max(0, Math.round(budgetWeights[cat.key]));
+            });
+
+             // Final pass to ensure it's exactly 100
+            currentTotal = CATEGORY_META.reduce((sum, c) => sum + budgetWeights[c.key], 0);
+            if (currentTotal !== 100) {
+                 budgetWeights[changedKey] += (100 - currentTotal);
+            }
+        }
+
+
+        function updateUI() {
+            const salary = parseFloat(salaryProfitInput.value) || 0;
+            const keys = CATEGORY_META.map(c => c.key);
+
+            CATEGORY_META.forEach(cat => {
+                const perc = budgetWeights[cat.key];
+                const amount = (perc / 100) * salary;
+                
+                document.querySelector(`.percentage-input[data-key="${cat.key}"]`).value = perc.toFixed(0);
+                document.getElementById(`${cat.key}-amount`).textContent = salary > 0 ? formatCurrency(amount) : '';
+            });
+
+            if (!pieChart) {
+                createChart();
+            }
+            pieChart.data.labels = CATEGORY_META.map(c => `${c.name} (${budgetWeights[c.key].toFixed(0)}%)`);
+            pieChart.data.datasets[0].data = keys.map(k => budgetWeights[k]);
+            pieChart.options.plugins.datalabels.formatter = (value) => `${value.toFixed(0)}%`;
+            pieChart.update();
+        }
+
+        function createChart() {
+            if (pieChart) pieChart.destroy();
+            const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieChartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: CATEGORY_META.map(c => `${c.name} (${budgetWeights[c.key].toFixed(0)}%)`),
+                    datasets: [{
+                        data: CATEGORY_META.map(c => budgetWeights[c.key]),
+                        backgroundColor: CATEGORY_META.map(c => c.color),
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 16, family: 'Montserrat' },
+                            bodyFont: { size: 14, family: 'Montserrat' },
+                            padding: 12,
+                            cornerRadius: 8
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 14, family: 'Montserrat' },
+                             formatter: (value) => `${value.toFixed(0)}%`
+                        }
+                    },
+                    animation: { animateRotate: true, animateScale: true }
+                }
+            });
+        }
+        
+        function addPercentageInputListeners() {
+            document.querySelectorAll('.percentage-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const key = e.target.getAttribute('data-key');
+                    const value = parseFloat(e.target.value);
+                    rebalanceWeights(key, value);
+                    updateUI();
+                });
             });
         }
 
-        const pieChart = new Chart(pieChartCanvas, {
-            type: 'doughnut',
-            data: {
-                labels: CATEGORY_META.map(c => `${c.label} (${budgetWeights[c.key]}%)`),
-                datasets: [{
-                    data: CATEGORY_META.map(c => budgetWeights[c.key]),
-                    backgroundColor: budgetColors,
-                    borderWidth: 0,
-                    hoverOffset: 15
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#fff',
-                            font: { size: 14, family: 'Montserrat' },
-                            padding: 20
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleFont: { size: 16, family: 'Montserrat' },
-                        bodyFont: { size: 14, family: 'Montserrat' },
-                        padding: 12,
-                        cornerRadius: 8
-                    },
-                    datalabels: {
-                        color: '#fff',
-                        font: { weight: 'bold', size: 14, family: 'Montserrat' },
-                        formatter: (value, context) => {
-                            return budgetWeights[CATEGORY_META[context.dataIndex].key] + '%';
-                        }
-                    }
-                },
-                animation: { animateRotate: true, animateScale: true }
-            }
-        });
-
-        salaryProfitInput.addEventListener('input', () => {
-            const salaryProfit = parseFloat(salaryProfitInput.value) || 0;
-            updateCardHeaders(salaryProfit);
-
-            const w = budgetWeights;
-            const keys = ['fixed', 'guiltFree', 'savings', 'investments'];
-            pieChart.data.datasets[0].data = keys.map(k => {
-                const val = (w[k] / 100) * salaryProfit;
-                return val || w[k];
-            });
-            pieChart.update();
-        });
-
-        // Add retake button to the input section
+        salaryProfitInput.addEventListener('input', () => updateUI());
+        
         (function() {
             const inputSection = document.querySelector('.input-section .glass-card');
             if (inputSection) {
@@ -1431,91 +1523,131 @@
         })();
 
         // Initialize
+        createChart();
         initQuiz();
     </script>
-
-    <!-- tsParticles lib -->
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-
-    <!-- tsParticles config -->
+    
     <script>
-    tsParticles.load("particles-js", {
-        "particles": {
-            "number": {
-                "value": 80, // Adjusted particle count
-                "density": {
-                    "enable": true,
-                    "area": 800
+        // ============ DYNAMIC BUDGET ADJUSTMENT LOGIC ============
+        let pieChart; // Declared globally
+
+        function rebalanceWeights(changedKey, newValue) {
+            newValue = Math.max(0, Math.min(100, newValue));
+            let oldValue = budgetWeights[changedKey];
+            let diff = newValue - oldValue;
+            
+            if (diff === 0) return;
+
+            // Calculate available percentage to distribute among other categories
+            let otherKeys = CATEGORY_META.map(c => c.key).filter(k => k !== changedKey);
+            let currentTotalOtherWeights = otherKeys.reduce((sum, k) => sum + budgetWeights[k], 0);
+
+            if (currentTotalOtherWeights - diff < 0) {
+                // Cannot take more than available, cap newValue to prevent negative percentages
+                newValue = oldValue + currentTotalOtherWeights;
+                diff = newValue - oldValue;
+            }
+
+            budgetWeights[changedKey] = newValue;
+            
+            let remainderToDistribute = -diff; // The amount to add/subtract from other categories
+
+            if (currentTotalOtherWeights > 0) {
+                for(let key of otherKeys) {
+                    let proportion = budgetWeights[key] / currentTotalOtherWeights;
+                    budgetWeights[key] += remainderToDistribute * proportion;
                 }
-            },
-            "color": {
-                "value": ["#00CE7C", "#FFFFFF", "#FF6384", "#FFCE56", "#36A2EB"]
-            },
-            "shape": {
-                "type": "image",
-                "image": {
-                    "src": "data:image/svg+xml;utf8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 64 64%22%3E%3Cpath data-name%3D%22layer1%22 d%3D%22M49 41.6a14.4 14.4 0 0 0-7-12.3 12.6 12.6 0 0 0-7-21.1V4h-6v4h-4V4h-6v4h-4v48h4v4h6v-4h4v4h6v-4a14.2 14.2 0 0 0 14-14.4zm-9.5-21a6.6 6.6 0 0 1-6.6 6.6H21V14h11.9a6.6 6.6 0 0 1 6.6 6.6zM34.6 50H21V33.2h14a8.6 8.6 0 0 1 8.2 8.4 8.6 8.6 0 0 1-8.6 8.4z%22 fill%3D%22%2300CE7C%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E",
-                    "width": 100,
-                    "height": 100
+            } else if (otherKeys.length > 0) { // If other weights are all zero, distribute equally
+                const amountPerKey = remainderToDistribute / otherKeys.length;
+                for(let key of otherKeys) {
+                    budgetWeights[key] += amountPerKey;
                 }
-            },
-            "opacity": {
-                "value": 0.7,
-                "random": {
-                    "enable": true,
-                    "minimumValue": 0.2
+            }
+
+            // Round to nearest integer and ensure total is 100 due to floating point inaccuracies
+            CATEGORY_META.forEach(cat => {
+                budgetWeights[cat.key] = Math.round(budgetWeights[cat.key]);
+            });
+            let totalAfterRounding = CATEGORY_META.reduce((sum, c) => sum + budgetWeights[c.key], 0);
+            if (totalAfterRounding !== 100) {
+                let largestKey = changedKey; // Give/take from the one user is editing
+                if(Math.abs(100 - totalAfterRounding) > 0) {
+                    budgetWeights[largestKey] += (100 - totalAfterRounding);
+                }
+            }
+            
+            // Ensure no category drops below 0 or goes above 100 due to rounding adjustments
+            CATEGORY_META.forEach(cat => {
+                budgetWeights[cat.key] = Math.max(0, Math.min(100, budgetWeights[cat.key]));
+            });
+        }
+
+        function updateUI() {
+            const salary = parseFloat(document.getElementById('salaryProfit').value) || 0;
+            const keys = CATEGORY_META.map(c => c.key);
+
+            CATEGORY_META.forEach(cat => {
+                const perc = budgetWeights[cat.key];
+                const amount = (perc / 100) * salary;
+                
+                const input = document.querySelector(`.percentage-input[data-key="${cat.key}"]`);
+                if (input) input.value = perc.toFixed(0);
+
+                const amountEl = document.getElementById(`${cat.key}-amount`);
+                if(amountEl) amountEl.textContent = salary > 0 ? formatCurrency(amount) : '';
+            });
+
+            if (pieChart) { // Check if pieChart is initialized before updating
+                pieChart.data.labels = CATEGORY_META.map(c => `${c.name} (${budgetWeights[c.key].toFixed(0)}%)`);
+                pieChart.data.datasets[0].data = keys.map(k => budgetWeights[k]);
+                pieChart.options.plugins.datalabels.formatter = (value) => `${value.toFixed(0)}%`;
+                pieChart.update();
+            }
+        }
+
+        function createChart() {
+            if (pieChart) pieChart.destroy(); // Destroy existing chart if it exists
+            const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieChartCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: CATEGORY_META.map(c => c.color),
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
                 },
-                "animation": {
-                    "enable": true,
-                    "speed": 0.8,
-                    "minimumValue": 0.1,
-                    "sync": false
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { size: 16, family: 'Montserrat' },
+                            bodyFont: { size: 14, family: 'Montserrat' },
+                            padding: 12,
+                            cornerRadius: 8
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 14, family: 'Montserrat' },
+                        }
+                    },
+                    animation: { animateRotate: true, animateScale: true }
                 }
-            },
-            "size": {
-                "value": { "min": 15, "max": 25 } // Adjusted size for icons
-            },
-
-            "rotate": {
-                "value": { "min": 0, "max": 0 },
-                "random": true,
-                "direction": "clockwise",
-                "animation": {
-                    "enable": true,
-                    "speed": 4,
-                    "sync": false
-                }
-            },
-            "tilt": {
-                "enable": true,
-                "value": { "min": 0, "max": 360 },
-                "direction": "random",
-                "animation": {
-                    "enable": true,
-                    "speed": 20,
-                    "sync": false
-                }
-            },
-            "move": {
-                "enable": true,
-                "speed": 2,
-                "direction": "bottom",
-                "straight": true,
-                "outModes": {
-                    "default": "out"
-                }
-            }
-        },
-        "interactivity": {
-            "detectsOn": "canvas",
-            "events": {
-                "resize": true
-            }
-        },
-        "detectRetina": true
-    });
+            });
+        }
+        
+        function addPercentageInputListeners() {
+            document.querySelectorAll('.percentage-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const key = e.target.getAttribute('data-key');
+                    const value = parseFloat(e.target.value);
+                    rebalanceWeights(key, value);
+                });
+            });
+        }
     </script>
-
-</body>
-
-</html>
