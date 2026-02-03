@@ -1153,6 +1153,100 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <script>
+    (async () => {
+        await tsParticles.load("particles-js", {
+            fullScreen: {
+                enable: false
+            },
+            background: {
+                color: {
+                    value: "transparent"
+                }
+            },
+            particles: {
+                number: {
+                    value: 25,
+                    density: {
+                        enable: true,
+                        area: 800
+                    }
+                },
+                shape: {
+                    type: "image",
+                    options: {
+                        image: {
+                            src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/2048px-Bitcoin.svg.png",
+                            width: 100,
+                            height: 100,
+                            replaceColor: false
+                        }
+                    }
+                },
+                opacity: {
+                    value: 0.6
+                },
+                size: {
+                    value: { min: 14, max: 30 }
+                },
+                move: {
+                    enable: true,
+                    speed: 1.5,
+                    direction: "bottom",
+                    random: true,
+                    straight: false,
+                    outModes: {
+                        default: "out"
+                    }
+                },
+                rotate: {
+                    value: { min: 0, max: 360 },
+                    direction: "random",
+                    animation: {
+                        enable: true,
+                        speed: 10,
+                        sync: false
+                    }
+                },
+                tilt: {
+                    enable: true,
+                    value: { min: -20, max: 20 },
+                    direction: "random",
+                    animation: {
+                        enable: true,
+                        speed: 5,
+                        sync: false
+                    }
+                }
+            },
+            interactivity: {
+                detectsOn: "window",
+                events: {
+                    onHover: {
+                        enable: true,
+                        mode: "repulse"
+                    },
+                    onClick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                },
+                modes: {
+                    repulse: {
+                        distance: 100,
+                        duration: 0.4
+                    },
+                    push: {
+                        quantity: 4
+                    }
+                }
+            },
+            detectRetina: true
+        });
+    })();
+    </script>
 
     <script>
         // ============ MODAL ============
