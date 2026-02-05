@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --void: #0a0e1a;
@@ -66,7 +67,31 @@
         .modal-tip::before { content: '💡 '; }
 
         /* HEADER */
-        .header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, var(--void) 0%, rgba(10, 14, 26, 0.95) 100%); backdrop-filter: blur(20px); border-bottom: 1px solid var(--grid-strong); padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; animation: fadeIn 0.6s ease-out; }
+        .header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, var(--void) 0%, rgba(10, 14, 26, 0.95) 100%); backdrop-filter: blur(20px); border-bottom: 1px solid var(--grid-strong); padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: flex-start; gap: 20px; animation: fadeIn 0.6s ease-out; }
+        .back-to-rhytoleaf-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Slightly larger clickable area */
+            height: 48px;
+            border-radius: 8px; /* Square with rounded corners */
+            background: var(--deep); /* Use a darker background */
+            border: 1px solid var(--grid-strong);
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0;
+            padding: 8px; /* Add padding to contain image */
+        }
+        .back-to-rhytoleaf-btn:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transform: translateY(-1px);
+        }
+        .back-to-rhytoleaf-btn img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
         .logo { display: flex; align-items: center; gap: 12px; }
         .logo-icon { flex-shrink: 0; }
         .logo-text { display: flex; flex-direction: column; gap: 0; }
@@ -246,6 +271,9 @@
     </div>
 
     <header class="header">
+        <a href="../index.html" class="back-to-rhytoleaf-btn" title="Back to RhytoLeaf Home">
+            <img src="../images/logo-icon.png" alt="RhytoLeaf Home">
+        </a>
         <div class="logo">
             <svg class="logo-icon" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Chart line (V-shape) -->
@@ -413,8 +441,30 @@
 
         // STATE
         let currentTab = 'visualization';
-        let params = { seed: 42, interestRate: 8, periods: 12, principal: 10000, annuity: 1000, particleCount: 1200, flowSpeed: 1.5, trailOpacity: 12, colorInvest: '#fb7185', colorReturn: '#6ee7b7', colorGrowth: '#38bdf8' };
+        let params = { seed: 42, interestRate: 8, periods: 12, principal: 10000, annuity: 1000, particleCount: 1200, flowSpeed: 1.5, trailOpacity: 12, colorInvest: '#fb7185', colorReturn: '#6ee7b7', colorGrowth: '#38bdf8', isFrozen: false };
         let defaultParams = JSON.parse(JSON.stringify(params));
+
+        function toggleFreeze() {
+            params.isFrozen = !params.isFrozen;
+            const freezeBtn = document.getElementById('freeze-btn');
+            if (freezeBtn) {
+                const icon = freezeBtn.querySelector('i');
+                const textSpan = freezeBtn.querySelector('span');
+                if (params.isFrozen) {
+                    freezeBtn.classList.add('active');
+                    icon.classList.remove('fa-snowflake');
+                    icon.classList.add('fa-play');
+                    textSpan.textContent = 'Unfreeze';
+                    freezeBtn.title = 'Unfreeze Visualization';
+                } else {
+                    freezeBtn.classList.remove('active');
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-snowflake');
+                    textSpan.textContent = 'Freeze';
+                    freezeBtn.title = 'Freeze Visualization';
+                }
+            }
+        }
 
         // ECON FUNCTIONS
         const fpFactor = (i, N) => Math.pow(1 + i, N);
@@ -483,6 +533,11 @@
                 </div>
                 <div class="control-section">
                     <div class="section-header">Visualization</div>
+                    <div class="control-group">
+                        <button id="freeze-btn" class="btn btn-ghost" onclick="toggleFreeze()" title="Freeze Visualization" style="width:100%; margin-bottom: 12px;">
+                            <i class="fas fa-snowflake"></i> <span>Freeze</span>
+                        </button>
+                    </div>
                     <div class="control-group">
                         <div class="control-label"><span class="control-label-text">Particle Count</span><span class="control-value" id="particleCount-value">${params.particleCount}</span></div>
                         <input type="range" id="particleCount" min="400" max="2000" step="100" value="${params.particleCount}" oninput="updateParam('particleCount', this.value)">
@@ -753,7 +808,7 @@ BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
 
         function initializeSystem() { randomSeed(params.seed); noiseSeed(params.seed); particles = []; growthCurve = []; periodWidth = (width - 100) / params.periods; const i = params.interestRate / 100; maxValue = calculateFV(params.principal, params.annuity, i, params.periods); for (let n = 0; n <= params.periods; n++) growthCurve.push(calculateFV(params.principal, params.annuity, i, n)); for (let j = 0; j < params.particleCount; j++) particles.push(new EconomicParticle()); background(10, 14, 26); }
 
-        function draw() { if (currentTab !== 'visualization') return; noStroke(); fill(10, 14, 26, params.trailOpacity); rect(0, 0, width, height); stroke(56, 189, 248, 15); strokeWeight(1); for (let x = 0; x < width; x += 50) line(x, 0, x, height); for (let y = 0; y < height; y += 50) line(0, y, width, y); drawTimeline(); drawGrowthCurve(); for (let p of particles) { p.update(); p.display(); } drawCashFlows(); drawLabels(); }
+        function draw() { if (currentTab !== 'visualization') return; noStroke(); fill(10, 14, 26, params.trailOpacity); rect(0, 0, width, height); stroke(56, 189, 248, 15); strokeWeight(1); for (let x = 0; x < width; x += 50) line(x, 0, x, height); for (let y = 0; y < height; y += 50) line(0, y, width, y); drawTimeline(); drawGrowthCurve(); for (let p of particles) { if (!params.isFrozen) { p.update(); } p.display(); } drawCashFlows(); drawLabels(); }
 
         function drawTimeline() { stroke(148, 163, 184, 150); strokeWeight(1); line(50, timelineY, width - 50, timelineY); for (let n = 0; n <= params.periods; n++) { const x = 50 + n * periodWidth; stroke(148, 163, 184, 100); line(x, timelineY - 4, x, timelineY + 4); noStroke(); fill(100, 116, 139); textSize(9); textAlign(CENTER); text(n, x, timelineY + 16); } }
 
