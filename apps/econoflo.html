@@ -376,6 +376,12 @@
                 definition: 'Multipliers that convert between present, future, and annual values. They\'re shortcuts so you don\'t have to derive formulas every time.',
                 example: '(F/P, 10%, 5) = 1.6105 means $1 today becomes $1.61 in 5 years at 10%. Just multiply!',
                 tip: 'The notation (X/Y, i, N) means "find X given Y at interest i for N periods."'
+            },
+            'seed': {
+                title: 'Seed',
+                definition: 'A starting value used to initialize a pseudo-random number generator. In this visualization, changing the seed will create a completely new and unique visual pattern, allowing for endless exploration of different economic flow dynamics.',
+                example: 'If you use "123" as a seed, you\'ll always get the same sequence of "random" particles. Changing it to "456" will give a different, but consistently reproducible, sequence.',
+                tip: 'Use different seeds to explore a wide variety of flow patterns. If you find a pattern you like, note its seed to revisit it later!'
             }
         };
 
@@ -448,7 +454,7 @@
                 <div class="sidebar-title">Economic Flows</div>
                 <p class="sidebar-desc">Visualizing the ${info('tvm')}time value of money through particle dynamics. Watch ${info('compound-interest')}compound interest accelerate wealth accumulation.</p>
                 <div class="control-section">
-                    <div class="section-header">Seed</div>
+                    <div class="section-header">Seed ${info('seed')}</div>
                     <input type="number" class="seed-display" id="seed-input" value="${params.seed}" onchange="updateSeed()">
                     <div class="seed-nav">
                         <button class="btn btn-secondary" onclick="previousSeed()">← Prev</button>
