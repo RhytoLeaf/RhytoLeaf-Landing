@@ -1207,6 +1207,44 @@
         transform: translateY(-20px) rotate(360deg) translateX(80px);
       }
     }
+
+    @media (max-width: 480px) {
+      .hero {
+        min-height: 90vh;
+        padding-top: 4rem;
+        text-align: center;
+      }
+      .hero-content {
+        max-width: 100%;
+      }
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero-actions .btn-primary-glow,
+      .hero-actions .btn-ghost {
+        width: 100%;
+        justify-content: center;
+      }
+      .hero p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .donate-card, .cta-card {
+        padding: 2.5rem 1.5rem;
+      }
+      .donate-card h2, .cta-card h2 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+      }
+      .footer-inner {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .footer-brand, .footer-copy, .footer-contact {
+        text-align: center;
+      }
+    }
   </style>
 </head>
 

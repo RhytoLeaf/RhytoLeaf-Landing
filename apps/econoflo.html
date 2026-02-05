@@ -214,6 +214,23 @@
         /* RESPONSIVE */
         @media (max-width: 1200px) { .main-container { flex-direction: column; } .sidebar { width: 100%; max-height: none; border-right: none; border-bottom: 1px solid var(--grid-strong); } .content-area { max-height: none; } }
         @media (max-width: 768px) { .header { padding: 16px 20px; height: auto; flex-direction: column; gap: 16px; } .nav-tabs { width: 100%; overflow-x: auto; } .content-area { padding: 20px; } .formula-grid { grid-template-columns: 1fr; } .calc-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) {
+            .header {
+                align-items: center;
+            }
+            .logo-main {
+                font-size: 22px;
+            }
+            .nav-tab {
+                padding: 8px 14px;
+            }
+            .formula-card, .calc-section, .example-card {
+                padding: 20px;
+            }
+            .content-area {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
