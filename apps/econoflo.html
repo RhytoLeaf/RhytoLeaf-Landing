@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/econoflo-icon.png">
+    <title>EconoFlo - Economics 101</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0a0e1a;
+            --deep: #0f1628;
+            --navy: #1a2342;
+            --slate: #2a3a5c;
+            --grid: rgba(56, 189, 248, 0.08);
+            --grid-strong: rgba(56, 189, 248, 0.15);
+            --cyan: #38bdf8;
+            --cyan-glow: rgba(56, 189, 248, 0.4);
+            --cream: #f5f0e6;
+            --gold: #d4a853;
+            --gold-pale: #e8d5a8;
+            --mint: #6ee7b7;
+            --coral: #fb7185;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px), linear-gradient(var(--grid-strong) 1px, transparent 1px), linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px); background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px; pointer-events: none; z-index: 0; animation: gridMove 60s linear infinite; }
+        body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 30% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(212, 168, 83, 0.03) 0%, transparent 40%); pointer-events: none; z-index: 0; }
+
+        /* INFO ICON & MODAL STYLES */
+        .info-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: rgba(56, 189, 248, 0.15); border: 1px solid var(--cyan); border-radius: 50%; font-size: 10px; font-weight: 600; color: var(--cyan); cursor: pointer; margin-left: 6px; transition: all 0.2s; font-family: 'Instrument Serif', serif; font-style: italic; }
+        .info-icon:hover { background: var(--cyan); color: var(--void); transform: scale(1.1); box-shadow: 0 0 12px var(--cyan-glow); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10, 14, 26, 0.85); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; animation: overlayIn 0.2s ease-out; }
+        .modal-overlay.active { display: flex; }
+
+        .modal { background: linear-gradient(145deg, var(--deep) 0%, var(--navy) 100%); border: 1px solid var(--cyan); border-radius: 16px; max-width: 520px; width: 100%; max-height: 80vh; overflow: hidden; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px var(--cyan-glow); animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--grid-strong); display: flex; align-items: center; justify-content: space-between; background: var(--void); }
+        .modal-title { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--cream); display: flex; align-items: center; gap: 10px; }
+        .modal-title::before { content: '?'; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, var(--cyan) 0%, #0ea5e9 100%); border-radius: 50%; font-size: 14px; color: var(--void); font-weight: 600; }
+        .modal-close { width: 32px; height: 32px; background: transparent; border: 1px solid var(--slate); border-radius: 8px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; }
+        .modal-close:hover { background: var(--coral); border-color: var(--coral); color: white; }
+        .modal-body { padding: 24px; overflow-y: auto; max-height: calc(80vh - 80px); }
+        .modal-section { margin-bottom: 20px; }
+        .modal-section:last-child { margin-bottom: 0; }
+        .modal-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 8px; }
+        .modal-text { font-size: 14px; line-height: 1.7; color: var(--text); }
+        .modal-example { background: var(--void); border: 1px solid var(--slate); border-radius: 8px; padding: 14px 16px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold-pale); line-height: 1.6; }
+        .modal-tip { background: linear-gradient(135deg, rgba(110, 231, 183, 0.1) 0%, rgba(110, 231, 183, 0.02) 100%); border: 1px solid rgba(110, 231, 183, 0.25); border-radius: 8px; padding: 12px 14px; margin-top: 12px; font-size: 13px; color: var(--mint); }
+        .modal-tip::before { content: '💡 '; }
+
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 100; background: linear-gradient(180deg, var(--void) 0%, rgba(10, 14, 26, 0.95) 100%); backdrop-filter: blur(20px); border-bottom: 1px solid var(--grid-strong); padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; animation: fadeIn 0.6s ease-out; }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { flex-shrink: 0; }
+        .logo-text { display: flex; flex-direction: column; gap: 0; }
+        .logo-main { font-family: 'Instrument Serif', serif; font-size: 26px; font-weight: 400; color: var(--cream); letter-spacing: -0.02em; line-height: 1.1; }
+        .logo-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 400; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.8; }
+        .nav-tabs { display: flex; gap: 4px; background: var(--deep); padding: 4px; border-radius: 8px; border: 1px solid var(--grid-strong); }
+        .nav-tab { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.02em; padding: 10px 20px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; border-radius: 5px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .nav-tab::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--cyan) 0%, rgba(56, 189, 248, 0.7) 100%); opacity: 0; transition: opacity 0.25s; }
+        .nav-tab span { position: relative; z-index: 1; }
+        .nav-tab:hover { color: var(--cream); }
+        .nav-tab.active { color: var(--void); }
+        .nav-tab.active::before { opacity: 1; }
+
+        /* LAYOUT */
+        .main-container { display: flex; min-height: calc(100vh - 72px); position: relative; z-index: 1; }
+        .sidebar { width: 360px; flex-shrink: 0; background: linear-gradient(180deg, var(--deep) 0%, var(--navy) 100%); border-right: 1px solid var(--grid-strong); padding: 28px 24px; overflow-y: auto; max-height: calc(100vh - 72px); animation: slideInLeft 0.5s ease-out; }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--slate); border-radius: 3px; }
+        .sidebar-title { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--cream); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .sidebar-title::before { content: ''; width: 3px; height: 20px; background: var(--gold); border-radius: 2px; }
+        .sidebar-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; padding-left: 13px; border-left: 1px solid var(--grid-strong); }
+        .content-area { flex: 1; padding: 32px 40px; overflow-y: auto; max-height: calc(100vh - 72px); }
+        .content-area::-webkit-scrollbar { width: 8px; }
+        .content-area::-webkit-scrollbar-track { background: transparent; }
+        .content-area::-webkit-scrollbar-thumb { background: var(--slate); border-radius: 4px; }
+        .tab-content { display: none; animation: fadeInUp 0.4s ease-out; }
+        .tab-content.active { display: block; }
+
+        /* CONTROLS */
+        .control-section { margin-bottom: 28px; }
+        .section-header { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+        .section-header::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--grid-strong) 0%, transparent 100%); }
+        .control-group { margin-bottom: 16px; }
+        .control-label { font-size: 12px; font-weight: 500; color: var(--text-dim); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .control-label-text { display: flex; align-items: center; }
+        .control-value { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold); background: rgba(212, 168, 83, 0.1); padding: 2px 8px; border-radius: 4px; }
+        input[type="range"] { width: 100%; height: 4px; background: var(--slate); border-radius: 2px; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--cream); border-radius: 50%; cursor: pointer; box-shadow: 0 0 0 4px rgba(245, 240, 230, 0.1), 0 2px 8px rgba(0, 0, 0, 0.3); transition: all 0.2s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="number"], input[type="text"], select { width: 100%; padding: 12px 14px; background: var(--void); border: 1px solid var(--slate); border-radius: 6px; color: var(--cream); font-family: 'JetBrains Mono', monospace; font-size: 13px; transition: all 0.2s; }
+        input[type="number"]:focus, select:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1); }
+        select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L2 4h8z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+
+        /* BUTTONS */
+        .btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; padding: 12px 18px; border: none; border-radius: 6px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-primary { background: linear-gradient(135deg, var(--cyan) 0%, #0ea5e9 100%); color: var(--void); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3); }
+        .btn-secondary { background: var(--slate); color: var(--text); }
+        .btn-secondary:hover { background: var(--navy); transform: translateY(-1px); }
+        .btn-gold { background: linear-gradient(135deg, var(--gold) 0%, #c9973d 100%); color: var(--void); }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212, 168, 83, 0.3); }
+        .btn-ghost { background: transparent; border: 1px solid var(--slate); color: var(--text-dim); }
+        .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-row { display: flex; gap: 8px; }
+        .btn-row .btn { flex: 1; }
+        .seed-display { background: var(--void); border: 1px solid var(--slate); border-radius: 6px; padding: 10px 14px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--cyan); margin-bottom: 10px; letter-spacing: 0.1em; width: 100%; }
+        .seed-display:focus { outline: none; border-color: var(--cyan); }
+        .seed-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+
+        /* INFO PANEL */
+        .info-panel { background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(212, 168, 83, 0.03) 100%); border: 1px solid var(--grid-strong); border-radius: 8px; padding: 16px; }
+        .info-formula { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan); background: var(--void); padding: 10px 14px; border-radius: 4px; text-align: center; margin-bottom: 12px; border: 1px solid var(--grid-strong); }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--grid); font-size: 12px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-muted); display: flex; align-items: center; }
+        .info-value { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 500; }
+        .info-value.positive { color: var(--mint); }
+
+        /* COLOR PICKER */
+        .color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .color-picker { width: 32px; height: 32px; border: 2px solid var(--slate); border-radius: 6px; cursor: pointer; padding: 0; overflow: hidden; }
+        .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker::-webkit-color-swatch { border: none; }
+        .color-label { font-size: 12px; color: var(--text-dim); flex: 1; }
+        .color-value { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); }
+
+        /* CANVAS */
+        #canvas-container { background: linear-gradient(135deg, var(--deep) 0%, var(--navy) 50%, var(--deep) 100%); border-radius: 12px; border: 1px solid var(--grid-strong); overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); }
+        #canvas-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--cyan) 50%, transparent 100%); opacity: 0.5; }
+        #canvas-container canvas { display: block; width: 100% !important; height: auto !important; }
+        .loading { display: flex; align-items: center; justify-content: center; padding: 80px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+        .loading::before { content: '◐'; margin-right: 12px; animation: pulse 1s infinite; }
+
+        /* FORMULA CARDS */
+        .formula-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px; }
+        .formula-card { background: linear-gradient(145deg, var(--deep) 0%, var(--navy) 100%); border: 1px solid var(--grid-strong); border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all 0.3s; }
+        .formula-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--cyan) 0%, var(--gold) 100%); opacity: 0; transition: opacity 0.3s; }
+        .formula-card:hover { transform: translateY(-4px); border-color: var(--cyan); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); }
+        .formula-card:hover::before { opacity: 1; }
+        .formula-card h3 { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--cream); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .formula-card h3::before { content: '§'; color: var(--gold); font-size: 14px; }
+        .formula-card h4 { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin: 20px 0 10px; display: flex; align-items: center; }
+        .formula-box { background: var(--void); border: 1px solid var(--slate); border-radius: 6px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--cream); line-height: 1.8; white-space: pre-wrap; }
+        .formula-box.highlight { border-color: var(--cyan); background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, var(--void) 100%); }
+        .formula-box.gold { border-color: var(--gold); background: linear-gradient(135deg, rgba(212, 168, 83, 0.05) 0%, var(--void) 100%); }
+        .variable-list { font-size: 11px; color: var(--text-muted); margin-top: 10px; line-height: 1.8; }
+        .variable-list strong { color: var(--gold-pale); }
+        .decision-rule { background: linear-gradient(135deg, rgba(110, 231, 183, 0.08) 0%, rgba(110, 231, 183, 0.02) 100%); border: 1px solid rgba(110, 231, 183, 0.2); border-radius: 8px; padding: 14px 16px; margin: 16px 0; font-size: 12px; line-height: 1.7; }
+        .decision-rule strong { color: var(--mint); display: block; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        /* CALCULATORS */
+        .calc-section { background: linear-gradient(145deg, var(--deep) 0%, var(--navy) 100%); border: 1px solid var(--grid-strong); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+        .calc-section h3 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--cream); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .calc-section h3::before { content: ''; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 12px var(--cyan-glow); }
+        .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .calc-input label { display: flex; align-items: center; font-size: 11px; font-weight: 500; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .calc-result { background: var(--void); border: 1px solid var(--grid-strong); border-radius: 8px; padding: 20px; position: relative; }
+        .calc-result::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--mint) 0%, var(--cyan) 100%); }
+        .calc-result h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mint); margin-bottom: 8px; }
+        .calc-result .value { font-family: 'Instrument Serif', serif; font-size: 32px; color: var(--cream); margin-bottom: 12px; }
+        .calc-result .breakdown { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); line-height: 1.8; white-space: pre-wrap; }
+        .factor-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 16px; }
+        .factor-table th, .factor-table td { padding: 10px 14px; text-align: center; border: 1px solid var(--grid-strong); }
+        .factor-table th { background: var(--void); color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        .factor-table td { font-family: 'JetBrains Mono', monospace; color: var(--cream); background: var(--deep); }
+
+        /* EXAMPLES */
+        .example-card { background: linear-gradient(145deg, var(--deep) 0%, var(--navy) 100%); border: 1px solid var(--grid-strong); border-radius: 12px; padding: 28px; margin-bottom: 24px; }
+        .example-card .category { display: inline-block; background: linear-gradient(135deg, var(--cyan) 0%, #0ea5e9 100%); color: var(--void); padding: 4px 12px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+        .example-card h3 { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--cream); margin-bottom: 16px; line-height: 1.3; }
+        .example-card .problem { background: var(--void); border: 1px solid var(--slate); border-radius: 8px; padding: 18px 20px; margin-bottom: 20px; font-size: 14px; line-height: 1.7; color: var(--text); }
+        .example-card .problem strong { color: var(--gold); }
+        .example-card .solution { border-left: 2px solid var(--cyan); padding-left: 20px; margin-left: 8px; }
+        .example-card .solution h4 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px; }
+        .step { margin-bottom: 18px; }
+        .step-header { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .step-header::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+        .step-content { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--void); border: 1px solid var(--slate); border-radius: 6px; padding: 14px 16px; white-space: pre-wrap; line-height: 1.8; color: var(--cream); }
+        .final-answer { background: linear-gradient(135deg, rgba(110, 231, 183, 0.1) 0%, rgba(110, 231, 183, 0.02) 100%); border: 1px solid rgba(110, 231, 183, 0.3); border-radius: 8px; padding: 16px 20px; margin-top: 20px; }
+        .final-answer strong { color: var(--mint); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+        .final-answer p { font-size: 14px; color: var(--cream); line-height: 1.6; }
+
+        /* NAV BUTTONS */
+        .quick-nav-btn { width: 100%; padding: 12px 14px; margin-bottom: 8px; background: var(--void); border: 1px solid var(--slate); border-radius: 6px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: left; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+        .quick-nav-btn::before { content: '→'; color: var(--cyan); opacity: 0; transition: all 0.2s; transform: translateX(-5px); }
+        .quick-nav-btn:hover { border-color: var(--cyan); color: var(--cream); padding-left: 18px; }
+        .quick-nav-btn:hover::before { opacity: 1; transform: translateX(0); }
+        .factor-results { background: var(--void); border: 1px solid var(--slate); border-radius: 8px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 2; }
+        .factor-results .factor-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--grid); }
+        .factor-results .factor-row:last-child { border-bottom: none; }
+        .factor-results .factor-name { color: var(--text-muted); }
+        .factor-results .factor-val { color: var(--cyan); font-weight: 500; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) { .main-container { flex-direction: column; } .sidebar { width: 100%; max-height: none; border-right: none; border-bottom: 1px solid var(--grid-strong); } .content-area { max-height: none; } }
+        @media (max-width: 768px) { .header { padding: 16px 20px; height: auto; flex-direction: column; gap: 16px; } .nav-tabs { width: 100%; overflow-x: auto; } .content-area { padding: 20px; } .formula-grid { grid-template-columns: 1fr; } .calc-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Term</div>
+                <button class="modal-close" onclick="closeModalBtn()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <svg class="logo-icon" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Chart line (V-shape) -->
+                <path d="M10 35 L40 70 L90 25" stroke="#1a2342" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Water droplet -->
+                <path d="M50 12 C50 12 28 42 28 58 C28 74 38 86 50 86 C62 86 72 74 72 58 C72 42 50 12 50 12 Z" stroke="#38bdf8" stroke-width="6" fill="none"/>
+            </svg>
+            <div class="logo-text">
+                <span class="logo-main">Econo<span style="color: var(--cyan)">Flo</span></span>
+                <span class="logo-sub">Economics 101</span>
+            </div>
+        </div>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('visualization')"><span>Visualization</span></button>
+            <button class="nav-tab" onclick="switchTab('formulas')"><span>Formulas</span></button>
+            <button class="nav-tab" onclick="switchTab('calculators')"><span>Calculators</span></button>
+            <button class="nav-tab" onclick="switchTab('examples')"><span>Examples</span></button>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar"></aside>
+        <main class="content-area">
+            <div id="tab-visualization" class="tab-content active">
+                <div id="canvas-container"><div class="loading">Initializing visualization</div></div>
+            </div>
+            <div id="tab-formulas" class="tab-content"></div>
+            <div id="tab-calculators" class="tab-content"></div>
+            <div id="tab-examples" class="tab-content"></div>
+        </main>
+    </div>
+
+    <script>
+        // GLOSSARY - Beginner-friendly explanations
+        const glossary = {
+            'interest-rate': {
+                title: 'Interest Rate',
+                definition: 'The percentage charged or earned on money over a period of time. Think of it as the "rental fee" for borrowing money, or the "reward" for lending it.',
+                example: 'If you put $100 in a savings account with 5% interest, after one year you\'d have $105. The bank paid you $5 for letting them use your money.',
+                tip: 'Higher interest rates mean your money grows faster when saving, but costs more when borrowing!'
+            },
+            'marr': {
+                title: 'MARR (Minimum Acceptable Rate of Return)',
+                definition: 'The lowest return rate a company will accept on an investment. It\'s like setting a minimum grade you need to pass - any project earning less than MARR isn\'t worth doing.',
+                example: 'If your company\'s MARR is 10%, a project returning only 8% would be rejected, even if it makes money, because you could earn more elsewhere.',
+                tip: 'MARR is often based on the cost of borrowing money plus some extra to account for risk.'
+            },
+            'periods': {
+                title: 'Time Periods (N)',
+                definition: 'The number of time intervals in your analysis, usually years but can be months or quarters. It\'s how long you\'re looking into the future.',
+                example: 'A 30-year mortgage has N=30 (or N=360 if counting monthly). A 5-year car loan has N=5 years.',
+                tip: 'Make sure your interest rate matches your period - if N is in months, use a monthly interest rate!'
+            },
+            'principal': {
+                title: 'Principal (P) / Present Value',
+                definition: 'The amount of money you have RIGHT NOW, at time zero. It\'s your starting point - either what you\'re investing or what you\'re borrowing.',
+                example: 'If you deposit $10,000 in an account today, that $10,000 is your principal. If you take out a $200,000 mortgage, that\'s also the principal.',
+                tip: 'Present Value asks: "What is a future amount worth in today\'s dollars?"'
+            },
+            'annuity': {
+                title: 'Annuity (A) / Uniform Series',
+                definition: 'Equal payments made at regular intervals. Like your monthly rent, car payment, or paycheck - the same amount, over and over.',
+                example: 'Paying $500/month rent for a year is an annuity of 12 payments. Getting $1,000/year salary bonus is also an annuity.',
+                tip: 'Most loans and retirement plans use annuities because equal payments are easy to budget!'
+            },
+            'future-value': {
+                title: 'Future Value (F)',
+                definition: 'What your money will be worth at some point in the future, after earning interest. It\'s the answer to "how much will I have later?"',
+                example: 'Invest $1,000 today at 8% for 10 years → Future Value = $2,159. Your money more than doubled!',
+                tip: 'Future Value is always larger than Present Value (assuming positive interest rates).'
+            },
+            'compound-interest': {
+                title: 'Compound Interest',
+                definition: 'Interest calculated on both the initial principal AND the accumulated interest from previous periods. It\'s "interest on interest" - your money grows exponentially, not linearly.',
+                example: 'Year 1: $100 + 10% = $110. Year 2: $110 + 10% = $121 (not $120!). The extra $1 is interest earned on Year 1\'s interest.',
+                tip: 'Albert Einstein allegedly called compound interest "the eighth wonder of the world." Start saving early!'
+            },
+            'present-worth': {
+                title: 'Present Worth (PW)',
+                definition: 'The total value of all future cash flows converted back to today\'s dollars. It answers: "Is this investment worth it right now?"',
+                example: 'A machine costs $50,000 today but saves $15,000/year for 5 years. PW analysis tells you if those savings are worth more than $50,000 in today\'s terms.',
+                tip: 'If PW > 0, the investment earns more than your MARR. If PW < 0, look for something better!'
+            },
+            'cash-flow': {
+                title: 'Cash Flow',
+                definition: 'Money moving in or out at specific times. Inflows (receipts) are positive, outflows (disbursements) are negative. It\'s the heartbeat of any financial analysis.',
+                example: 'Buying a car: -$25,000 today (outflow), then -$100/month maintenance (outflows), finally +$5,000 sale in 5 years (inflow).',
+                tip: 'Draw a timeline with arrows! Up arrows for money in, down arrows for money out. It really helps!'
+            },
+            'depreciation': {
+                title: 'Depreciation',
+                definition: 'The decrease in value of an asset over time due to wear, age, or obsolescence. For accounting, it\'s spreading the cost of an asset over its useful life.',
+                example: 'A $50,000 truck used for 10 years might depreciate $5,000/year (straight-line). After 4 years, its "book value" is $30,000.',
+                tip: 'Depreciation is a non-cash expense - no money actually leaves! But it reduces taxes, which saves real money.'
+            },
+            'salvage-value': {
+                title: 'Salvage Value (S)',
+                definition: 'What an asset is worth at the end of its useful life. It\'s the "trade-in" or "scrap" value when you\'re done using it.',
+                example: 'Buy equipment for $100,000, use it for 8 years, sell it for $15,000. The salvage value is $15,000.',
+                tip: 'Higher salvage value = lower total cost of ownership. Consider resale value when buying!'
+            },
+            'irr': {
+                title: 'IRR (Internal Rate of Return)',
+                definition: 'The interest rate that makes an investment break even (PW = 0). It\'s asking: "What return rate does this project actually earn?"',
+                example: 'Invest $1,000 today, get $1,200 in 2 years. IRR ≈ 9.5%. If your MARR is 8%, accept it (IRR > MARR)!',
+                tip: 'IRR is great for comparing projects, but can be tricky with unusual cash flows. When in doubt, use PW analysis.'
+            },
+            'effective-rate': {
+                title: 'Effective Interest Rate',
+                definition: 'The actual annual interest rate after accounting for compounding. Credit cards say "24% APR" but charge monthly - the effective rate is actually 26.8%!',
+                example: '12% nominal, compounded monthly = (1 + 0.12/12)^12 - 1 = 12.68% effective. That extra 0.68% adds up!',
+                tip: 'Always compare effective rates, not nominal rates. It\'s the only true apples-to-apples comparison.'
+            },
+            'gradient': {
+                title: 'Gradient Series',
+                definition: 'Cash flows that increase (or decrease) by a fixed amount each period. Unlike uniform annuities, each payment is different.',
+                example: 'Maintenance costs: $500 in Year 1, $600 in Year 2, $700 in Year 3... The gradient G = $100/year increase.',
+                tip: 'Common in real life! Salaries increase, maintenance costs grow, revenues expand. Gradients capture this reality.'
+            },
+            'tvm': {
+                title: 'Time Value of Money',
+                definition: 'The core principle: a dollar today is worth MORE than a dollar tomorrow. Why? Because today\'s dollar can be invested to earn interest.',
+                example: 'Would you rather have $100 today or $100 in a year? Today! You could invest it and have $108 in a year (at 8%).',
+                tip: 'This is THE fundamental concept. Every formula in engineering economics is built on this idea!'
+            },
+            'factors': {
+                title: 'Interest Factors',
+                definition: 'Multipliers that convert between present, future, and annual values. They\'re shortcuts so you don\'t have to derive formulas every time.',
+                example: '(F/P, 10%, 5) = 1.6105 means $1 today becomes $1.61 in 5 years at 10%. Just multiply!',
+                tip: 'The notation (X/Y, i, N) means "find X given Y at interest i for N periods."'
+            }
+        };
+
+        function showInfo(termId) {
+            const term = glossary[termId];
+            if (!term) return;
+            document.getElementById('modal-title').textContent = term.title;
+            document.getElementById('modal-body').innerHTML = `
+                <div class="modal-section">
+                    <div class="modal-label">What is it?</div>
+                    <div class="modal-text">${term.definition}</div>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-label">Real-World Example</div>
+                    <div class="modal-example">${term.example}</div>
+                </div>
+                <div class="modal-tip">${term.tip}</div>
+            `;
+            document.getElementById('modal-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(e) { if (e.target.id === 'modal-overlay') closeModalBtn(); }
+        function closeModalBtn() { document.getElementById('modal-overlay').classList.remove('active'); document.body.style.overflow = ''; }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+
+        // Helper to create info icon
+        const info = (id) => `<span class="info-icon" onclick="showInfo('${id}')" title="Click for explanation">i</span>`;
+
+        // STATE
+        let currentTab = 'visualization';
+        let params = { seed: 42, interestRate: 8, periods: 12, principal: 10000, annuity: 1000, particleCount: 1200, flowSpeed: 1.5, trailOpacity: 12, colorInvest: '#fb7185', colorReturn: '#6ee7b7', colorGrowth: '#38bdf8' };
+        let defaultParams = JSON.parse(JSON.stringify(params));
+
+        // ECON FUNCTIONS
+        const fpFactor = (i, N) => Math.pow(1 + i, N);
+        const pfFactor = (i, N) => 1 / Math.pow(1 + i, N);
+        const faFactor = (i, N) => i === 0 ? N : (Math.pow(1 + i, N) - 1) / i;
+        const afFactor = (i, N) => i === 0 ? 1/N : i / (Math.pow(1 + i, N) - 1);
+        const paFactor = (i, N) => i === 0 ? N : (Math.pow(1 + i, N) - 1) / (i * Math.pow(1 + i, N));
+        const apFactor = (i, N) => i === 0 ? 1/N : (i * Math.pow(1 + i, N)) / (Math.pow(1 + i, N) - 1);
+        const agFactor = (i, N) => i === 0 ? (N-1)/2 : (1/i) - N / (Math.pow(1 + i, N) - 1);
+        const effectiveRate = (r, m) => Math.pow(1 + r/m, m) - 1;
+        const calculateFV = (P, A, i, N) => P * fpFactor(i, N) + A * faFactor(i, N);
+
+        // TAB SWITCHING
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.nav-tab').classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            renderSidebar(tabName);
+            if (tabName === 'formulas') renderFormulas();
+            if (tabName === 'calculators') renderCalculators();
+            if (tabName === 'examples') renderExamples();
+        }
+
+        function renderSidebar(tabName) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebars = { visualization: getVisualizationSidebar, formulas: getFormulasSidebar, calculators: getCalculatorsSidebar, examples: getExamplesSidebar };
+            sidebar.innerHTML = sidebars[tabName]();
+            if (tabName === 'visualization') { updateSeedDisplay(); updateCalcDisplay(); }
+            if (tabName === 'formulas') setTimeout(updateFactorTable, 50);
+        }
+
+        // SIDEBARS
+        function getVisualizationSidebar() {
+            return `
+                <div class="sidebar-title">Economic Flows</div>
+                <p class="sidebar-desc">Visualizing the ${info('tvm')}time value of money through particle dynamics. Watch ${info('compound-interest')}compound interest accelerate wealth accumulation.</p>
+                <div class="control-section">
+                    <div class="section-header">Seed</div>
+                    <input type="number" class="seed-display" id="seed-input" value="${params.seed}" onchange="updateSeed()">
+                    <div class="seed-nav">
+                        <button class="btn btn-secondary" onclick="previousSeed()">← Prev</button>
+                        <button class="btn btn-secondary" onclick="nextSeed()">Next →</button>
+                    </div>
+                    <button class="btn btn-ghost" onclick="randomSeedAndUpdate()" style="width:100%">↻ Random Seed</button>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Economic Parameters</div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">${info('marr')}Interest Rate (MARR)</span><span class="control-value" id="interestRate-value">${params.interestRate}%</span></div>
+                        <input type="range" id="interestRate" min="1" max="25" value="${params.interestRate}" oninput="updateParam('interestRate', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">${info('periods')}Time Periods (N)</span><span class="control-value" id="periods-value">${params.periods}</span></div>
+                        <input type="range" id="periods" min="5" max="30" value="${params.periods}" oninput="updateParam('periods', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">${info('principal')}Initial Investment (P)</span><span class="control-value" id="principal-value">$${params.principal.toLocaleString()}</span></div>
+                        <input type="range" id="principal" min="1000" max="50000" step="1000" value="${params.principal}" oninput="updateParam('principal', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">${info('annuity')}Annual Payment (A)</span><span class="control-value" id="annuity-value">$${params.annuity.toLocaleString()}</span></div>
+                        <input type="range" id="annuity" min="0" max="5000" step="100" value="${params.annuity}" oninput="updateParam('annuity', this.value)">
+                    </div>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Visualization</div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">Particle Count</span><span class="control-value" id="particleCount-value">${params.particleCount}</span></div>
+                        <input type="range" id="particleCount" min="400" max="2000" step="100" value="${params.particleCount}" oninput="updateParam('particleCount', this.value)">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><span class="control-label-text">Flow Speed</span><span class="control-value" id="flowSpeed-value">${params.flowSpeed}</span></div>
+                        <input type="range" id="flowSpeed" min="0.5" max="3" step="0.1" value="${params.flowSpeed}" oninput="updateParam('flowSpeed', this.value)">
+                    </div>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Colors</div>
+                    <div class="color-row"><input type="color" class="color-picker" id="colorInvest" value="${params.colorInvest}" onchange="updateColor('colorInvest', this.value)"><span class="color-label">${info('cash-flow')}Disbursement</span></div>
+                    <div class="color-row"><input type="color" class="color-picker" id="colorReturn" value="${params.colorReturn}" onchange="updateColor('colorReturn', this.value)"><span class="color-label">Receipt</span></div>
+                    <div class="color-row"><input type="color" class="color-picker" id="colorGrowth" value="${params.colorGrowth}" onchange="updateColor('colorGrowth', this.value)"><span class="color-label">Growth Curve</span></div>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Live Calculations</div>
+                    <div class="info-panel">
+                        <div class="info-formula">F = P(F/P,i,N) + A(F/A,i,N) ${info('factors')}</div>
+                        <div class="info-row"><span class="info-label">${info('future-value')}Future Value</span><span class="info-value" id="fv-result">$0</span></div>
+                        <div class="info-row"><span class="info-label">${info('present-worth')}Present Worth</span><span class="info-value" id="pw-result">$0</span></div>
+                        <div class="info-row"><span class="info-label">Total Interest</span><span class="info-value positive" id="interest-result">$0</span></div>
+                    </div>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Actions</div>
+                    <div class="btn-row">
+                        <button class="btn btn-secondary" onclick="resetParameters()">Reset</button>
+                        <button class="btn btn-gold" onclick="downloadPNG()">Export PNG</button>
+                    </div>
+                </div>`;
+        }
+
+        function getFormulasSidebar() {
+            return `
+                <div class="sidebar-title">Formula Reference</div>
+                <p class="sidebar-desc">Complete ${info('tvm')}engineering economics formulas with ${info('factors')}factor calculations and decision rules.</p>
+                <div class="control-section">
+                    <div class="section-header">Quick Navigation</div>
+                    <button class="quick-nav-btn" onclick="scrollToFormula('tvm')">Time Value of Money</button>
+                    <button class="quick-nav-btn" onclick="scrollToFormula('factors')">Interest Factors</button>
+                    <button class="quick-nav-btn" onclick="scrollToFormula('comparison')">Comparison Methods</button>
+                    <button class="quick-nav-btn" onclick="scrollToFormula('depreciation')">Depreciation</button>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Factor Calculator ${info('factors')}</div>
+                    <div class="control-group">
+                        <div class="control-label">${info('interest-rate')}Interest Rate (%)</div>
+                        <input type="number" id="sidebar-rate" value="10" step="0.5" onchange="updateFactorTable()">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">${info('periods')}Periods (N)</div>
+                        <input type="number" id="sidebar-n" value="10" onchange="updateFactorTable()">
+                    </div>
+                    <div class="factor-results" id="factor-results"></div>
+                </div>`;
+        }
+
+        function getCalculatorsSidebar() {
+            return `
+                <div class="sidebar-title">Calculators</div>
+                <p class="sidebar-desc">Interactive calculators for ${info('tvm')}time value of money, ${info('annuity')}annuities, ${info('gradient')}gradients, and ${info('depreciation')}depreciation.</p>
+                <div class="control-section">
+                    <div class="section-header">Calculator Types</div>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('tvm')">Time Value of Money</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('annuity')">Annuity & Series</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('gradient')">Gradient Series</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('depreciation')">Depreciation</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('loan')">Loan Amortization</button>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Quick Reference</div>
+                    <div class="info-panel">
+                        <div style="font-size:12px;color:var(--cream);margin-bottom:8px;font-weight:500;">Rule of 72 ${info('compound-interest')}</div>
+                        <div style="font-size:11px;color:var(--text-muted);line-height:1.7;">Years to double ≈ 72 / i%<br><br><span style="color:var(--gold)">8%</span> → ~9 years<br><span style="color:var(--gold)">10%</span> → ~7.2 years<br><span style="color:var(--gold)">12%</span> → ~6 years</div>
+                    </div>
+                </div>`;
+        }
+
+        function getExamplesSidebar() {
+            return `
+                <div class="sidebar-title">Worked Examples</div>
+                <p class="sidebar-desc">Step-by-step solutions showing how to apply ${info('tvm')}time value concepts, ${info('present-worth')}present worth analysis, and ${info('irr')}rate of return calculations.</p>
+                <div class="control-section">
+                    <div class="section-header">Filter by Topic</div>
+                    <button class="quick-nav-btn" onclick="filterExamples('all')">All Examples</button>
+                    <button class="quick-nav-btn" onclick="filterExamples('tvm')">Time Value</button>
+                    <button class="quick-nav-btn" onclick="filterExamples('comparison')">Comparison</button>
+                    <button class="quick-nav-btn" onclick="filterExamples('irr')">IRR / ERR</button>
+                    <button class="quick-nav-btn" onclick="filterExamples('depreciation')">Depreciation</button>
+                </div>`;
+        }
+
+        // FORMULAS
+        function renderFormulas() {
+            document.getElementById('tab-formulas').innerHTML = `
+                <div id="formula-tvm" class="formula-grid">
+                    <div class="formula-card">
+                        <h3>Time Value of Money ${info('tvm')}</h3>
+                        <h4>Simple Interest ${info('interest-rate')}</h4>
+                        <div class="formula-box">F = P(1 + ni)
+I = Pni</div>
+                        <div class="variable-list"><strong>F</strong> = Future · <strong>P</strong> = Present · <strong>n</strong> = Periods · <strong>i</strong> = Rate</div>
+                        <h4>Compound Interest ${info('compound-interest')}</h4>
+                        <div class="formula-box highlight">F = P(1 + i)<sup>N</sup></div>
+                        <h4>Effective Rate ${info('effective-rate')}</h4>
+                        <div class="formula-box">i<sub>e</sub> = (1 + r/m)<sup>m</sup> - 1</div>
+                    </div>
+                    <div class="formula-card">
+                        <h3>Useful Approximations</h3>
+                        <h4>Rule of 72</h4>
+                        <div class="formula-box gold">Years to double ≈ 72 / (i × 100)</div>
+                        <div class="decision-rule"><strong>Sign Convention</strong>Receipts: <span style="color:var(--mint)">Positive (+)</span><br>Disbursements: <span style="color:var(--coral)">Negative (−)</span></div>
+                    </div>
+                </div>
+                <div id="formula-factors" class="formula-grid" style="margin-top:24px;">
+                    <div class="formula-card">
+                        <h3>Single Payment Factors ${info('factors')}</h3>
+                        <h4>Compound Amount (F/P)</h4>
+                        <div class="formula-box highlight">(F/P, i, N) = (1 + i)<sup>N</sup></div>
+                        <h4>Present Worth (P/F)</h4>
+                        <div class="formula-box">(P/F, i, N) = 1/(1 + i)<sup>N</sup></div>
+                    </div>
+                    <div class="formula-card">
+                        <h3>Uniform Series Factors ${info('annuity')}</h3>
+                        <h4>Series Compound Amount (F/A)</h4>
+                        <div class="formula-box">(F/A, i, N) = [(1 + i)<sup>N</sup> - 1] / i</div>
+                        <h4>Sinking Fund (A/F)</h4>
+                        <div class="formula-box">(A/F, i, N) = i / [(1 + i)<sup>N</sup> - 1]</div>
+                        <h4>Series Present Worth (P/A)</h4>
+                        <div class="formula-box highlight">(P/A, i, N) = [(1 + i)<sup>N</sup> - 1] / [i(1 + i)<sup>N</sup>]</div>
+                        <h4>Capital Recovery (A/P)</h4>
+                        <div class="formula-box">(A/P, i, N) = [i(1 + i)<sup>N</sup>] / [(1 + i)<sup>N</sup> - 1]</div>
+                    </div>
+                    <div class="formula-card">
+                        <h3>Gradient Series ${info('gradient')}</h3>
+                        <h4>Arithmetic Gradient (A/G)</h4>
+                        <div class="formula-box">(A/G, i, N) = 1/i - N/[(1+i)<sup>N</sup> - 1]
+A<sub>total</sub> = A<sub>base</sub> + G × (A/G)</div>
+                        <h4>Geometric Gradient</h4>
+                        <div class="formula-box">i₀ = (i - g)/(1 + g)  when i ≠ g
+P = A × (P/A, i₀, N)</div>
+                    </div>
+                </div>
+                <div id="formula-comparison" class="formula-grid" style="margin-top:24px;">
+                    <div class="formula-card">
+                        <h3>Present Worth Analysis ${info('present-worth')}</h3>
+                        <div class="formula-box highlight">PW = Σ[CF<sub>t</sub> / (1 + i)<sup>t</sup>]</div>
+                        <div class="decision-rule"><strong>Decision Rules</strong>Independent: PW ≥ 0 → Accept<br>Mutually Exclusive: Choose max PW</div>
+                    </div>
+                    <div class="formula-card">
+                        <h3>Rate of Return ${info('irr')}</h3>
+                        <h4>Internal Rate of Return</h4>
+                        <div class="formula-box highlight">0 = Σ[CF<sub>t</sub> / (1 + IRR)<sup>t</sup>]</div>
+                        <div class="decision-rule"><strong>Decision Rules</strong>Independent: IRR ≥ ${info('marr')}MARR → Accept<br>Mutually Exclusive: Use incremental IRR</div>
+                    </div>
+                </div>
+                <div id="formula-depreciation" class="formula-grid" style="margin-top:24px;">
+                    <div class="formula-card">
+                        <h3>Straight-Line ${info('depreciation')}</h3>
+                        <div class="formula-box highlight">D<sub>n</sub> = (P - S) / N
+BV<sub>n</sub> = P - n(P - S)/N</div>
+                        <div class="variable-list"><strong>D</strong> = Annual depreciation · <strong>BV</strong> = Book value · <strong>S</strong> = ${info('salvage-value')}Salvage value</div>
+                    </div>
+                    <div class="formula-card">
+                        <h3>Declining Balance</h3>
+                        <div class="formula-box">d = 1 - (S/P)<sup>1/N</sup>
+D<sub>n</sub> = d × BV<sub>n-1</sub>
+BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
+                    </div>
+                </div>`;
+            setTimeout(updateFactorTable, 50);
+        }
+
+        function scrollToFormula(id) { document.getElementById('formula-' + id)?.scrollIntoView({ behavior: 'smooth' }); }
+        function scrollToCalc(id) { document.getElementById('calc-' + id)?.scrollIntoView({ behavior: 'smooth' }); }
+
+        function updateFactorTable() {
+            const i = parseFloat(document.getElementById('sidebar-rate')?.value || 10) / 100;
+            const N = parseInt(document.getElementById('sidebar-n')?.value || 10);
+            const r = document.getElementById('factor-results');
+            if (!r) return;
+            r.innerHTML = `<div class="factor-row"><span class="factor-name">(F/P)</span><span class="factor-val">${fpFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(P/F)</span><span class="factor-val">${pfFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(F/A)</span><span class="factor-val">${faFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(A/F)</span><span class="factor-val">${afFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(P/A)</span><span class="factor-val">${paFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(A/P)</span><span class="factor-val">${apFactor(i,N).toFixed(4)}</span></div><div class="factor-row"><span class="factor-name">(A/G)</span><span class="factor-val">${agFactor(i,N).toFixed(4)}</span></div>`;
+        }
+
+        // CALCULATORS
+        function renderCalculators() {
+            document.getElementById('tab-calculators').innerHTML = `
+                <div id="calc-tvm" class="calc-section">
+                    <h3>Time Value of Money ${info('tvm')}</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>${info('principal')}Present Value (P)</label><input type="number" id="tvm-pv" value="10000" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>${info('interest-rate')}Interest Rate (%)</label><input type="number" id="tvm-rate" value="8" step="0.5" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>${info('periods')}Periods (N)</label><input type="number" id="tvm-n" value="10" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>${info('effective-rate')}Compounding</label><select id="tvm-compound" onchange="calcTVM()"><option value="1">Annual</option><option value="2">Semi-Annual</option><option value="4">Quarterly</option><option value="12">Monthly</option><option value="365">Daily</option></select></div>
+                    </div>
+                    <div class="calc-result" id="tvm-result"><h4>${info('future-value')}Future Value</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+                <div id="calc-annuity" class="calc-section">
+                    <h3>Annuity Calculator ${info('annuity')}</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Calculation Type</label><select id="annuity-type" onchange="calcAnnuity()"><option value="fv">Find Future Value</option><option value="pv">Find Present Value</option><option value="pmt">Find Payment</option></select></div>
+                        <div class="calc-input"><label>Present Value (P)</label><input type="number" id="annuity-pv" value="0" onchange="calcAnnuity()"></div>
+                        <div class="calc-input"><label>Payment (A)</label><input type="number" id="annuity-pmt" value="1000" onchange="calcAnnuity()"></div>
+                        <div class="calc-input"><label>Future Value (F)</label><input type="number" id="annuity-fv" value="0" onchange="calcAnnuity()"></div>
+                        <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="annuity-rate" value="8" onchange="calcAnnuity()"></div>
+                        <div class="calc-input"><label>Periods (N)</label><input type="number" id="annuity-n" value="10" onchange="calcAnnuity()"></div>
+                    </div>
+                    <div class="calc-result" id="annuity-result"><h4>Result</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+                <div id="calc-gradient" class="calc-section">
+                    <h3>Gradient Series ${info('gradient')}</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Type</label><select id="gradient-type" onchange="calcGradient()"><option value="arithmetic">Arithmetic (G)</option><option value="geometric">Geometric (g%)</option></select></div>
+                        <div class="calc-input"><label>Base Amount (A₁)</label><input type="number" id="gradient-base" value="1000" onchange="calcGradient()"></div>
+                        <div class="calc-input"><label>Gradient (G or g%)</label><input type="number" id="gradient-g" value="100" onchange="calcGradient()"></div>
+                        <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="gradient-rate" value="10" onchange="calcGradient()"></div>
+                        <div class="calc-input"><label>Periods (N)</label><input type="number" id="gradient-n" value="5" onchange="calcGradient()"></div>
+                    </div>
+                    <div class="calc-result" id="gradient-result"><h4>Present Worth</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+                <div id="calc-depreciation" class="calc-section">
+                    <h3>Depreciation Schedule ${info('depreciation')}</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Method</label><select id="dep-method" onchange="calcDep()"><option value="sl">Straight-Line</option><option value="db">Declining Balance</option><option value="syd">Sum-of-Years-Digits</option></select></div>
+                        <div class="calc-input"><label>Initial Cost (P)</label><input type="number" id="dep-cost" value="100000" onchange="calcDep()"></div>
+                        <div class="calc-input"><label>${info('salvage-value')}Salvage Value (S)</label><input type="number" id="dep-salvage" value="10000" onchange="calcDep()"></div>
+                        <div class="calc-input"><label>Useful Life (N)</label><input type="number" id="dep-life" value="5" onchange="calcDep()"></div>
+                    </div>
+                    <div class="calc-result" id="dep-result"><h4>Schedule</h4><div id="dep-schedule"></div></div>
+                </div>
+                <div id="calc-loan" class="calc-section">
+                    <h3>Loan Amortization</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Loan Amount</label><input type="number" id="loan-amount" value="100000" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Annual Rate (%)</label><input type="number" id="loan-rate" value="6" step="0.125" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Term (Years)</label><input type="number" id="loan-term" value="30" onchange="calcLoan()"></div>
+                    </div>
+                    <div class="calc-result" id="loan-result"><h4>Monthly Payment</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>`;
+            setTimeout(() => { calcTVM(); calcAnnuity(); calcGradient(); calcDep(); calcLoan(); }, 50);
+        }
+
+        function calcTVM() { const P = parseFloat(document.getElementById('tvm-pv')?.value||0), r = parseFloat(document.getElementById('tvm-rate')?.value||0)/100, N = parseInt(document.getElementById('tvm-n')?.value||0), m = parseInt(document.getElementById('tvm-compound')?.value||1); const ie = effectiveRate(r, m), F = P * fpFactor(ie, N); document.getElementById('tvm-result').innerHTML = `<h4>Future Value</h4><div class="value">$${F.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">Effective Rate: ${(ie*100).toFixed(4)}%\n(F/P) = ${fpFactor(ie,N).toFixed(4)}\nInterest Earned: $${(F-P).toLocaleString('en-US',{maximumFractionDigits:2})}</div>`; }
+        function calcAnnuity() { const t = document.getElementById('annuity-type')?.value||'fv', P = parseFloat(document.getElementById('annuity-pv')?.value||0), A = parseFloat(document.getElementById('annuity-pmt')?.value||0), F = parseFloat(document.getElementById('annuity-fv')?.value||0), i = parseFloat(document.getElementById('annuity-rate')?.value||0)/100, N = parseInt(document.getElementById('annuity-n')?.value||0); let v,l,b; if(t==='fv'){v=P*fpFactor(i,N)+A*faFactor(i,N);l='Future Value';b=`F = P(F/P) + A(F/A)`;} else if(t==='pv'){v=F*pfFactor(i,N)+A*paFactor(i,N);l='Present Value';b=`P = F(P/F) + A(P/A)`;} else{v=P>0?P*apFactor(i,N):F*afFactor(i,N);l='Payment';b=P>0?'A = P(A/P)':'A = F(A/F)';} document.getElementById('annuity-result').innerHTML=`<h4>${l}</h4><div class="value">$${v.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">${b}</div>`; }
+        function calcGradient() { const t = document.getElementById('gradient-type')?.value||'arithmetic', A1 = parseFloat(document.getElementById('gradient-base')?.value||0), G = parseFloat(document.getElementById('gradient-g')?.value||0), i = parseFloat(document.getElementById('gradient-rate')?.value||0)/100, N = parseInt(document.getElementById('gradient-n')?.value||0); let PW,b; if(t==='arithmetic'){ const AG=agFactor(i,N), AW=A1+G*AG; PW=AW*paFactor(i,N); b=`(A/G) = ${AG.toFixed(4)}\nA_total = ${AW.toFixed(2)}\nPW = ${PW.toFixed(2)}`;} else { const g=G/100; if(Math.abs(i-g)<0.0001){PW=N*A1/(1+i);b=`i ≈ g: PW = NA₁/(1+i)`;} else { const i0=(i-g)/(1+g); PW=A1*paFactor(i0,N); b=`i₀ = ${i0.toFixed(4)}\nPW = A₁(P/A,i₀,N)`;}} document.getElementById('gradient-result').innerHTML=`<h4>Present Worth</h4><div class="value">$${PW.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">${b}</div>`; }
+        function calcDep() { const m=document.getElementById('dep-method')?.value||'sl', P=parseFloat(document.getElementById('dep-cost')?.value||0), S=parseFloat(document.getElementById('dep-salvage')?.value||0), N=parseInt(document.getElementById('dep-life')?.value||0); let h='<table class="factor-table"><tr><th>Year</th><th>Depreciation</th><th>Book Value</th></tr>', BV=P; if(m==='sl'){ const D=(P-S)/N; for(let n=1;n<=N;n++){BV=P-n*(P-S)/N; h+=`<tr><td>${n}</td><td>$${D.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} else if(m==='db'){ const d=1-Math.pow(S/P,1/N); for(let n=1;n<=N;n++){const Dn=BV*d; BV-=Dn; h+=`<tr><td>${n}</td><td>$${Dn.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} else { const SYD=N*(N+1)/2; for(let n=1;n<=N;n++){const Dn=(P-S)*(N-n+1)/SYD; BV-=Dn; h+=`<tr><td>${n}</td><td>$${Dn.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} h+='</table>'; document.getElementById('dep-schedule').innerHTML=h; }
+        function calcLoan() { const P=parseFloat(document.getElementById('loan-amount')?.value||0), r=parseFloat(document.getElementById('loan-rate')?.value||0)/100, y=parseInt(document.getElementById('loan-term')?.value||0); const i=r/12, N=y*12, PMT=P*apFactor(i,N), tot=PMT*N, int=tot-P; document.getElementById('loan-result').innerHTML=`<h4>Monthly Payment</h4><div class="value">$${PMT.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">Total Paid: $${tot.toLocaleString('en-US',{maximumFractionDigits:0})}\nTotal Interest: $${int.toLocaleString('en-US',{maximumFractionDigits:0})}</div>`; }
+
+        // EXAMPLES
+        const examples = [
+            { id:1, title:"Compound Interest", cat:"tvm", prob:"Lend $100 for 3 years at 10% compound. Find total interest.", sol:[{h:"Given",c:"P=$100, i=10%, N=3"},{h:"Formula",c:"F = P(1+i)^N"},{h:"Calculate",c:"F = 100(1.10)³ = $133.10"},{h:"Result",c:"I = F - P = $33.10"}], ans:"Interest = $33.10" },
+            { id:2, title:"Effective vs Nominal Rate", cat:"tvm", prob:"Credit card: 24% nominal, daily compounding. Find effective rate.", sol:[{h:"Given",c:"r=24%, m=365"},{h:"Formula",c:"iₑ = (1 + r/m)^m - 1"},{h:"Calculate",c:"iₑ = (1.000657)^365 - 1 = 27.1%"}], ans:"Effective = 27.1% (not 24%!)" },
+            { id:3, title:"Present Worth Comparison", cat:"comparison", prob:"Compare aircraft at MARR=10%, 5yr:\n737: $90M cost, $24M/yr\nA320: $108M cost, $28.5M/yr", sol:[{h:"737 MAX",c:"PW = -90 + 24(3.7908) = $0.98M"},{h:"A320neo",c:"PW = -108 + 28.5(3.7908) = $0.04M"}], ans:"Choose 737 (PW = $0.98M)" },
+            { id:4, title:"Incremental IRR", cat:"irr", prob:"Device A: $120K, $30K/yr\nDevice B: $180K, $40K/yr\n10yr, MARR=12%", sol:[{h:"Check A",c:"(P/A) = 4 → IRR ≈ 21% > MARR ✓"},{h:"Incremental",c:"Δ = $60K invest, $10K/yr\n(P/A) = 6 → IRR ≈ 10-11%"},{h:"Decision",c:"10% < MARR(12%) → Reject B"}], ans:"Choose Device A" },
+            { id:5, title:"Arithmetic Gradient", cat:"tvm", prob:"Labor: $100K yr1, +$10K/yr for 10yrs. Find PW at 10%.", sol:[{h:"Annuity",c:"A = 100K + 10K(3.7255) = $137,255"},{h:"PW",c:"P = 137,255(6.1446) = $843,227"}], ans:"PW = $843,227" },
+            { id:6, title:"Depreciation Methods", cat:"depreciation", prob:"$250K asset, $10K salvage, 6yr. Compare Year 1 D and Year 4 BV.", sol:[{h:"Straight-Line",c:"D = 40K/yr\nD₁ = $40,000, BV₄ = $90,000"},{h:"Declining Balance",c:"d = 43.54%\nD₁ = $108,850, BV₄ = $25,409"}], ans:"SL: D₁=$40K, BV₄=$90K\nDB: D₁=$109K, BV₄=$25K" }
+        ];
+        let exFilter = 'all';
+
+        function renderExamples() { filterExamples(exFilter); }
+        function filterExamples(t) { exFilter = t; const f = t === 'all' ? examples : examples.filter(e => e.cat === t); document.getElementById('tab-examples').innerHTML = f.map(e => `<div class="example-card"><span class="category">${e.cat.toUpperCase()}</span><h3>Example ${e.id}: ${e.title}</h3><div class="problem"><strong>Problem:</strong><br>${e.prob.replace(/\n/g,'<br>')}</div><div class="solution"><h4>Solution</h4>${e.sol.map(s=>`<div class="step"><div class="step-header">${s.h}</div><div class="step-content">${s.c}</div></div>`).join('')}<div class="final-answer"><strong>Answer</strong><p>${e.ans.replace(/\n/g,'<br>')}</p></div></div></div>`).join(''); }
+
+        // P5.JS VISUALIZATION
+        let particles=[], timelineY, periodWidth, maxValue, growthCurve=[];
+
+        function setup() { let c = createCanvas(900, 550); c.parent('canvas-container'); timelineY = height * 0.52; initializeSystem(); renderSidebar('visualization'); document.querySelector('.loading').style.display = 'none'; }
+
+        function initializeSystem() { randomSeed(params.seed); noiseSeed(params.seed); particles = []; growthCurve = []; periodWidth = (width - 100) / params.periods; const i = params.interestRate / 100; maxValue = calculateFV(params.principal, params.annuity, i, params.periods); for (let n = 0; n <= params.periods; n++) growthCurve.push(calculateFV(params.principal, params.annuity, i, n)); for (let j = 0; j < params.particleCount; j++) particles.push(new EconomicParticle()); background(10, 14, 26); }
+
+        function draw() { if (currentTab !== 'visualization') return; noStroke(); fill(10, 14, 26, params.trailOpacity); rect(0, 0, width, height); stroke(56, 189, 248, 15); strokeWeight(1); for (let x = 0; x < width; x += 50) line(x, 0, x, height); for (let y = 0; y < height; y += 50) line(0, y, width, y); drawTimeline(); drawGrowthCurve(); for (let p of particles) { p.update(); p.display(); } drawCashFlows(); drawLabels(); }
+
+        function drawTimeline() { stroke(148, 163, 184, 150); strokeWeight(1); line(50, timelineY, width - 50, timelineY); for (let n = 0; n <= params.periods; n++) { const x = 50 + n * periodWidth; stroke(148, 163, 184, 100); line(x, timelineY - 4, x, timelineY + 4); noStroke(); fill(100, 116, 139); textSize(9); textAlign(CENTER); text(n, x, timelineY + 16); } }
+
+        function drawGrowthCurve() { noFill(); stroke(params.colorGrowth); strokeWeight(2); beginShape(); for (let n = 0; n <= params.periods; n++) { const x = 50 + n * periodWidth; const norm = growthCurve[n] / maxValue; curveVertex(x, timelineY - norm * (timelineY - 50)); } endShape(); for (let n = 0; n <= params.periods; n++) { const x = 50 + n * periodWidth; fill(params.colorGrowth); noStroke(); ellipse(x, timelineY - (growthCurve[n] / maxValue) * (timelineY - 50), 5, 5); } }
+
+        function drawCashFlows() { const s = 50; if (params.principal > 0) drawArrow(50, timelineY, 50, timelineY + (params.principal / maxValue) * s + 12, params.colorInvest); if (params.annuity > 0) for (let n = 1; n <= params.periods; n++) drawArrow(50 + n * periodWidth, timelineY, 50 + n * periodWidth, timelineY + (params.annuity / maxValue) * s * 0.4 + 8, params.colorInvest); drawArrow(50 + params.periods * periodWidth, timelineY, 50 + params.periods * periodWidth, timelineY - (growthCurve[params.periods] / maxValue) * s - 18, params.colorReturn); }
+
+        function drawArrow(x1, y1, x2, y2, col) { stroke(col); strokeWeight(2); line(x1, y1, x2, y2); const a = atan2(y2 - y1, x2 - x1); fill(col); noStroke(); push(); translate(x2, y2); rotate(a); triangle(0, 0, -5, -3, -5, 3); pop(); }
+
+        function drawLabels() { fill(245, 240, 230); textSize(12); textAlign(LEFT); text('F = $' + growthCurve[params.periods].toLocaleString('en-US', {maximumFractionDigits: 0}), width - 130, 28); fill(148, 163, 184); textSize(10); text('i=' + params.interestRate + '% N=' + params.periods, width - 130, 44); textSize(8); fill(params.colorInvest); rect(16, height - 38, 10, 10, 2); fill(148, 163, 184); text('Disbursement', 30, height - 30); fill(params.colorReturn); rect(16, height - 22, 10, 10, 2); fill(148, 163, 184); text('Receipt', 30, height - 14); fill(params.colorGrowth); rect(100, height - 38, 10, 10, 2); fill(148, 163, 184); text('Growth', 114, height - 30); }
+
+        class EconomicParticle { constructor() { this.reset(); } reset() { const s = random(); if (s < 0.4) { this.x = 50 + random(-8, 8); this.y = timelineY + random(12, 40); this.type = 'invest'; } else if (s < 0.7) { const p = floor(random(1, params.periods + 1)); this.x = 50 + p * periodWidth + random(-6, 6); this.y = timelineY + random(8, 25); this.type = 'payment'; } else { const t = random(); const p = t * params.periods; this.x = 50 + p * periodWidth; const idx = floor(p), next = min(idx + 1, growthCurve.length - 1); const val = lerp(growthCurve[idx], growthCurve[next], p - idx); this.y = timelineY - (val / maxValue) * (timelineY - 50) + random(-12, 12); this.type = 'growth'; } this.vx = random(-0.3, 0.3); this.vy = random(-0.6, 0.6); this.size = random(1.5, 3.5); this.life = 255; this.maxLife = random(100, 200); } update() { const i = params.interestRate / 100; if (this.type === 'invest' || this.type === 'payment') { this.vy += 0.012; if (this.y > timelineY + 35) { this.vy *= 0.93; this.vx += random(-0.06, 0.06); } } else { this.vy -= i * 0.3 * 0.012; this.vx += params.flowSpeed * 0.006; const p = (this.x - 50) / periodWidth; if (p >= 0 && p <= params.periods) { const idx = floor(p), next = min(idx + 1, growthCurve.length - 1); const tgt = lerp(growthCurve[idx], growthCurve[next], p - idx); const tgtY = timelineY - (tgt / maxValue) * (timelineY - 50); this.vy += (tgtY - this.y) * 0.006; } } const n = noise(this.x * 0.006, this.y * 0.006, frameCount * 0.006); this.vx += (n - 0.5) * 0.06; this.vy += (noise(this.x * 0.006 + 100, this.y * 0.006) - 0.5) * 0.06; this.x += this.vx * params.flowSpeed; this.y += this.vy * params.flowSpeed; this.vx *= 0.96; this.vy *= 0.96; this.life -= 255 / this.maxLife; if (this.x < 0 || this.x > width || this.y < 0 || this.y > height || this.life <= 0) this.reset(); } display() { noStroke(); let col; if (this.type === 'invest' || this.type === 'payment') col = color(params.colorInvest); else { const blend = constrain(map(this.y, timelineY, 50, 0, 1), 0, 1); col = lerpColor(color(params.colorGrowth), color(params.colorReturn), blend); } col.setAlpha(this.life); fill(col); ellipse(this.x, this.y, this.size, this.size); } }
+
+        // UI HANDLERS
+        function updateParam(n, v) { const num = parseFloat(v); params[n] = num; const el = document.getElementById(n + '-value'); if (el) el.textContent = n === 'interestRate' ? num + '%' : (n === 'principal' || n === 'annuity') ? '$' + num.toLocaleString() : num; if (['interestRate', 'periods', 'principal', 'annuity', 'particleCount'].includes(n)) { initializeSystem(); updateCalcDisplay(); } }
+        function updateColor(id, v) { params[id] = v; }
+        function updateSeedDisplay() { const el = document.getElementById('seed-input'); if (el) el.value = params.seed; }
+        function updateSeed() { const el = document.getElementById('seed-input'); const v = parseInt(el?.value || params.seed); if (v > 0) { params.seed = v; initializeSystem(); } else updateSeedDisplay(); }
+        function previousSeed() { params.seed = Math.max(1, params.seed - 1); updateSeedDisplay(); initializeSystem(); }
+        function nextSeed() { params.seed++; updateSeedDisplay(); initializeSystem(); }
+        function randomSeedAndUpdate() { params.seed = Math.floor(Math.random() * 999999) + 1; updateSeedDisplay(); initializeSystem(); }
+        function resetParameters() { params = JSON.parse(JSON.stringify(defaultParams)); renderSidebar('visualization'); initializeSystem(); updateCalcDisplay(); }
+        function updateCalcDisplay() { const i = params.interestRate / 100; const fv = calculateFV(params.principal, params.annuity, i, params.periods); const pw = params.principal + params.annuity * paFactor(i, params.periods); const inv = params.principal + params.annuity * params.periods; const fvEl = document.getElementById('fv-result'), pwEl = document.getElementById('pw-result'), intEl = document.getElementById('interest-result'); if (fvEl) fvEl.textContent = '$' + fv.toLocaleString('en-US', {maximumFractionDigits: 0}); if (pwEl) pwEl.textContent = '$' + pw.toLocaleString('en-US', {maximumFractionDigits: 0}); if (intEl) intEl.textContent = '$' + (fv - inv).toLocaleString('en-US', {maximumFractionDigits: 0}); }
+        function downloadPNG() { saveCanvas('econ-101-' + params.seed, 'png'); }
+
+        window.addEventListener('load', () => renderSidebar('visualization'));
+    </script>
+</body>
+</html>
