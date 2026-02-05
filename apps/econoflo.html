@@ -410,6 +410,18 @@
                 definition: 'A starting value used to initialize a pseudo-random number generator. In this visualization, changing the seed will create a completely new and unique visual pattern, allowing for endless exploration of different economic flow dynamics.',
                 example: 'If you use "123" as a seed, you\'ll always get the same sequence of "random" particles. Changing it to "456" will give a different, but consistently reproducible, sequence.',
                 tip: 'Use different seeds to explore a wide variety of flow patterns. If you find a pattern you like, note its seed to revisit it later!'
+            },
+            'particle-count': {
+                title: 'Particle Count',
+                definition: 'This controls the total number of individual particles rendered in the visualization. A higher count can make the flow appear denser and more continuous, representing a more robust economic system or larger capital movement.',
+                example: 'Think of each particle as a single dollar, a small investment, or an individual transaction. A higher particle count visualizes a larger volume of money, more investors participating, or a greater number of economic activities occurring simultaneously.',
+                tip: 'Adjust the particle count to balance visual detail with performance. Lower counts might be better on older devices.'
+            },
+            'flow-speed': {
+                title: 'Flow Speed',
+                definition: 'Determines how quickly the particles move across the screen. This can be interpreted as the velocity of money in the economy, or the pace of wealth generation. Higher speeds suggest more dynamic and rapid economic activity.',
+                example: 'Imagine particles as money moving through the economy. High flow speed can represent rapid transactions in stock markets, quick capital reallocation by businesses, or a fast-paced economic cycle where money changes hands frequently. Conversely, low speed might illustrate money sitting idle or slow economic growth.',
+                tip: 'Combine higher flow speed with higher interest rates to vividly illustrate accelerated compound growth.'
             }
         };
 
@@ -539,11 +551,11 @@
                         </button>
                     </div>
                     <div class="control-group">
-                        <div class="control-label"><span class="control-label-text">Particle Count</span><span class="control-value" id="particleCount-value">${params.particleCount}</span></div>
+                        <div class="control-label"><span class="control-label-text">Particle Count ${info('particle-count')}</span><span class="control-value" id="particleCount-value">${params.particleCount}</span></div>
                         <input type="range" id="particleCount" min="400" max="2000" step="100" value="${params.particleCount}" oninput="updateParam('particleCount', this.value)">
                     </div>
                     <div class="control-group">
-                        <div class="control-label"><span class="control-label-text">Flow Speed</span><span class="control-value" id="flowSpeed-value">${params.flowSpeed}</span></div>
+                        <div class="control-label"><span class="control-label-text">Flow Speed ${info('flow-speed')}</span><span class="control-value" id="flowSpeed-value">${params.flowSpeed}</span></div>
                         <input type="range" id="flowSpeed" min="0.5" max="3" step="0.1" value="${params.flowSpeed}" oninput="updateParam('flowSpeed', this.value)">
                     </div>
                 </div>
@@ -818,7 +830,47 @@ BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
 
         function drawArrow(x1, y1, x2, y2, col) { stroke(col); strokeWeight(2); line(x1, y1, x2, y2); const a = atan2(y2 - y1, x2 - x1); fill(col); noStroke(); push(); translate(x2, y2); rotate(a); triangle(0, 0, -5, -3, -5, 3); pop(); }
 
-        function drawLabels() { fill(245, 240, 230); textSize(12); textAlign(LEFT); text('F = $' + growthCurve[params.periods].toLocaleString('en-US', {maximumFractionDigits: 0}), width - 130, 28); fill(148, 163, 184); textSize(10); text('i=' + params.interestRate + '% N=' + params.periods, width - 130, 44); textSize(8); fill(params.colorInvest); rect(16, height - 38, 10, 10, 2); fill(148, 163, 184); text('Disbursement', 30, height - 30); fill(params.colorReturn); rect(16, height - 22, 10, 10, 2); fill(148, 163, 184); text('Receipt', 30, height - 14); fill(params.colorGrowth); rect(100, height - 38, 10, 10, 2); fill(148, 163, 184); text('Growth', 114, height - 30); }
+        function drawLabels() {
+            // Future Value and Interest Rate display (top right)
+            fill(245, 240, 230);
+            textSize(14); // Slightly larger for main values
+            textAlign(RIGHT); // Align to the right
+            text('F = $' + growthCurve[params.periods].toLocaleString('en-US', {maximumFractionDigits: 0}), width - 30, 30);
+            fill(148, 163, 184);
+            textSize(12); // Slightly larger for info
+            text('i=' + params.interestRate + '% N=' + params.periods, width - 30, 50);
+
+            // Legend items (bottom left)
+            const legendTextSize = 12; // Increased text size
+            const rectSize = 16;      // Increased rectangle size
+            const startX = 20;        // Starting X position
+            let currentY = height - 60; // Starting Y position for legend items
+            const spacingY = 25;      // Vertical spacing between items
+            const textOffsetX = rectSize + 8; // Horizontal offset for text from rectangle
+
+            textAlign(LEFT);
+            textSize(legendTextSize);
+
+            // Disbursement
+            fill(params.colorInvest);
+            rect(startX, currentY - rectSize / 2, rectSize, rectSize, 2);
+            fill(148, 163, 184);
+            text('Disbursement', startX + textOffsetX, currentY + legendTextSize / 3);
+            currentY += spacingY;
+
+            // Receipt
+            fill(params.colorReturn);
+            rect(startX, currentY - rectSize / 2, rectSize, rectSize, 2);
+            fill(148, 163, 184);
+            text('Receipt', startX + textOffsetX, currentY + legendTextSize / 3);
+            currentY += spacingY;
+
+            // Growth
+            fill(params.colorGrowth);
+            rect(startX, currentY - rectSize / 2, rectSize, rectSize, 2);
+            fill(148, 163, 184);
+            text('Growth', startX + textOffsetX, currentY + legendTextSize / 3);
+        }
 
         class EconomicParticle { constructor() { this.reset(); } reset() { const s = random(); if (s < 0.4) { this.x = 50 + random(-8, 8); this.y = timelineY + random(12, 40); this.type = 'invest'; } else if (s < 0.7) { const p = floor(random(1, params.periods + 1)); this.x = 50 + p * periodWidth + random(-6, 6); this.y = timelineY + random(8, 25); this.type = 'payment'; } else { const t = random(); const p = t * params.periods; this.x = 50 + p * periodWidth; const idx = floor(p), next = min(idx + 1, growthCurve.length - 1); const val = lerp(growthCurve[idx], growthCurve[next], p - idx); this.y = timelineY - (val / maxValue) * (timelineY - 50) + random(-12, 12); this.type = 'growth'; } this.vx = random(-0.3, 0.3); this.vy = random(-0.6, 0.6); this.size = random(1.5, 3.5); this.life = 255; this.maxLife = random(100, 200); } update() { const i = params.interestRate / 100; if (this.type === 'invest' || this.type === 'payment') { this.vy += 0.012; if (this.y > timelineY + 35) { this.vy *= 0.93; this.vx += random(-0.06, 0.06); } } else { this.vy -= i * 0.3 * 0.012; this.vx += params.flowSpeed * 0.006; const p = (this.x - 50) / periodWidth; if (p >= 0 && p <= params.periods) { const idx = floor(p), next = min(idx + 1, growthCurve.length - 1); const tgt = lerp(growthCurve[idx], growthCurve[next], p - idx); const tgtY = timelineY - (tgt / maxValue) * (timelineY - 50); this.vy += (tgtY - this.y) * 0.006; } } const n = noise(this.x * 0.006, this.y * 0.006, frameCount * 0.006); this.vx += (n - 0.5) * 0.06; this.vy += (noise(this.x * 0.006 + 100, this.y * 0.006) - 0.5) * 0.06; this.x += this.vx * params.flowSpeed; this.y += this.vy * params.flowSpeed; this.vx *= 0.96; this.vy *= 0.96; this.life -= 255 / this.maxLife; if (this.x < 0 || this.x > width || this.y < 0 || this.y > height || this.life <= 0) this.reset(); } display() { noStroke(); let col; if (this.type === 'invest' || this.type === 'payment') col = color(params.colorInvest); else { const blend = constrain(map(this.y, timelineY, 50, 0, 1), 0, 1); col = lerpColor(color(params.colorGrowth), color(params.colorReturn), blend); } col.setAlpha(this.life); fill(col); ellipse(this.x, this.y, this.size, this.size); } }
 
