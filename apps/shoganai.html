@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shoganai - A free online Shogi (Japanese chess) game with AI opponent, tutorials, and adjustable difficulty levels.">
+    <link rel="canonical" href="https://rhytoleaf.ca/apps/shoganai.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Shoganai - Japanese Chess">
+    <meta property="og:description" content="Play Shogi (Japanese chess) online with AI opponent. Learn the rules with interactive tutorials.">
+    <meta property="og:image" content="https://rhytoleaf.ca/images/shoganai-logo.jpg">
+    <meta property="og:url" content="https://rhytoleaf.ca/apps/shoganai.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Shoganai - Japanese Chess">
+    <meta name="twitter:description" content="Play Shogi online with AI opponent and learn the game.">
+    <meta name="twitter:image" content="https://rhytoleaf.ca/images/shoganai-logo.jpg">
+    <meta property="twitter:url" content="https://rhytoleaf.ca/apps/shoganai.html">
+
     <title>将棋 Shoganai - Japanese Chess</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,6 +95,11 @@
     </style>
 </head>
 <body class="min-h-screen bg-ui-bg dark:bg-gray-900 transition-theme">
+    <!-- Back to All Apps Navigation -->
+    <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
+      ← All Apps
+    </a>
+
     <div id="app"></div>
     <script>
     // ========== LOCALIZATION ==========

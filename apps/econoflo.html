@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EconoFlo - Learn economics fundamentals with interactive simulations and visualizations.">
+    <link rel="canonical" href="https://rhytoleaf.ca/apps/econoflo.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="EconoFlo - Economics 101">
+    <meta property="og:description" content="Learn economics fundamentals with interactive simulations and visualizations.">
+    <meta property="og:image" content="https://rhytoleaf.ca/images/econoflo-icon.png">
+    <meta property="og:url" content="https://rhytoleaf.ca/apps/econoflo.html">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="EconoFlo - Economics 101">
+    <meta name="twitter:description" content="Learn economics fundamentals interactively.">
+    <meta name="twitter:image" content="https://rhytoleaf.ca/images/econoflo-icon.png">
+    <meta property="twitter:url" content="https://rhytoleaf.ca/apps/econoflo.html">
+
     <link rel="icon" type="image/png" href="../images/econoflo-icon.png">
     <title>EconoFlo - Economics 101</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
@@ -236,9 +253,65 @@
         .factor-results .factor-name { color: var(--text-muted); }
         .factor-results .factor-val { color: var(--cyan); font-weight: 500; }
 
+        /* COLLAPSIBLE SECTIONS */
+        .collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 14px 18px; background: var(--void); border: 1px solid var(--slate); border-radius: 8px; margin-bottom: 8px; transition: all 0.2s; }
+        .collapsible-header:hover { border-color: var(--cyan); }
+        .collapsible-header h4 { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.05em; color: var(--text-dim); margin: 0; }
+        .collapsible-header .chevron { color: var(--text-muted); transition: transform 0.3s; font-size: 12px; }
+        .collapsible-header.open .chevron { transform: rotate(180deg); }
+        .collapsible-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+        .collapsible-body.open { max-height: 5000px; transition: max-height 0.6s ease-in; }
+
+        /* PROGRESS BAR */
+        .progress-bar-container { background: var(--void); border: 1px solid var(--slate); border-radius: 6px; overflow: hidden; height: 28px; position: relative; margin: 12px 0; }
+        .progress-bar-fill { height: 100%; border-radius: 6px 0 0 6px; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: var(--void); min-width: 40px; }
+        .progress-bar-fill.contributions { background: linear-gradient(135deg, var(--cyan) 0%, #0ea5e9 100%); }
+        .progress-bar-fill.interest { background: linear-gradient(135deg, var(--mint) 0%, #34d399 100%); }
+        .stacked-bar { display: flex; height: 100%; }
+
+        /* COMPARISON GRID */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .comparison-card { background: var(--void); border: 1px solid var(--slate); border-radius: 8px; padding: 18px; text-align: center; }
+        .comparison-card.highlight { border-color: var(--mint); box-shadow: 0 0 20px rgba(110, 231, 183, 0.1); }
+        .comparison-card h5 { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+        .comparison-card .big-number { font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--cream); margin-bottom: 8px; }
+        .comparison-card .detail { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+        .comparison-card .detail .positive { color: var(--mint); font-weight: 600; }
+
+        /* PRESET BUTTONS */
+        .preset-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .preset-btn { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 6px 12px; background: var(--void); border: 1px solid var(--slate); border-radius: 4px; color: var(--text-dim); cursor: pointer; transition: all 0.2s; }
+        .preset-btn:hover, .preset-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(56, 189, 248, 0.08); }
+
+        /* YEAR TABLE */
+        .year-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 12px; }
+        .year-table th { padding: 8px 10px; text-align: right; background: var(--void); color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid var(--slate); }
+        .year-table th:first-child { text-align: center; }
+        .year-table td { padding: 6px 10px; text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--cream); border-bottom: 1px solid var(--grid); }
+        .year-table td:first-child { text-align: center; color: var(--text-muted); }
+        .year-table tr:hover td { background: rgba(56, 189, 248, 0.03); }
+
+        /* STAT CARDS */
+        .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+        .stat-card { background: var(--void); border: 1px solid var(--grid-strong); border-radius: 8px; padding: 14px; text-align: center; }
+        .stat-card .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+        .stat-card .stat-value { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--cream); }
+        .stat-card .stat-value.mint { color: var(--mint); }
+        .stat-card .stat-value.gold { color: var(--gold); }
+        .stat-card .stat-value.cyan { color: var(--cyan); }
+
+        /* LEARN SECTION */
+        .learn-card { background: linear-gradient(145deg, var(--deep) 0%, var(--navy) 100%); border: 1px solid var(--grid-strong); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+        .learn-card h3 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--cream); margin-bottom: 12px; }
+        .learn-card p { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+        .learn-highlight { background: rgba(56, 189, 248, 0.06); border-left: 3px solid var(--cyan); padding: 14px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 13px; color: var(--text); line-height: 1.7; }
+        .rule72-demo { display: flex; align-items: center; gap: 16px; background: var(--void); border: 1px solid var(--gold); border-radius: 8px; padding: 16px; margin: 12px 0; }
+        .rule72-demo input { width: 70px; text-align: center; }
+        .rule72-demo .result { font-family: 'Instrument Serif', serif; font-size: 24px; color: var(--gold); }
+
         /* RESPONSIVE */
         @media (max-width: 1200px) { .main-container { flex-direction: column; } .sidebar { width: 100%; max-height: none; border-right: none; border-bottom: 1px solid var(--grid-strong); } .content-area { max-height: none; } }
-        @media (max-width: 768px) { .header { padding: 16px 20px; height: auto; flex-direction: column; gap: 16px; } .nav-tabs { width: 100%; overflow-x: auto; } .content-area { padding: 20px; } .formula-grid { grid-template-columns: 1fr; } .calc-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .header { padding: 16px 20px; height: auto; flex-direction: column; gap: 16px; } .nav-tabs { width: 100%; overflow-x: auto; } .content-area { padding: 20px; } .formula-grid { grid-template-columns: 1fr; } .calc-grid { grid-template-columns: 1fr; } .comparison-grid { grid-template-columns: 1fr; } .stat-row { grid-template-columns: 1fr; } }
         @media (max-width: 480px) {
             .header {
                 align-items: center;
@@ -259,6 +332,11 @@
     </style>
 </head>
 <body>
+    <!-- Back to All Apps Navigation -->
+    <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
+      <i class="fas fa-arrow-left" style="font-size:0.75rem;"></i> All Apps
+    </a>
+
     <!-- Modal Overlay -->
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
@@ -287,22 +365,22 @@
             </div>
         </div>
         <nav class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('visualization')"><span>Visualization</span></button>
-            <button class="nav-tab" onclick="switchTab('formulas')"><span>Formulas</span></button>
+            <button class="nav-tab active" onclick="switchTab('mymoney')"><span>My Money</span></button>
             <button class="nav-tab" onclick="switchTab('calculators')"><span>Calculators</span></button>
-            <button class="nav-tab" onclick="switchTab('examples')"><span>Examples</span></button>
+            <button class="nav-tab" onclick="switchTab('learn')"><span>Learn</span></button>
+            <button class="nav-tab" onclick="switchTab('visualization')"><span>Visualization</span></button>
         </nav>
     </header>
 
     <div class="main-container">
         <aside class="sidebar" id="sidebar"></aside>
         <main class="content-area">
-            <div id="tab-visualization" class="tab-content active">
+            <div id="tab-mymoney" class="tab-content active"></div>
+            <div id="tab-calculators" class="tab-content"></div>
+            <div id="tab-learn" class="tab-content"></div>
+            <div id="tab-visualization" class="tab-content">
                 <div id="canvas-container"><div class="loading">Initializing visualization</div></div>
             </div>
-            <div id="tab-formulas" class="tab-content"></div>
-            <div id="tab-calculators" class="tab-content"></div>
-            <div id="tab-examples" class="tab-content"></div>
         </main>
     </div>
 
@@ -422,6 +500,30 @@
                 definition: 'Determines how quickly the particles move across the screen. This can be interpreted as the velocity of money in the economy, or the pace of wealth generation. Higher speeds suggest more dynamic and rapid economic activity.',
                 example: 'Imagine particles as money moving through the economy. High flow speed can represent rapid transactions in stock markets, quick capital reallocation by businesses, or a fast-paced economic cycle where money changes hands frequently. Conversely, low speed might illustrate money sitting idle or slow economic growth.',
                 tip: 'Combine higher flow speed with higher interest rates to vividly illustrate accelerated compound growth.'
+            },
+            'savings-goal': {
+                title: 'Savings Goal',
+                definition: 'The total amount of money you want to accumulate by a specific date. Setting a clear target helps you figure out exactly how much to save each month.',
+                example: 'Want $20,000 for a car in 3 years? A savings goal calculator tells you to save about $530/month at 5% return.',
+                tip: 'Start with your goal and work backwards. It\'s easier to commit to a monthly number than a giant lump sum!'
+            },
+            'inflation': {
+                title: 'Inflation',
+                definition: 'The rate at which prices rise over time, reducing your money\'s purchasing power. If inflation is 3%, something that costs $100 today will cost $103 next year.',
+                example: 'In 1990, a movie ticket cost about $4. Today it\'s around $12. That\'s inflation at work over 35 years.',
+                tip: 'Your investments need to earn MORE than inflation just to break even. If inflation is 3% and your savings earn 2%, you\'re actually losing purchasing power!'
+            },
+            'retirement': {
+                title: 'Retirement Planning',
+                definition: 'Figuring out how much money you need saved so you can stop working and live comfortably. The "4% rule" suggests you can safely withdraw 4% of your savings each year in retirement.',
+                example: 'If you need $40,000/year in retirement, you\'d need about $1,000,000 saved (40,000 / 0.04 = 1,000,000).',
+                tip: 'Starting early is the biggest advantage. Someone who invests $200/month from age 25 will have MORE than someone who invests $400/month starting at age 35!'
+            },
+            'return-rate': {
+                title: 'Expected Return Rate',
+                definition: 'How much you expect your investments to grow per year, on average. Different types of investments have different historical returns.',
+                example: 'Savings account: ~2-4%. Bonds: ~4-6%. Stock market index fund: ~7-10% (historically). These are averages \u2014 actual years will vary.',
+                tip: 'Higher returns come with higher risk. A diversified index fund is a common middle ground for long-term savings.'
             }
         };
 
@@ -452,7 +554,7 @@
         const info = (id) => `<span class="info-icon" onclick="showInfo('${id}')" title="Click for explanation">i</span>`;
 
         // STATE
-        let currentTab = 'visualization';
+        let currentTab = 'mymoney';
         let params = { seed: 42, interestRate: 8, periods: 12, principal: 10000, annuity: 1000, particleCount: 1200, flowSpeed: 1.5, trailOpacity: 12, colorInvest: '#fb7185', colorReturn: '#6ee7b7', colorGrowth: '#38bdf8', isFrozen: false };
         let defaultParams = JSON.parse(JSON.stringify(params));
 
@@ -497,20 +599,51 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById('tab-' + tabName).classList.add('active');
             renderSidebar(tabName);
-            if (tabName === 'formulas') renderFormulas();
+            if (tabName === 'mymoney') renderMyMoney();
             if (tabName === 'calculators') renderCalculators();
-            if (tabName === 'examples') renderExamples();
+            if (tabName === 'learn') renderLearn();
         }
 
         function renderSidebar(tabName) {
             const sidebar = document.getElementById('sidebar');
-            const sidebars = { visualization: getVisualizationSidebar, formulas: getFormulasSidebar, calculators: getCalculatorsSidebar, examples: getExamplesSidebar };
+            const sidebars = { mymoney: getMoneySidebar, visualization: getVisualizationSidebar, learn: getLearnSidebar, calculators: getCalculatorsSidebar };
             sidebar.innerHTML = sidebars[tabName]();
             if (tabName === 'visualization') { updateSeedDisplay(); updateCalcDisplay(); }
-            if (tabName === 'formulas') setTimeout(updateFactorTable, 50);
+            if (tabName === 'learn') setTimeout(updateFactorTable, 50);
         }
 
         // SIDEBARS
+        function getMoneySidebar() {
+            return `
+                <div class="sidebar-title">My Money</div>
+                <p class="sidebar-desc">Plan your financial future. See how your money can grow with ${info('compound-interest')}compound interest and smart saving habits.</p>
+                <div class="control-section">
+                    <div class="section-header">Quick Presets</div>
+                    <div class="preset-row">
+                        <button class="preset-btn" onclick="applyPreset('emergency')">Emergency Fund</button>
+                        <button class="preset-btn" onclick="applyPreset('car')">New Car</button>
+                        <button class="preset-btn" onclick="applyPreset('house')">House Down Payment</button>
+                        <button class="preset-btn" onclick="applyPreset('college')">College Fund</button>
+                        <button class="preset-btn" onclick="applyPreset('retirement')">Retirement</button>
+                    </div>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Jump To</div>
+                    <button class="quick-nav-btn" onclick="scrollToMoney('savings-goal')">Savings Goal Planner</button>
+                    <button class="quick-nav-btn" onclick="scrollToMoney('future-value')">Future Value Explorer</button>
+                    <button class="quick-nav-btn" onclick="scrollToMoney('inflation')">Inflation Impact</button>
+                    <button class="quick-nav-btn" onclick="scrollToMoney('comparison')">Investment Comparison</button>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Your Snapshot</div>
+                    <div class="info-panel">
+                        <div class="info-row"><span class="info-label">Total Contributed</span><span class="info-value" id="snap-contributed">$0</span></div>
+                        <div class="info-row"><span class="info-label">${info('compound-interest')}Interest Earned</span><span class="info-value positive" id="snap-interest">$0</span></div>
+                        <div class="info-row"><span class="info-label">${info('future-value')}Final Balance</span><span class="info-value" id="snap-balance">$0</span></div>
+                    </div>
+                </div>`;
+        }
+
         function getVisualizationSidebar() {
             return `
                 <div class="sidebar-title">Economic Flows</div>
@@ -583,16 +716,17 @@
                 </div>`;
         }
 
-        function getFormulasSidebar() {
+        function getLearnSidebar() {
             return `
-                <div class="sidebar-title">Formula Reference</div>
-                <p class="sidebar-desc">Complete ${info('tvm')}engineering economics formulas with ${info('factors')}factor calculations and decision rules.</p>
+                <div class="sidebar-title">Learn</div>
+                <p class="sidebar-desc">Understand how money grows and the math behind it. Start with the basics or dive into ${info('factors')}engineering economics formulas.</p>
                 <div class="control-section">
-                    <div class="section-header">Quick Navigation</div>
-                    <button class="quick-nav-btn" onclick="scrollToFormula('tvm')">Time Value of Money</button>
-                    <button class="quick-nav-btn" onclick="scrollToFormula('factors')">Interest Factors</button>
-                    <button class="quick-nav-btn" onclick="scrollToFormula('comparison')">Comparison Methods</button>
-                    <button class="quick-nav-btn" onclick="scrollToFormula('depreciation')">Depreciation</button>
+                    <div class="section-header">Topics</div>
+                    <button class="quick-nav-btn" onclick="scrollToLearn('basics')">Why Money Grows</button>
+                    <button class="quick-nav-btn" onclick="scrollToLearn('rule72')">Rule of 72</button>
+                    <button class="quick-nav-btn" onclick="scrollToLearn('cost-waiting')">The Cost of Waiting</button>
+                    <button class="quick-nav-btn" onclick="scrollToLearn('formulas')">Formulas & Factors</button>
+                    <button class="quick-nav-btn" onclick="scrollToLearn('examples')">Worked Examples</button>
                 </div>
                 <div class="control-section">
                     <div class="section-header">Factor Calculator ${info('factors')}</div>
@@ -611,14 +745,19 @@
         function getCalculatorsSidebar() {
             return `
                 <div class="sidebar-title">Calculators</div>
-                <p class="sidebar-desc">Interactive calculators for ${info('tvm')}time value of money, ${info('annuity')}annuities, ${info('gradient')}gradients, and ${info('depreciation')}depreciation.</p>
+                <p class="sidebar-desc">Financial tools for everyday decisions and ${info('tvm')}time value of money analysis.</p>
                 <div class="control-section">
-                    <div class="section-header">Calculator Types</div>
-                    <button class="quick-nav-btn" onclick="scrollToCalc('tvm')">Time Value of Money</button>
+                    <div class="section-header">Everyday Tools</div>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('loan')">Loan & Mortgage</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('retirement')">Retirement Planner</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('tvm')">Compound Interest</button>
+                    <button class="quick-nav-btn" onclick="scrollToCalc('tip')">Tip Calculator</button>
+                </div>
+                <div class="control-section">
+                    <div class="section-header">Advanced / Academic</div>
                     <button class="quick-nav-btn" onclick="scrollToCalc('annuity')">Annuity & Series</button>
                     <button class="quick-nav-btn" onclick="scrollToCalc('gradient')">Gradient Series</button>
                     <button class="quick-nav-btn" onclick="scrollToCalc('depreciation')">Depreciation</button>
-                    <button class="quick-nav-btn" onclick="scrollToCalc('loan')">Loan Amortization</button>
                 </div>
                 <div class="control-section">
                     <div class="section-header">Quick Reference</div>
@@ -629,29 +768,324 @@
                 </div>`;
         }
 
-        function getExamplesSidebar() {
-            return `
-                <div class="sidebar-title">Worked Examples</div>
-                <p class="sidebar-desc">Step-by-step solutions showing how to apply ${info('tvm')}time value concepts, ${info('present-worth')}present worth analysis, and ${info('irr')}rate of return calculations.</p>
-                <div class="control-section">
-                    <div class="section-header">Filter by Topic</div>
-                    <button class="quick-nav-btn" onclick="filterExamples('all')">All Examples</button>
-                    <button class="quick-nav-btn" onclick="filterExamples('tvm')">Time Value</button>
-                    <button class="quick-nav-btn" onclick="filterExamples('comparison')">Comparison</button>
-                    <button class="quick-nav-btn" onclick="filterExamples('irr')">IRR / ERR</button>
-                    <button class="quick-nav-btn" onclick="filterExamples('depreciation')">Depreciation</button>
-                </div>`;
+        // MY MONEY
+        function scrollToMoney(id) { document.getElementById('money-' + id)?.scrollIntoView({ behavior: 'smooth' }); }
+
+        function applyPreset(type) {
+            const presets = {
+                emergency: { goal: 10000, years: 1, rate: 4, label: 'Emergency Fund' },
+                car: { goal: 25000, years: 3, rate: 5, label: 'New Car' },
+                house: { goal: 60000, years: 5, rate: 6, label: 'House Down Payment' },
+                college: { goal: 80000, years: 18, rate: 7, label: 'College Fund' },
+                retirement: { goal: 1000000, years: 30, rate: 7, label: 'Retirement' }
+            };
+            const p = presets[type]; if (!p) return;
+            const el = (id) => document.getElementById(id);
+            if (el('sg-goal')) el('sg-goal').value = p.goal;
+            if (el('sg-years')) el('sg-years').value = p.years;
+            if (el('sg-rate')) el('sg-rate').value = p.rate;
+            calcSavingsGoal();
+            if (el('fv-start')) el('fv-start').value = 0;
+            if (el('fv-monthly')) { el('fv-monthly').value = Math.round(p.goal / (p.years * 12)); }
+            if (el('fv-rate')) el('fv-rate').value = p.rate;
+            if (el('fv-years')) el('fv-years').value = p.years;
+            calcFutureValue();
         }
 
-        // FORMULAS
-        function renderFormulas() {
-            document.getElementById('tab-formulas').innerHTML = `
-                <div id="formula-tvm" class="formula-grid">
+        function renderMyMoney() {
+            document.getElementById('tab-mymoney').innerHTML = `
+                <div id="money-savings-goal" class="calc-section">
+                    <h3>Savings Goal Planner ${info('savings-goal')}</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">How much do you need to save each month to reach your goal?</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Target Amount ($)</label><input type="number" id="sg-goal" value="25000" onchange="calcSavingsGoal()"></div>
+                        <div class="calc-input"><label>Years to Save</label><input type="number" id="sg-years" value="5" onchange="calcSavingsGoal()"></div>
+                        <div class="calc-input"><label>${info('return-rate')}Expected Return (%)</label>
+                            <select id="sg-rate" onchange="calcSavingsGoal()">
+                                <option value="2">Savings Account (~2%)</option>
+                                <option value="4">High-Yield Savings (~4%)</option>
+                                <option value="5" selected>Bonds / CDs (~5%)</option>
+                                <option value="7">Index Fund (~7%)</option>
+                                <option value="10">Aggressive (~10%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="stat-row" id="sg-stats">
+                        <div class="stat-card"><div class="stat-label">Monthly Savings</div><div class="stat-value cyan" id="sg-monthly">$0</div></div>
+                        <div class="stat-card"><div class="stat-label">You Contribute</div><div class="stat-value" id="sg-total-contrib">$0</div></div>
+                        <div class="stat-card"><div class="stat-label">Interest Earns</div><div class="stat-value mint" id="sg-total-interest">$0</div></div>
+                    </div>
+                    <div class="progress-bar-container"><div class="stacked-bar" id="sg-bar"></div></div>
+                    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;"><span><span style="color:var(--cyan);">&#9632;</span> Your Contributions</span><span><span style="color:var(--mint);">&#9632;</span> Interest Earned</span></div>
+                </div>
+
+                <div id="money-future-value" class="calc-section">
+                    <h3>Future Value Explorer ${info('future-value')}</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">See how your money grows over time with regular contributions.</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Starting Amount ($)</label><input type="number" id="fv-start" value="5000" onchange="calcFutureValue()"></div>
+                        <div class="calc-input"><label>Monthly Contribution ($)</label><input type="number" id="fv-monthly" value="300" onchange="calcFutureValue()"></div>
+                        <div class="calc-input"><label>${info('return-rate')}Annual Return (%)</label><input type="number" id="fv-rate" value="7" step="0.5" onchange="calcFutureValue()"></div>
+                        <div class="calc-input"><label>Years</label><input type="number" id="fv-years" value="20" onchange="calcFutureValue()"></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-card"><div class="stat-label">Future Balance</div><div class="stat-value cyan" id="fv-balance">$0</div></div>
+                        <div class="stat-card"><div class="stat-label">Total Contributed</div><div class="stat-value" id="fv-contrib">$0</div></div>
+                        <div class="stat-card"><div class="stat-label">Money Earned For You</div><div class="stat-value mint" id="fv-earned">$0</div></div>
+                    </div>
+                    <div id="fv-table-container" style="max-height:300px;overflow-y:auto;border:1px solid var(--slate);border-radius:8px;"></div>
+                </div>
+
+                <div id="money-inflation" class="calc-section">
+                    <h3>Inflation Impact ${info('inflation')}</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">See how inflation erodes your purchasing power over time.</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Amount Today ($)</label><input type="number" id="inf-amount" value="100" onchange="calcInflation()"></div>
+                        <div class="calc-input"><label>Years From Now</label><input type="number" id="inf-years" value="20" onchange="calcInflation()"></div>
+                        <div class="calc-input"><label>Inflation Rate (%)</label><input type="number" id="inf-rate" value="3" step="0.5" onchange="calcInflation()"></div>
+                    </div>
+                    <div class="calc-result" id="inf-result"><h4>Purchasing Power</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+
+                <div id="money-comparison" class="calc-section">
+                    <h3>Investment Comparison</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">See the difference between saving strategies side-by-side.</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Starting Amount ($)</label><input type="number" id="cmp-start" value="5000" onchange="calcComparison()"></div>
+                        <div class="calc-input"><label>Monthly Addition ($)</label><input type="number" id="cmp-monthly" value="300" onchange="calcComparison()"></div>
+                        <div class="calc-input"><label>Years</label><input type="number" id="cmp-years" value="20" onchange="calcComparison()"></div>
+                    </div>
+                    <div class="comparison-grid" id="cmp-results"></div>
+                </div>`;
+            setTimeout(() => { calcSavingsGoal(); calcFutureValue(); calcInflation(); calcComparison(); }, 50);
+        }
+
+        function calcSavingsGoal() {
+            const goal = parseFloat(document.getElementById('sg-goal')?.value || 0);
+            const years = parseInt(document.getElementById('sg-years')?.value || 0);
+            const rate = parseFloat(document.getElementById('sg-rate')?.value || 0) / 100;
+            const monthlyRate = rate / 12;
+            const months = years * 12;
+            let monthly;
+            if (monthlyRate === 0) { monthly = goal / months; }
+            else { monthly = goal * monthlyRate / (Math.pow(1 + monthlyRate, months) - 1); }
+            const totalContrib = monthly * months;
+            const totalInterest = goal - totalContrib;
+            const contribPct = Math.max(5, (totalContrib / goal) * 100);
+            const interestPct = 100 - contribPct;
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            const el = (id) => document.getElementById(id);
+            if (el('sg-monthly')) el('sg-monthly').textContent = fmt(monthly);
+            if (el('sg-total-contrib')) el('sg-total-contrib').textContent = fmt(totalContrib);
+            if (el('sg-total-interest')) el('sg-total-interest').textContent = fmt(totalInterest);
+            if (el('sg-bar')) el('sg-bar').innerHTML = `<div class="progress-bar-fill contributions" style="width:${contribPct}%">${Math.round(contribPct)}%</div><div class="progress-bar-fill interest" style="width:${interestPct}%">${Math.round(interestPct)}%</div>`;
+            updateSnapshot(totalContrib, totalInterest, goal);
+        }
+
+        function calcFutureValue() {
+            const start = parseFloat(document.getElementById('fv-start')?.value || 0);
+            const monthly = parseFloat(document.getElementById('fv-monthly')?.value || 0);
+            const rate = parseFloat(document.getElementById('fv-rate')?.value || 0) / 100;
+            const years = parseInt(document.getElementById('fv-years')?.value || 0);
+            const monthlyRate = rate / 12;
+            let balance = start, totalContrib = start;
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            let rows = '<table class="year-table"><tr><th>Year</th><th>Contributed</th><th>Interest</th><th>Balance</th></tr>';
+            for (let y = 1; y <= years; y++) {
+                for (let m = 0; m < 12; m++) { balance = balance * (1 + monthlyRate) + monthly; }
+                totalContrib += monthly * 12;
+                const interest = balance - totalContrib;
+                rows += `<tr><td>${y}</td><td>${fmt(totalContrib)}</td><td>${fmt(interest)}</td><td>${fmt(balance)}</td></tr>`;
+            }
+            rows += '</table>';
+            const totalInterest = balance - totalContrib;
+            const el = (id) => document.getElementById(id);
+            if (el('fv-balance')) el('fv-balance').textContent = fmt(balance);
+            if (el('fv-contrib')) el('fv-contrib').textContent = fmt(totalContrib);
+            if (el('fv-earned')) el('fv-earned').textContent = fmt(totalInterest);
+            if (el('fv-table-container')) el('fv-table-container').innerHTML = rows;
+            updateSnapshot(totalContrib, totalInterest, balance);
+        }
+
+        function calcInflation() {
+            const amount = parseFloat(document.getElementById('inf-amount')?.value || 0);
+            const years = parseInt(document.getElementById('inf-years')?.value || 0);
+            const rate = parseFloat(document.getElementById('inf-rate')?.value || 0) / 100;
+            const futureEquiv = amount / Math.pow(1 + rate, years);
+            const futurePrice = amount * Math.pow(1 + rate, years);
+            const lost = amount - futureEquiv;
+            const fmt = (v) => '$' + v.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            document.getElementById('inf-result').innerHTML = `
+                <h4>Purchasing Power in ${years} Years</h4>
+                <div class="value">${fmt(futureEquiv)}</div>
+                <div class="breakdown">Today's ${fmt(amount)} will only buy ${fmt(futureEquiv)} worth of goods in ${years} years.
+Purchasing power lost: ${fmt(lost)} (${((lost/amount)*100).toFixed(1)}%)
+To buy what costs ${fmt(amount)} today, you'll need ${fmt(futurePrice)} in ${years} years.</div>`;
+        }
+
+        function calcComparison() {
+            const start = parseFloat(document.getElementById('cmp-start')?.value || 0);
+            const monthly = parseFloat(document.getElementById('cmp-monthly')?.value || 0);
+            const years = parseInt(document.getElementById('cmp-years')?.value || 0);
+            const scenarios = [
+                { name: 'Under the Mattress', rate: 0 },
+                { name: 'Savings Account', rate: 0.02 },
+                { name: 'Index Fund', rate: 0.07 },
+                { name: 'Aggressive Growth', rate: 0.10 }
+            ];
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            const totalContrib = start + monthly * 12 * years;
+            let html = '';
+            let maxBal = 0;
+            const results = scenarios.map(s => {
+                let bal = start;
+                const mr = s.rate / 12;
+                for (let m = 0; m < years * 12; m++) { bal = bal * (1 + mr) + monthly; }
+                if (bal > maxBal) maxBal = bal;
+                return { ...s, balance: bal, interest: bal - totalContrib };
+            });
+            results.forEach(r => {
+                const best = r.balance === maxBal ? ' highlight' : '';
+                html += `<div class="comparison-card${best}">
+                    <h5>${r.name}</h5>
+                    <div class="big-number">${fmt(r.balance)}</div>
+                    <div class="detail">
+                        ${r.rate > 0 ? `<span class="positive">+${fmt(r.interest)} earned</span><br>` : ''}
+                        at ${(r.rate * 100).toFixed(0)}% annual return
+                    </div>
+                </div>`;
+            });
+            document.getElementById('cmp-results').innerHTML = html;
+        }
+
+        function updateSnapshot(contrib, interest, balance) {
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            const el = (id) => document.getElementById(id);
+            if (el('snap-contributed')) el('snap-contributed').textContent = fmt(contrib);
+            if (el('snap-interest')) el('snap-interest').textContent = fmt(interest);
+            if (el('snap-balance')) el('snap-balance').textContent = fmt(balance);
+        }
+
+        // LEARN TAB
+        function scrollToLearn(id) { document.getElementById('learn-' + id)?.scrollIntoView({ behavior: 'smooth' }); }
+
+        function calcRule72Demo() {
+            const rate = parseFloat(document.getElementById('rule72-rate')?.value || 8);
+            const years = rate > 0 ? (72 / rate) : Infinity;
+            const el = document.getElementById('rule72-result');
+            if (el) el.textContent = rate > 0 ? `~${years.toFixed(1)} years` : '--';
+        }
+
+        function renderLearn() {
+            document.getElementById('tab-learn').innerHTML = `
+                <div id="learn-basics" class="learn-card">
+                    <h3>Why Does Money Grow?</h3>
+                    <p>Imagine you lend your friend $100. A year later, they give you back $108. That extra $8 is <strong style="color:var(--cyan)">interest</strong> — a reward for letting someone else use your money.</p>
+                    <p>Now here's where it gets powerful: the next year, you earn interest on $108, not just the original $100. That's ${info('compound-interest')}<strong style="color:var(--mint)">compound interest</strong> — your money earns money, and <em>that</em> money earns money too.</p>
+                    <div class="learn-highlight">A single $1,000 invested at 7% for 40 years becomes <strong style="color:var(--gold)">$14,974</strong> — without adding another cent. That's the power of time + compounding.</div>
+                </div>
+
+                <div id="learn-rule72" class="learn-card">
+                    <h3>The Rule of 72</h3>
+                    <p>Want a quick way to know how long it takes to <strong>double</strong> your money? Just divide 72 by the interest rate.</p>
+                    <div class="rule72-demo">
+                        <div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">RATE (%)</div>
+                            <input type="number" id="rule72-rate" value="8" step="0.5" onchange="calcRule72Demo()" style="width:80px;padding:10px;background:var(--deep);border:1px solid var(--gold);border-radius:6px;color:var(--cream);font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center;">
+                        </div>
+                        <div style="font-size:24px;color:var(--text-muted);">=</div>
+                        <div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">DOUBLES IN</div>
+                            <div class="result" id="rule72-result">~9.0 years</div>
+                        </div>
+                    </div>
+                    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;margin-top:12px;">
+                        <span style="color:var(--gold)">4%</span> → 18 years &nbsp; | &nbsp;
+                        <span style="color:var(--gold)">7%</span> → 10.3 years &nbsp; | &nbsp;
+                        <span style="color:var(--gold)">10%</span> → 7.2 years &nbsp; | &nbsp;
+                        <span style="color:var(--gold)">12%</span> → 6 years
+                    </div>
+                </div>
+
+                <div id="learn-cost-waiting" class="learn-card">
+                    <h3>The Cost of Waiting</h3>
+                    <p>Starting 5 years earlier can be worth more than doubling your monthly contribution later. Time is your most powerful financial tool.</p>
+                    <div class="comparison-grid" id="learn-cost-comparison"></div>
+                </div>
+
+                <div id="learn-formulas" style="margin-top:24px;">
+                    <div class="collapsible-header open" data-collapse="formulas-content" onclick="toggleCollapsible('formulas-content')">
+                        <h4>Formulas & Factor Reference</h4>
+                        <span class="chevron"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-body open" id="formulas-content">
+                        <div id="formulas-inner"></div>
+                    </div>
+                </div>
+
+                <div id="learn-examples" style="margin-top:24px;">
+                    <div class="collapsible-header open" data-collapse="examples-content" onclick="toggleCollapsible('examples-content')">
+                        <h4>Worked Examples</h4>
+                        <span class="chevron"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-body open" id="examples-content">
+                        <div id="examples-inner" style="padding-top:8px;"></div>
+                    </div>
+                </div>`;
+
+            // Render cost of waiting comparison
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            const mr = 0.07 / 12;
+            // Person A: starts at 25, $200/mo for 40 years
+            let balA = 0; for (let m = 0; m < 40*12; m++) balA = balA * (1 + mr) + 200;
+            // Person B: starts at 30, $200/mo for 35 years
+            let balB = 0; for (let m = 0; m < 35*12; m++) balB = balB * (1 + mr) + 200;
+            // Person C: starts at 30, $400/mo for 35 years
+            let balC = 0; for (let m = 0; m < 35*12; m++) balC = balC * (1 + mr) + 400;
+            const costEl = document.getElementById('learn-cost-comparison');
+            if (costEl) costEl.innerHTML = `
+                <div class="comparison-card highlight">
+                    <h5>Starts at 25</h5>
+                    <div class="big-number">${fmt(balA)}</div>
+                    <div class="detail">$200/mo for 40 years<br>Contributed: ${fmt(200*12*40)}<br><span class="positive">+${fmt(balA - 200*12*40)} earned</span></div>
+                </div>
+                <div class="comparison-card">
+                    <h5>Starts at 30</h5>
+                    <div class="big-number">${fmt(balB)}</div>
+                    <div class="detail">$200/mo for 35 years<br>Contributed: ${fmt(200*12*35)}<br><span class="positive">+${fmt(balB - 200*12*35)} earned</span></div>
+                </div>
+                <div class="comparison-card">
+                    <h5>Starts at 30, 2x more</h5>
+                    <div class="big-number">${fmt(balC)}</div>
+                    <div class="detail">$400/mo for 35 years<br>Contributed: ${fmt(400*12*35)}<br><span class="positive">+${fmt(balC - 400*12*35)} earned</span></div>
+                </div>
+                <div class="comparison-card" style="display:flex;flex-direction:column;justify-content:center;">
+                    <div style="font-size:12px;color:var(--text-muted);line-height:1.8;">All at <span style="color:var(--gold)">7%</span> annual return.<br><br>Starting 5 years earlier with <em>less</em> money beats starting later with <em>more</em>!</div>
+                </div>`;
+
+            // Render formulas into the collapsible
+            const formulasInner = document.getElementById('formulas-inner');
+            if (formulasInner) formulasInner.innerHTML = getFormulasContent();
+
+            // Render examples into the collapsible
+            const examplesInner = document.getElementById('examples-inner');
+            if (examplesInner) examplesInner.innerHTML = getExamplesContent('all');
+
+            setTimeout(() => { updateFactorTable(); calcRule72Demo(); }, 50);
+        }
+
+        function getExamplesContent(filter) {
+            const f = filter === 'all' ? examples : examples.filter(e => e.cat === filter);
+            return f.map(e => `<div class="example-card"><span class="category">${e.cat.toUpperCase()}</span><h3>Example ${e.id}: ${e.title}</h3><div class="problem"><strong>Problem:</strong><br>${e.prob.replace(/\n/g,'<br>')}</div><div class="solution"><h4>Solution</h4>${e.sol.map(s=>`<div class="step"><div class="step-header">${s.h}</div><div class="step-content">${s.c}</div></div>`).join('')}<div class="final-answer"><strong>Answer</strong><p>${e.ans.replace(/\n/g,'<br>')}</p></div></div></div>`).join('');
+        }
+
+        function getFormulasContent() {
+            return `
+                <div class="formula-grid" style="margin-top:8px;">
                     <div class="formula-card">
                         <h3>Time Value of Money ${info('tvm')}</h3>
                         <h4>Simple Interest ${info('interest-rate')}</h4>
-                        <div class="formula-box">F = P(1 + ni)
-I = Pni</div>
+                        <div class="formula-box">F = P(1 + ni)\nI = Pni</div>
                         <div class="variable-list"><strong>F</strong> = Future · <strong>P</strong> = Present · <strong>n</strong> = Periods · <strong>i</strong> = Rate</div>
                         <h4>Compound Interest ${info('compound-interest')}</h4>
                         <div class="formula-box highlight">F = P(1 + i)<sup>N</sup></div>
@@ -665,7 +1099,7 @@ I = Pni</div>
                         <div class="decision-rule"><strong>Sign Convention</strong>Receipts: <span style="color:var(--mint)">Positive (+)</span><br>Disbursements: <span style="color:var(--coral)">Negative (−)</span></div>
                     </div>
                 </div>
-                <div id="formula-factors" class="formula-grid" style="margin-top:24px;">
+                <div class="formula-grid" style="margin-top:24px;">
                     <div class="formula-card">
                         <h3>Single Payment Factors ${info('factors')}</h3>
                         <h4>Compound Amount (F/P)</h4>
@@ -687,14 +1121,12 @@ I = Pni</div>
                     <div class="formula-card">
                         <h3>Gradient Series ${info('gradient')}</h3>
                         <h4>Arithmetic Gradient (A/G)</h4>
-                        <div class="formula-box">(A/G, i, N) = 1/i - N/[(1+i)<sup>N</sup> - 1]
-A<sub>total</sub> = A<sub>base</sub> + G × (A/G)</div>
+                        <div class="formula-box">(A/G, i, N) = 1/i - N/[(1+i)<sup>N</sup> - 1]\nA<sub>total</sub> = A<sub>base</sub> + G × (A/G)</div>
                         <h4>Geometric Gradient</h4>
-                        <div class="formula-box">i₀ = (i - g)/(1 + g)  when i ≠ g
-P = A × (P/A, i₀, N)</div>
+                        <div class="formula-box">i₀ = (i - g)/(1 + g)  when i ≠ g\nP = A × (P/A, i₀, N)</div>
                     </div>
                 </div>
-                <div id="formula-comparison" class="formula-grid" style="margin-top:24px;">
+                <div class="formula-grid" style="margin-top:24px;">
                     <div class="formula-card">
                         <h3>Present Worth Analysis ${info('present-worth')}</h3>
                         <div class="formula-box highlight">PW = Σ[CF<sub>t</sub> / (1 + i)<sup>t</sup>]</div>
@@ -707,21 +1139,17 @@ P = A × (P/A, i₀, N)</div>
                         <div class="decision-rule"><strong>Decision Rules</strong>Independent: IRR ≥ ${info('marr')}MARR → Accept<br>Mutually Exclusive: Use incremental IRR</div>
                     </div>
                 </div>
-                <div id="formula-depreciation" class="formula-grid" style="margin-top:24px;">
+                <div class="formula-grid" style="margin-top:24px;">
                     <div class="formula-card">
                         <h3>Straight-Line ${info('depreciation')}</h3>
-                        <div class="formula-box highlight">D<sub>n</sub> = (P - S) / N
-BV<sub>n</sub> = P - n(P - S)/N</div>
+                        <div class="formula-box highlight">D<sub>n</sub> = (P - S) / N\nBV<sub>n</sub> = P - n(P - S)/N</div>
                         <div class="variable-list"><strong>D</strong> = Annual depreciation · <strong>BV</strong> = Book value · <strong>S</strong> = ${info('salvage-value')}Salvage value</div>
                     </div>
                     <div class="formula-card">
                         <h3>Declining Balance</h3>
-                        <div class="formula-box">d = 1 - (S/P)<sup>1/N</sup>
-D<sub>n</sub> = d × BV<sub>n-1</sub>
-BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
+                        <div class="formula-box">d = 1 - (S/P)<sup>1/N</sup>\nD<sub>n</sub> = d × BV<sub>n-1</sub>\nBV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
                     </div>
                 </div>`;
-            setTimeout(updateFactorTable, 50);
         }
 
         function scrollToFormula(id) { document.getElementById('formula-' + id)?.scrollIntoView({ behavior: 'smooth' }); }
@@ -736,68 +1164,176 @@ BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
         }
 
         // CALCULATORS
+        function toggleCollapsible(id) {
+            const header = document.querySelector(`[data-collapse="${id}"]`);
+            const body = document.getElementById(id);
+            if (header) header.classList.toggle('open');
+            if (body) body.classList.toggle('open');
+        }
+
         function renderCalculators() {
             document.getElementById('tab-calculators').innerHTML = `
-                <div id="calc-tvm" class="calc-section">
-                    <h3>Time Value of Money ${info('tvm')}</h3>
-                    <div class="calc-grid">
-                        <div class="calc-input"><label>${info('principal')}Present Value (P)</label><input type="number" id="tvm-pv" value="10000" onchange="calcTVM()"></div>
-                        <div class="calc-input"><label>${info('interest-rate')}Interest Rate (%)</label><input type="number" id="tvm-rate" value="8" step="0.5" onchange="calcTVM()"></div>
-                        <div class="calc-input"><label>${info('periods')}Periods (N)</label><input type="number" id="tvm-n" value="10" onchange="calcTVM()"></div>
-                        <div class="calc-input"><label>${info('effective-rate')}Compounding</label><select id="tvm-compound" onchange="calcTVM()"><option value="1">Annual</option><option value="2">Semi-Annual</option><option value="4">Quarterly</option><option value="12">Monthly</option><option value="365">Daily</option></select></div>
-                    </div>
-                    <div class="calc-result" id="tvm-result"><h4>${info('future-value')}Future Value</h4><div class="value">$0</div><div class="breakdown"></div></div>
-                </div>
-                <div id="calc-annuity" class="calc-section">
-                    <h3>Annuity Calculator ${info('annuity')}</h3>
-                    <div class="calc-grid">
-                        <div class="calc-input"><label>Calculation Type</label><select id="annuity-type" onchange="calcAnnuity()"><option value="fv">Find Future Value</option><option value="pv">Find Present Value</option><option value="pmt">Find Payment</option></select></div>
-                        <div class="calc-input"><label>Present Value (P)</label><input type="number" id="annuity-pv" value="0" onchange="calcAnnuity()"></div>
-                        <div class="calc-input"><label>Payment (A)</label><input type="number" id="annuity-pmt" value="1000" onchange="calcAnnuity()"></div>
-                        <div class="calc-input"><label>Future Value (F)</label><input type="number" id="annuity-fv" value="0" onchange="calcAnnuity()"></div>
-                        <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="annuity-rate" value="8" onchange="calcAnnuity()"></div>
-                        <div class="calc-input"><label>Periods (N)</label><input type="number" id="annuity-n" value="10" onchange="calcAnnuity()"></div>
-                    </div>
-                    <div class="calc-result" id="annuity-result"><h4>Result</h4><div class="value">$0</div><div class="breakdown"></div></div>
-                </div>
-                <div id="calc-gradient" class="calc-section">
-                    <h3>Gradient Series ${info('gradient')}</h3>
-                    <div class="calc-grid">
-                        <div class="calc-input"><label>Type</label><select id="gradient-type" onchange="calcGradient()"><option value="arithmetic">Arithmetic (G)</option><option value="geometric">Geometric (g%)</option></select></div>
-                        <div class="calc-input"><label>Base Amount (A₁)</label><input type="number" id="gradient-base" value="1000" onchange="calcGradient()"></div>
-                        <div class="calc-input"><label>Gradient (G or g%)</label><input type="number" id="gradient-g" value="100" onchange="calcGradient()"></div>
-                        <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="gradient-rate" value="10" onchange="calcGradient()"></div>
-                        <div class="calc-input"><label>Periods (N)</label><input type="number" id="gradient-n" value="5" onchange="calcGradient()"></div>
-                    </div>
-                    <div class="calc-result" id="gradient-result"><h4>Present Worth</h4><div class="value">$0</div><div class="breakdown"></div></div>
-                </div>
-                <div id="calc-depreciation" class="calc-section">
-                    <h3>Depreciation Schedule ${info('depreciation')}</h3>
-                    <div class="calc-grid">
-                        <div class="calc-input"><label>Method</label><select id="dep-method" onchange="calcDep()"><option value="sl">Straight-Line</option><option value="db">Declining Balance</option><option value="syd">Sum-of-Years-Digits</option></select></div>
-                        <div class="calc-input"><label>Initial Cost (P)</label><input type="number" id="dep-cost" value="100000" onchange="calcDep()"></div>
-                        <div class="calc-input"><label>${info('salvage-value')}Salvage Value (S)</label><input type="number" id="dep-salvage" value="10000" onchange="calcDep()"></div>
-                        <div class="calc-input"><label>Useful Life (N)</label><input type="number" id="dep-life" value="5" onchange="calcDep()"></div>
-                    </div>
-                    <div class="calc-result" id="dep-result"><h4>Schedule</h4><div id="dep-schedule"></div></div>
-                </div>
                 <div id="calc-loan" class="calc-section">
-                    <h3>Loan Amortization</h3>
+                    <h3>Loan & Mortgage Calculator</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">Calculate your monthly payment and see how much goes to interest vs. principal.</p>
                     <div class="calc-grid">
-                        <div class="calc-input"><label>Loan Amount</label><input type="number" id="loan-amount" value="100000" onchange="calcLoan()"></div>
-                        <div class="calc-input"><label>Annual Rate (%)</label><input type="number" id="loan-rate" value="6" step="0.125" onchange="calcLoan()"></div>
-                        <div class="calc-input"><label>Term (Years)</label><input type="number" id="loan-term" value="30" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Loan Amount ($)</label><input type="number" id="loan-amount" value="300000" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Annual Interest Rate (%)</label><input type="number" id="loan-rate" value="6.5" step="0.125" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Loan Term (Years)</label><input type="number" id="loan-term" value="30" onchange="calcLoan()"></div>
+                        <div class="calc-input"><label>Extra Monthly Payment ($)</label><input type="number" id="loan-extra" value="0" onchange="calcLoan()"></div>
                     </div>
                     <div class="calc-result" id="loan-result"><h4>Monthly Payment</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+
+                <div id="calc-retirement" class="calc-section">
+                    <h3>Retirement Planner ${info('retirement')}</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">Estimate how much you'll have when you retire and what monthly income it could provide.</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Current Age</label><input type="number" id="ret-age" value="30" onchange="calcRetirement()"></div>
+                        <div class="calc-input"><label>Retirement Age</label><input type="number" id="ret-retire-age" value="65" onchange="calcRetirement()"></div>
+                        <div class="calc-input"><label>Current Savings ($)</label><input type="number" id="ret-savings" value="20000" onchange="calcRetirement()"></div>
+                        <div class="calc-input"><label>Monthly Contribution ($)</label><input type="number" id="ret-monthly" value="500" onchange="calcRetirement()"></div>
+                        <div class="calc-input"><label>${info('return-rate')}Expected Return (%)</label><input type="number" id="ret-rate" value="7" step="0.5" onchange="calcRetirement()"></div>
+                    </div>
+                    <div class="calc-result" id="ret-result"><h4>Retirement Projection</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+
+                <div id="calc-tvm" class="calc-section">
+                    <h3>Compound Interest ${info('compound-interest')}</h3>
+                    <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">See how a lump sum grows with different compounding frequencies.</p>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Starting Amount ($)</label><input type="number" id="tvm-pv" value="10000" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>Annual Interest Rate (%)</label><input type="number" id="tvm-rate" value="8" step="0.5" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>Years</label><input type="number" id="tvm-n" value="10" onchange="calcTVM()"></div>
+                        <div class="calc-input"><label>${info('effective-rate')}Compounding</label><select id="tvm-compound" onchange="calcTVM()"><option value="1">Annual</option><option value="2">Semi-Annual</option><option value="4">Quarterly</option><option value="12" selected>Monthly</option><option value="365">Daily</option></select></div>
+                    </div>
+                    <div class="calc-result" id="tvm-result"><h4>Future Value</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+
+                <div id="calc-tip" class="calc-section">
+                    <h3>Tip Calculator</h3>
+                    <div class="calc-grid">
+                        <div class="calc-input"><label>Bill Amount ($)</label><input type="number" id="tip-bill" value="50" step="0.01" onchange="calcTip()"></div>
+                        <div class="calc-input"><label>Tip Percentage (%)</label>
+                            <select id="tip-pct" onchange="calcTip()">
+                                <option value="10">10%</option>
+                                <option value="15">15%</option>
+                                <option value="18">18%</option>
+                                <option value="20" selected>20%</option>
+                                <option value="25">25%</option>
+                            </select>
+                        </div>
+                        <div class="calc-input"><label>Split Between</label><input type="number" id="tip-split" value="1" min="1" onchange="calcTip()"></div>
+                    </div>
+                    <div class="calc-result" id="tip-result"><h4>Tip & Total</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                </div>
+
+                <div style="margin-top:32px;">
+                    <div class="collapsible-header" data-collapse="advanced-calcs" onclick="toggleCollapsible('advanced-calcs')">
+                        <h4>Advanced / Academic Calculators</h4>
+                        <span class="chevron"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="collapsible-body" id="advanced-calcs">
+                        <div id="calc-annuity" class="calc-section" style="margin-top:8px;">
+                            <h3>Annuity Calculator ${info('annuity')}</h3>
+                            <div class="calc-grid">
+                                <div class="calc-input"><label>Calculation Type</label><select id="annuity-type" onchange="calcAnnuity()"><option value="fv">Find Future Value</option><option value="pv">Find Present Value</option><option value="pmt">Find Payment</option></select></div>
+                                <div class="calc-input"><label>Present Value (P)</label><input type="number" id="annuity-pv" value="0" onchange="calcAnnuity()"></div>
+                                <div class="calc-input"><label>Payment (A)</label><input type="number" id="annuity-pmt" value="1000" onchange="calcAnnuity()"></div>
+                                <div class="calc-input"><label>Future Value (F)</label><input type="number" id="annuity-fv" value="0" onchange="calcAnnuity()"></div>
+                                <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="annuity-rate" value="8" onchange="calcAnnuity()"></div>
+                                <div class="calc-input"><label>Periods (N)</label><input type="number" id="annuity-n" value="10" onchange="calcAnnuity()"></div>
+                            </div>
+                            <div class="calc-result" id="annuity-result"><h4>Result</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                        </div>
+                        <div id="calc-gradient" class="calc-section">
+                            <h3>Gradient Series ${info('gradient')}</h3>
+                            <div class="calc-grid">
+                                <div class="calc-input"><label>Type</label><select id="gradient-type" onchange="calcGradient()"><option value="arithmetic">Arithmetic (G)</option><option value="geometric">Geometric (g%)</option></select></div>
+                                <div class="calc-input"><label>Base Amount (A1)</label><input type="number" id="gradient-base" value="1000" onchange="calcGradient()"></div>
+                                <div class="calc-input"><label>Gradient (G or g%)</label><input type="number" id="gradient-g" value="100" onchange="calcGradient()"></div>
+                                <div class="calc-input"><label>Interest Rate (%)</label><input type="number" id="gradient-rate" value="10" onchange="calcGradient()"></div>
+                                <div class="calc-input"><label>Periods (N)</label><input type="number" id="gradient-n" value="5" onchange="calcGradient()"></div>
+                            </div>
+                            <div class="calc-result" id="gradient-result"><h4>Present Worth</h4><div class="value">$0</div><div class="breakdown"></div></div>
+                        </div>
+                        <div id="calc-depreciation" class="calc-section">
+                            <h3>Depreciation Schedule ${info('depreciation')}</h3>
+                            <div class="calc-grid">
+                                <div class="calc-input"><label>Method</label><select id="dep-method" onchange="calcDep()"><option value="sl">Straight-Line</option><option value="db">Declining Balance</option><option value="syd">Sum-of-Years-Digits</option></select></div>
+                                <div class="calc-input"><label>Initial Cost (P)</label><input type="number" id="dep-cost" value="100000" onchange="calcDep()"></div>
+                                <div class="calc-input"><label>${info('salvage-value')}Salvage Value (S)</label><input type="number" id="dep-salvage" value="10000" onchange="calcDep()"></div>
+                                <div class="calc-input"><label>Useful Life (N)</label><input type="number" id="dep-life" value="5" onchange="calcDep()"></div>
+                            </div>
+                            <div class="calc-result" id="dep-result"><h4>Schedule</h4><div id="dep-schedule"></div></div>
+                        </div>
+                    </div>
                 </div>`;
-            setTimeout(() => { calcTVM(); calcAnnuity(); calcGradient(); calcDep(); calcLoan(); }, 50);
+            setTimeout(() => { calcLoan(); calcRetirement(); calcTVM(); calcTip(); }, 50);
         }
 
         function calcTVM() { const P = parseFloat(document.getElementById('tvm-pv')?.value||0), r = parseFloat(document.getElementById('tvm-rate')?.value||0)/100, N = parseInt(document.getElementById('tvm-n')?.value||0), m = parseInt(document.getElementById('tvm-compound')?.value||1); const ie = effectiveRate(r, m), F = P * fpFactor(ie, N); document.getElementById('tvm-result').innerHTML = `<h4>Future Value</h4><div class="value">$${F.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">Effective Rate: ${(ie*100).toFixed(4)}%\n(F/P) = ${fpFactor(ie,N).toFixed(4)}\nInterest Earned: $${(F-P).toLocaleString('en-US',{maximumFractionDigits:2})}</div>`; }
         function calcAnnuity() { const t = document.getElementById('annuity-type')?.value||'fv', P = parseFloat(document.getElementById('annuity-pv')?.value||0), A = parseFloat(document.getElementById('annuity-pmt')?.value||0), F = parseFloat(document.getElementById('annuity-fv')?.value||0), i = parseFloat(document.getElementById('annuity-rate')?.value||0)/100, N = parseInt(document.getElementById('annuity-n')?.value||0); let v,l,b; if(t==='fv'){v=P*fpFactor(i,N)+A*faFactor(i,N);l='Future Value';b=`F = P(F/P) + A(F/A)`;} else if(t==='pv'){v=F*pfFactor(i,N)+A*paFactor(i,N);l='Present Value';b=`P = F(P/F) + A(P/A)`;} else{v=P>0?P*apFactor(i,N):F*afFactor(i,N);l='Payment';b=P>0?'A = P(A/P)':'A = F(A/F)';} document.getElementById('annuity-result').innerHTML=`<h4>${l}</h4><div class="value">$${v.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">${b}</div>`; }
         function calcGradient() { const t = document.getElementById('gradient-type')?.value||'arithmetic', A1 = parseFloat(document.getElementById('gradient-base')?.value||0), G = parseFloat(document.getElementById('gradient-g')?.value||0), i = parseFloat(document.getElementById('gradient-rate')?.value||0)/100, N = parseInt(document.getElementById('gradient-n')?.value||0); let PW,b; if(t==='arithmetic'){ const AG=agFactor(i,N), AW=A1+G*AG; PW=AW*paFactor(i,N); b=`(A/G) = ${AG.toFixed(4)}\nA_total = ${AW.toFixed(2)}\nPW = ${PW.toFixed(2)}`;} else { const g=G/100; if(Math.abs(i-g)<0.0001){PW=N*A1/(1+i);b=`i ≈ g: PW = NA₁/(1+i)`;} else { const i0=(i-g)/(1+g); PW=A1*paFactor(i0,N); b=`i₀ = ${i0.toFixed(4)}\nPW = A₁(P/A,i₀,N)`;}} document.getElementById('gradient-result').innerHTML=`<h4>Present Worth</h4><div class="value">$${PW.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">${b}</div>`; }
         function calcDep() { const m=document.getElementById('dep-method')?.value||'sl', P=parseFloat(document.getElementById('dep-cost')?.value||0), S=parseFloat(document.getElementById('dep-salvage')?.value||0), N=parseInt(document.getElementById('dep-life')?.value||0); let h='<table class="factor-table"><tr><th>Year</th><th>Depreciation</th><th>Book Value</th></tr>', BV=P; if(m==='sl'){ const D=(P-S)/N; for(let n=1;n<=N;n++){BV=P-n*(P-S)/N; h+=`<tr><td>${n}</td><td>$${D.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} else if(m==='db'){ const d=1-Math.pow(S/P,1/N); for(let n=1;n<=N;n++){const Dn=BV*d; BV-=Dn; h+=`<tr><td>${n}</td><td>$${Dn.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} else { const SYD=N*(N+1)/2; for(let n=1;n<=N;n++){const Dn=(P-S)*(N-n+1)/SYD; BV-=Dn; h+=`<tr><td>${n}</td><td>$${Dn.toFixed(0)}</td><td>$${BV.toFixed(0)}</td></tr>`;}} h+='</table>'; document.getElementById('dep-schedule').innerHTML=h; }
-        function calcLoan() { const P=parseFloat(document.getElementById('loan-amount')?.value||0), r=parseFloat(document.getElementById('loan-rate')?.value||0)/100, y=parseInt(document.getElementById('loan-term')?.value||0); const i=r/12, N=y*12, PMT=P*apFactor(i,N), tot=PMT*N, int=tot-P; document.getElementById('loan-result').innerHTML=`<h4>Monthly Payment</h4><div class="value">$${PMT.toLocaleString('en-US',{maximumFractionDigits:2})}</div><div class="breakdown">Total Paid: $${tot.toLocaleString('en-US',{maximumFractionDigits:0})}\nTotal Interest: $${int.toLocaleString('en-US',{maximumFractionDigits:0})}</div>`; }
+        function calcLoan() {
+            const P = parseFloat(document.getElementById('loan-amount')?.value||0);
+            const r = parseFloat(document.getElementById('loan-rate')?.value||0)/100;
+            const y = parseInt(document.getElementById('loan-term')?.value||0);
+            const extra = parseFloat(document.getElementById('loan-extra')?.value||0);
+            const i = r/12, N = y*12, PMT = P*apFactor(i,N);
+            const tot = PMT*N, interest = tot-P;
+            const fmt = (v) => '$' + v.toLocaleString('en-US',{maximumFractionDigits:2});
+            let extraInfo = '';
+            if (extra > 0) {
+                let bal = P, months = 0, totPaid = 0;
+                while (bal > 0 && months < N * 2) {
+                    const intPmt = bal * i;
+                    const princPmt = Math.min(bal, PMT - intPmt + extra);
+                    bal -= princPmt; totPaid += intPmt + princPmt; months++;
+                    if (bal < 0.01) bal = 0;
+                }
+                const savedInterest = tot - totPaid;
+                const savedMonths = N - months;
+                const savedYrs = Math.floor(savedMonths / 12);
+                const savedMos = savedMonths % 12;
+                extraInfo = `\n\nWith ${fmt(extra)}/mo extra:\nPaid off in ${Math.floor(months/12)}y ${months%12}m (${savedYrs}y ${savedMos}m sooner)\nInterest saved: ${fmt(savedInterest)}`;
+            }
+            document.getElementById('loan-result').innerHTML = `<h4>Monthly Payment</h4><div class="value">${fmt(PMT)}</div><div class="breakdown">Total Paid: ${fmt(tot)}\nTotal Interest: ${fmt(interest)}\nInterest is ${((interest/P)*100).toFixed(1)}% of loan amount${extraInfo}</div>`;
+        }
+
+        function calcRetirement() {
+            const age = parseInt(document.getElementById('ret-age')?.value||30);
+            const retireAge = parseInt(document.getElementById('ret-retire-age')?.value||65);
+            const savings = parseFloat(document.getElementById('ret-savings')?.value||0);
+            const monthly = parseFloat(document.getElementById('ret-monthly')?.value||0);
+            const rate = parseFloat(document.getElementById('ret-rate')?.value||7)/100;
+            const years = Math.max(0, retireAge - age);
+            const monthlyRate = rate / 12;
+            let balance = savings;
+            for (let m = 0; m < years * 12; m++) { balance = balance * (1 + monthlyRate) + monthly; }
+            const totalContrib = savings + monthly * 12 * years;
+            const interestEarned = balance - totalContrib;
+            const monthlyIncome = balance * 0.04 / 12;
+            const fmt = (v) => '$' + Math.round(v).toLocaleString();
+            let status = '';
+            if (balance >= 1000000) status = '<span style="color:var(--mint)">On track for a comfortable retirement!</span>';
+            else if (balance >= 500000) status = '<span style="color:var(--gold)">Good progress. Consider increasing contributions.</span>';
+            else status = '<span style="color:var(--coral)">Consider increasing contributions or starting earlier.</span>';
+            document.getElementById('ret-result').innerHTML = `<h4>Retirement Projection</h4><div class="value">${fmt(balance)}</div><div class="breakdown">You contribute: ${fmt(totalContrib)}\nInterest earns: ${fmt(interestEarned)}\n\nEstimated monthly income (4% rule): ${fmt(monthlyIncome)}/mo\nYears until retirement: ${years}\n\n${status}</div>`;
+        }
+
+        function calcTip() {
+            const bill = parseFloat(document.getElementById('tip-bill')?.value||0);
+            const pct = parseFloat(document.getElementById('tip-pct')?.value||20);
+            const split = Math.max(1, parseInt(document.getElementById('tip-split')?.value||1));
+            const tip = bill * pct / 100;
+            const total = bill + tip;
+            const perPerson = total / split;
+            const fmt = (v) => '$' + v.toFixed(2);
+            let splitInfo = split > 1 ? `\nPer person (${split}-way split): ${fmt(perPerson)}` : '';
+            document.getElementById('tip-result').innerHTML = `<h4>Tip & Total</h4><div class="value">${fmt(total)}</div><div class="breakdown">Tip amount: ${fmt(tip)} (${pct}%)\nBill: ${fmt(bill)} + Tip: ${fmt(tip)} = ${fmt(total)}${splitInfo}</div>`;
+        }
 
         // EXAMPLES
         const examples = [
@@ -808,15 +1344,11 @@ BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
             { id:5, title:"Arithmetic Gradient", cat:"tvm", prob:"Labor: $100K yr1, +$10K/yr for 10yrs. Find PW at 10%.", sol:[{h:"Annuity",c:"A = 100K + 10K(3.7255) = $137,255"},{h:"PW",c:"P = 137,255(6.1446) = $843,227"}], ans:"PW = $843,227" },
             { id:6, title:"Depreciation Methods", cat:"depreciation", prob:"$250K asset, $10K salvage, 6yr. Compare Year 1 D and Year 4 BV.", sol:[{h:"Straight-Line",c:"D = 40K/yr\nD₁ = $40,000, BV₄ = $90,000"},{h:"Declining Balance",c:"d = 43.54%\nD₁ = $108,850, BV₄ = $25,409"}], ans:"SL: D₁=$40K, BV₄=$90K\nDB: D₁=$109K, BV₄=$25K" }
         ];
-        let exFilter = 'all';
-
-        function renderExamples() { filterExamples(exFilter); }
-        function filterExamples(t) { exFilter = t; const f = t === 'all' ? examples : examples.filter(e => e.cat === t); document.getElementById('tab-examples').innerHTML = f.map(e => `<div class="example-card"><span class="category">${e.cat.toUpperCase()}</span><h3>Example ${e.id}: ${e.title}</h3><div class="problem"><strong>Problem:</strong><br>${e.prob.replace(/\n/g,'<br>')}</div><div class="solution"><h4>Solution</h4>${e.sol.map(s=>`<div class="step"><div class="step-header">${s.h}</div><div class="step-content">${s.c}</div></div>`).join('')}<div class="final-answer"><strong>Answer</strong><p>${e.ans.replace(/\n/g,'<br>')}</p></div></div></div>`).join(''); }
 
         // P5.JS VISUALIZATION
         let particles=[], timelineY, periodWidth, maxValue, growthCurve=[];
 
-        function setup() { let c = createCanvas(900, 550); c.parent('canvas-container'); timelineY = height * 0.52; initializeSystem(); renderSidebar('visualization'); document.querySelector('.loading').style.display = 'none'; }
+        function setup() { let c = createCanvas(900, 550); c.parent('canvas-container'); timelineY = height * 0.52; initializeSystem(); document.querySelector('.loading').style.display = 'none'; }
 
         function initializeSystem() { randomSeed(params.seed); noiseSeed(params.seed); particles = []; growthCurve = []; periodWidth = (width - 100) / params.periods; const i = params.interestRate / 100; maxValue = calculateFV(params.principal, params.annuity, i, params.periods); for (let n = 0; n <= params.periods; n++) growthCurve.push(calculateFV(params.principal, params.annuity, i, n)); for (let j = 0; j < params.particleCount; j++) particles.push(new EconomicParticle()); background(10, 14, 26); }
 
@@ -886,7 +1418,7 @@ BV<sub>n</sub> = P(1 - d)<sup>n</sup></div>
         function updateCalcDisplay() { const i = params.interestRate / 100; const fv = calculateFV(params.principal, params.annuity, i, params.periods); const pw = params.principal + params.annuity * paFactor(i, params.periods); const inv = params.principal + params.annuity * params.periods; const fvEl = document.getElementById('fv-result'), pwEl = document.getElementById('pw-result'), intEl = document.getElementById('interest-result'); if (fvEl) fvEl.textContent = '$' + fv.toLocaleString('en-US', {maximumFractionDigits: 0}); if (pwEl) pwEl.textContent = '$' + pw.toLocaleString('en-US', {maximumFractionDigits: 0}); if (intEl) intEl.textContent = '$' + (fv - inv).toLocaleString('en-US', {maximumFractionDigits: 0}); }
         function downloadPNG() { saveCanvas('econ-101-' + params.seed, 'png'); }
 
-        window.addEventListener('load', () => renderSidebar('visualization'));
+        window.addEventListener('load', () => { renderSidebar('mymoney'); renderMyMoney(); });
     </script>
 </body>
 </html>

@@ -5,28 +5,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
-    content="RhytoLeaf is a software development company that specializes in creating innovative applications to apply STEM (Science, Technology, Engineering, and Mathematics) in our daily lives.">
+    content="RhytoLeaf builds free STEM apps for accessibility, learning, and everyday problem-solving — including Zeek (speed reader for dyslexia), EconoFlo (financial calculator), and more.">
   <meta name="keywords"
     content="RhytoLeaf, STEM, software development, app development, science, technology, engineering, mathematics, innovation">
   <title>RhytoLeaf - Cultivating Innovators, One App at a Time</title>
 
   <link rel="icon" type="image/png" href="./images/logo-icon.png">
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://rhytoleaf.ca/">
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rhytoleaf.github.io/">
-  <meta property="og:title" content="RhytoLeaf - Cultivating Innovators, One App at a Time">
+  <meta property="og:url" content="https://rhytoleaf.ca/">
+  <meta property="og:title" content="RhytoLeaf - Free STEM Apps for Learning, Accessibility & Everyday Life">
   <meta property="og:description"
-    content="RhytoLeaf is a software development company that specializes in creating innovative applications to apply STEM (Science, Technology, Engineering, and Mathematics) in our daily lives.">
-  <meta property="og:image" content="https://rhytoleaf.github.io/images/logo-primary-light.png">
+    content="RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life — from speed readers to financial calculators.">
+  <meta property="og:image" content="https://rhytoleaf.ca/images/logo-primary-light.png">
+  <meta property="og:site_name" content="RhytoLeaf">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://rhytoleaf.github.io/">
-  <meta property="twitter:title" content="RhytoLeaf - Cultivating Innovators, One App at a Time">
+  <meta property="twitter:url" content="https://rhytoleaf.ca/">
+  <meta property="twitter:title" content="RhytoLeaf - Free STEM Apps for Learning, Accessibility & Everyday Life">
   <meta property="twitter:description"
-    content="RhytoLeaf is a software development company that specializes in creating innovative applications to apply STEM (Science, Technology, Engineering, and Mathematics) in our daily lives.">
-  <meta property="twitter:image" content="https://rhytoleaf.github.io/images/logo-primary-light.png">
+    content="RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life — from speed readers to financial calculators.">
+  <meta property="twitter:image" content="https://rhytoleaf.ca/images/logo-primary-light.png">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +39,72 @@
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://rhytoleaf.ca/#organization",
+        "name": "RhytoLeaf Inc.",
+        "url": "https://rhytoleaf.ca",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://rhytoleaf.ca/images/logo-primary-light.png"
+        },
+        "description": "Software development company specializing in free STEM applications for accessibility, learning, and everyday problem-solving.",
+        "email": "rhytoleaf.ops@gmail.com",
+        "foundingDate": "2024",
+        "slogan": "Cultivating Innovators, One App at a Time"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://rhytoleaf.ca/#website",
+        "url": "https://rhytoleaf.ca",
+        "name": "RhytoLeaf",
+        "publisher": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://rhytoleaf.ca/#webpage",
+        "url": "https://rhytoleaf.ca",
+        "name": "RhytoLeaf - Free STEM Apps for Learning, Accessibility & Everyday Life",
+        "isPartOf": { "@id": "https://rhytoleaf.ca/#website" },
+        "about": { "@id": "https://rhytoleaf.ca/#organization" },
+        "description": "RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Zeek",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/zeek.html",
+        "description": "RSVP speed reader built for dyslexia, ADHD, and visual processing support with OCR text scanning.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "EconoFlo",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/econoflo.html",
+        "description": "Interactive Time Value of Money visualizer and financial calculator.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "DonateAction",
+        "name": "Support RhytoLeaf's Free STEM Tools",
+        "recipient": { "@id": "https://rhytoleaf.ca/#organization" },
+        "target": "https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400",
+        "description": "Donate to help RhytoLeaf continue building free, accessible STEM applications."
+      }
+    ]
+  }
+  </script>
 
   <style>
     /* =============================================
@@ -978,6 +1048,85 @@
       color: var(--dark-base);
     }
 
+    /* Donate — Impact Stats */
+    .donate-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .donate-stat {
+      text-align: center;
+    }
+
+    .donate-stat-value {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.75rem;
+      color: var(--green);
+      line-height: 1.2;
+    }
+
+    .donate-stat-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Donate — Tier Buttons */
+    .donate-tiers {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .btn-tier {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+      padding: 0.6rem 1.25rem;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-tier:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-dim);
+      transform: translateY(-2px);
+    }
+
+    .donate-or {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 520px) {
+      .donate-stats { gap: 1.5rem; }
+      .donate-stat-value { font-size: 1.4rem; }
+    }
+
     /* =============================================
        CTA SECTION
        ============================================= */
@@ -1048,24 +1197,139 @@
       z-index: 1;
     }
 
-    .cta-coming {
+    /* CTA Form */
+    .cta-form {
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: left;
+    }
+
+    .cta-form .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .cta-form label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+    }
+
+    .cta-form input,
+    .cta-form textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+    }
+
+    .cta-form input:focus,
+    .cta-form textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-dim);
+    }
+
+    .cta-form input::placeholder,
+    .cta-form textarea::placeholder {
+      color: var(--text-dim);
+      opacity: 0.6;
+    }
+
+    .cta-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .cta-form-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-submit {
+      width: 100%;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
+      background: var(--green);
+      color: var(--dark-base);
+      padding: 0.85rem 2rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      font-family: var(--font-body);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background: var(--green-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--green-glow);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cta-mailto {
       font-size: 0.85rem;
-      font-weight: 500;
       color: var(--text-dim);
-      font-style: italic;
       position: relative;
       z-index: 1;
     }
 
-    .cta-coming::before,
-    .cta-coming::after {
-      content: '';
-      width: 24px;
-      height: 1px;
-      background: var(--border);
+    .cta-mailto a {
+      color: var(--green);
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .cta-mailto a:hover {
+      color: var(--green-bright);
+    }
+
+    .form-status {
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-status.success {
+      display: block;
+      background: var(--green-dim);
+      color: var(--green);
+      border: 1px solid var(--green-glow);
+    }
+
+    .form-status.error {
+      display: block;
+      background: rgba(230, 57, 70, 0.1);
+      color: #e63946;
+      border: 1px solid rgba(230, 57, 70, 0.3);
     }
 
     /* =============================================
@@ -1561,11 +1825,32 @@
     <div class="container">
       <div class="donate-card reveal">
         <div class="donate-icon"><i class="fas fa-heart"></i></div>
-        <h2>Support Our Free Tools</h2>
+        <h2>Keep STEM Free for Everyone</h2>
+        <div class="donate-stats">
+          <div class="donate-stat">
+            <div class="donate-stat-value">9+</div>
+            <div class="donate-stat-label">Free Apps</div>
+          </div>
+          <div class="donate-stat">
+            <div class="donate-stat-value">100%</div>
+            <div class="donate-stat-label">Free Forever</div>
+          </div>
+          <div class="donate-stat">
+            <div class="donate-stat-value">$0</div>
+            <div class="donate-stat-label">Ads Shown</div>
+          </div>
+        </div>
         <p>
-          Our apps like Zeek are free for everyone. Your donation helps cover hosting,
-          development, and maintenance so we can keep building accessible STEM tools.
+          Tools like Zeek help people with dyslexia read faster — completely free, no ads, no paywalls.
+          Every dollar goes directly to server costs, development, and keeping these tools accessible to everyone who needs them.
         </p>
+        <div class="donate-tiers">
+          <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="btn-tier">$5</a>
+          <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="btn-tier">$15</a>
+          <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="btn-tier">$25</a>
+        </div>
+        <span class="donate-or">or choose your own amount</span>
+        <br>
         <a href="https://donate.stripe.com/4gMfZh5UL8p4euHfaNfw400" target="_blank" rel="noopener noreferrer" class="btn-donate">
           <i class="fas fa-heart"></i>
           Donate via Stripe
@@ -1585,9 +1870,30 @@
           <h2>Your Vision, Our Craft.</h2>
           <p>
             Have a STEM-inspired application idea? We transform bold concepts into
-            polished, functional software. <br>Let's build something that matters.
+            polished, functional software. Let's build something that matters.
           </p>
-          <span class="cta-coming">Coming Soon</span>
+          <form class="cta-form" id="craft-idea-form" novalidate>
+            <div class="form-group">
+              <label for="craft-name">Your Name</label>
+              <input type="text" id="craft-name" name="name" placeholder="e.g. Jordan Lee" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="craft-email">Email Address</label>
+              <input type="email" id="craft-email" name="email" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="craft-idea">Your Idea</label>
+              <textarea id="craft-idea" name="idea" placeholder="Describe your STEM app idea — what problem does it solve, who is it for?" required></textarea>
+            </div>
+            <div id="form-status" class="form-status"></div>
+            <div class="cta-form-actions">
+              <button type="submit" class="btn-submit" id="craft-submit">
+                <i class="fas fa-paper-plane"></i>
+                Submit Your Idea
+              </button>
+              <span class="cta-mailto">or email us directly at <a href="mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea&body=Hi%20RhytoLeaf%2C%0A%0AI%20have%20an%20idea%20for%20a%20STEM%20app%3A%0A%0A">rhytoleaf.ops@gmail.com</a></span>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -1605,6 +1911,8 @@
       <p class="footer-copy">&copy; 2026 RhytoLeaf Inc. All rights reserved.</p>
       <p class="footer-contact">
         <a href="mailto:rhytoleaf.ops@gmail.com">rhytoleaf.ops@gmail.com</a>
+        &nbsp;&middot;&nbsp;
+        <a href="#donate" style="color:var(--green);"><i class="fas fa-heart" style="font-size:0.75rem;"></i> Support Us</a>
       </p>
     </div>
   </footer>
@@ -1713,6 +2021,63 @@
         }
       });
     });
+
+    // ---- Craft Idea Form Submission ----
+    (function () {
+      const form = document.getElementById('craft-idea-form');
+      const statusEl = document.getElementById('form-status');
+      const submitBtn = document.getElementById('craft-submit');
+      // TODO: Replace with your deployed Firebase Cloud Function URL
+      const FUNCTION_URL = 'https://us-central1-YOUR_PROJECT.cloudfunctions.net/submitIdea';
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        statusEl.className = 'form-status';
+        statusEl.style.display = 'none';
+
+        const name = form.elements.name.value.trim();
+        const email = form.elements.email.value.trim();
+        const idea = form.elements.idea.value.trim();
+
+        // Client-side validation
+        if (!name || !email || !idea) {
+          statusEl.textContent = 'Please fill in all fields.';
+          statusEl.className = 'form-status error';
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          statusEl.textContent = 'Please enter a valid email address.';
+          statusEl.className = 'form-status error';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        try {
+          const res = await fetch(FUNCTION_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, idea })
+          });
+
+          if (res.ok) {
+            statusEl.textContent = 'Thank you! We received your idea and will be in touch.';
+            statusEl.className = 'form-status success';
+            form.reset();
+          } else {
+            throw new Error('Server error');
+          }
+        } catch (err) {
+          // Fallback: open mailto with pre-filled content
+          statusEl.innerHTML = 'Our form service is temporarily unavailable. <a href="mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea%20from%20' + encodeURIComponent(name) + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nIdea:\n' + idea) + '" style="color:var(--green);font-weight:600;">Click here to send via email instead.</a>';
+          statusEl.className = 'form-status error';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Your Idea';
+        }
+      });
+    })();
   </script>
 </body>
 
