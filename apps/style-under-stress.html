@@ -27,11 +27,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -40,205 +36,221 @@
 
     <style>
         /* ============================================
-           CSS VARIABLES & BASE STYLES
+           CSS VARIABLES
            ============================================ */
         :root {
-            --rhyto-green: #00CE7C;
-            --rhyto-green-hover: #00b56d;
-            --rhyto-green-dark: #009d5e;
+            /* Logo palette */
+            --bg-deep:      #0D2B30;
+            --bg-mid:       #112F35;
+            --bg-card:      #0F353C;
+            --accent-teal:  #2E7B7C;
+            --accent-teal2: #1F5A5B;
+            --accent-green: #5B8A3C;
+            --accent-olive: #7A8C2E;
+            --accent-brown: #6B4A3C;
+            --accent-cream: #E8D4A8;
+
+            /* Functional */
+            --true-color:   #2E7B7C;
+            --true-dark:    #1F5A5B;
+            --false-color:  #C0392B;
+            --false-dark:   #A93226;
+            --begin-color:  #C0392B;
+            --begin-dark:   #A93226;
+
+            /* Text */
+            --text-primary:   #EEE8D6;
+            --text-secondary: #A8C0B8;
+            --text-muted:     #6A8A84;
+
+            /* Borders */
+            --border-subtle:  rgba(46, 123, 124, 0.2);
+            --border-card:    rgba(46, 123, 124, 0.3);
+
+            /* Header */
+            --header-height: 64px;
         }
 
-        * {
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-color: var(--bg-deep);
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(46, 123, 124, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 90%, rgba(91, 138, 60, 0.08) 0%, transparent 45%);
             background-attachment: fixed;
-            color: #f2f2f2;
-            padding: 1rem;
+            color: var(--text-primary);
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        body.dark-mode {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            background-attachment: fixed;
-            color: #f2f2f2;
-        }
-
-        body:not(.dark-mode) {
-            background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
-            background-attachment: fixed;
-            color: #1a1a1a;
-        }
-
         /* ============================================
-           GLASSMORPHISM
+           STICKY HEADER
            ============================================ */
-        .glass {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        body:not(.dark-mode) .glass {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        /* ============================================
-           HEADER & NAVIGATION
-           ============================================ */
-        .header-container {
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            height: var(--header-height);
+            background: rgba(13, 43, 48, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-card);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 2rem;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            gap: 1rem;
         }
 
-        .back-button {
+        /* Left: Back button */
+        .header-back {
             display: inline-flex;
             align-items: center;
-            color: inherit;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .back-button:hover {
-            color: var(--rhyto-green);
-        }
-
-        .back-button svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.5rem;
-        }
-
-        .logo-center {
-            flex: 1;
-            text-align: center;
-        }
-
-        .logo-center img {
-            width: 60px;
-            height: auto;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            border-radius: 20%;
-        }
-
-        .logo-center img:hover {
-            transform: scale(1.1);
-        }
-
-        /* Theme Toggle */
-        .theme-toggle-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(46, 123, 124, 0.08);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .theme-toggle-wrapper i {
-            font-size: 1.5rem;
-            color: var(--rhyto-green);
+        .header-back:hover {
+            color: var(--accent-cream);
+            border-color: var(--accent-teal);
+            background: rgba(46, 123, 124, 0.18);
         }
 
-        .form-check-input {
-            cursor: pointer;
+        .header-back i {
+            font-size: 0.75rem;
         }
 
-        .form-check-input:checked {
-            background-color: var(--rhyto-green);
-            border-color: var(--rhyto-green);
+        /* Center: App logo + title */
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 1;
+            justify-content: center;
+            min-width: 0;
+            overflow: hidden;
         }
 
-        .form-check-input:not(:checked) {
-            background-color: #f59e0b;
-            border-color: #f59e0b;
+        .header-app-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
         }
 
-        /* ============================================
-           MAIN CONTENT
-           ============================================ */
-        .container-xxl {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            margin-bottom: 1rem;
-            color: var(--rhyto-green);
+        .header-app-title {
+            font-size: 1rem;
             font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        h2 {
-            font-size: clamp(1.8rem, 4.5vw, 3rem);
-            text-align: center;
+        /* Right: RhytoLeaf logo (links home, triggers exit modal during quiz) */
+        .header-right {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
         }
 
-        h3 {
-            text-align: center;
-        }
-
-        #why-benefit-header {
-            cursor: pointer;
-            text-decoration: underline;
-            color: var(--rhyto-green);
-            transition: opacity 0.3s ease;
-        }
-
-        #why-benefit-header:hover {
-            opacity: 0.8;
-        }
-
-        /* Question Card */
-        .question-card {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 2rem 1.5rem;
-            min-height: 200px;
+        .header-home-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 2rem auto;
-            max-width: 900px;
-            width: 100%;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(46, 123, 124, 0.08);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        body:not(.dark-mode) .question-card {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+        .header-home-btn:hover {
+            border-color: var(--accent-teal);
+            background: rgba(46, 123, 124, 0.18);
         }
 
-        #question-number {
-            font-size: clamp(1.5rem, 4vw, 3.5rem);
-            margin-bottom: 1.5rem;
+        .header-home-btn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        /* ============================================
+           MAIN CONTENT WRAPPER
+           ============================================ */
+        .main-content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 3rem;
+        }
+
+        /* ============================================
+           PAGE HERO (logo + title + subtitle)
+           ============================================ */
+        .page-hero {
             text-align: center;
-            color: var(--rhyto-green);
+            margin-bottom: 2.5rem;
         }
 
-        #question-text {
-            text-align: center;
-            font-size: clamp(0.95rem, 2.2vw, 1.5rem);
-            line-height: 1.6;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 100%;
+        .app-logo-hero {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(46, 123, 124, 0.4);
+        }
+
+        .page-hero h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--accent-teal);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
+        }
+
+        #why-benefit-header {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: opacity 0.2s ease;
+        }
+
+        #why-benefit-header:hover {
+            opacity: 0.75;
         }
 
         /* ============================================
@@ -248,152 +260,183 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
+            gap: 0.45rem;
+            margin-bottom: 1.75rem;
         }
 
         .grid-button {
-            width: 45px;
-            height: 45px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: inherit;
+            border: 2px solid var(--border-card);
+            background: rgba(46, 123, 124, 0.1);
+            color: var(--text-secondary);
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
         }
 
         .grid-button:hover {
-            transform: scale(1.1);
-            border-color: var(--rhyto-green);
+            transform: scale(1.12);
+            border-color: var(--accent-teal);
+            color: var(--text-primary);
         }
 
         .grid-button.true {
-            background-color: rgba(0, 255, 251, 0.8);
-            border-color: rgb(0, 255, 251);
-            color: #000;
+            background: rgba(46, 123, 124, 0.75);
+            border-color: var(--accent-teal);
+            color: #fff;
         }
 
         .grid-button.false {
-            background-color: rgba(255, 31, 102, 0.8);
-            border-color: rgb(255, 31, 102);
+            background: rgba(192, 57, 43, 0.75);
+            border-color: var(--false-color);
             color: #fff;
         }
 
         /* ============================================
-           BUTTONS
+           QUESTION PANEL
            ============================================ */
-        #begin-button {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            padding: 2rem 4rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-        }
-
-        #begin-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
-        }
-
-        #true-button,
-        #false-button {
-            width: clamp(150px, 30vw, 250px);
-            height: clamp(150px, 30vw, 250px);
-            padding: 0;
+        #question-hr {
             display: none;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            text-align: center;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: clamp(1.5rem, 5vw, 3rem);
-            transition: all 0.3s ease;
             border: none;
-            cursor: pointer;
+            border-top: 1px solid var(--border-card);
+            margin: 0 0 1.75rem;
         }
 
-        #true-button {
-            background: linear-gradient(135deg, rgb(0, 255, 251), rgb(0, 200, 196));
-            color: #000;
-            box-shadow: 0 8px 20px rgba(0, 255, 251, 0.3);
+        #question-number {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--accent-green);
+            text-align: center;
+            margin-bottom: 1rem;
         }
 
-        #true-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 30px rgba(0, 255, 251, 0.4);
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 2rem 1.75rem;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            max-width: 820px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
         }
 
-        #false-button {
-            background: linear-gradient(135deg, rgb(255, 31, 102), rgb(220, 20, 80));
-            color: white;
-            box-shadow: 0 8px 20px rgba(255, 31, 102, 0.3);
+        #question-text {
+            text-align: center;
+            font-size: clamp(1rem, 2.2vw, 1.35rem);
+            line-height: 1.65;
+            color: var(--text-primary);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        #false-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 30px rgba(255, 31, 102, 0.4);
-        }
-
+        /* ============================================
+           ANSWER BUTTONS
+           ============================================ */
         .button-container {
             display: flex;
             justify-content: center;
             gap: 2rem;
-            margin: 2rem 0;
+            margin: 0 0 1.5rem;
             flex-wrap: wrap;
         }
 
-        #scroll-to-results {
-            background-color: var(--rhyto-green);
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 206, 124, 0.3);
+        #true-button,
+        #false-button {
             display: none;
+            justify-content: center;
+            align-items: center;
+            width: clamp(130px, 28vw, 220px);
+            height: clamp(130px, 28vw, 220px);
+            border-radius: 18px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.3rem, 4vw, 2.5rem);
+            text-transform: uppercase;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            letter-spacing: 0.04em;
         }
 
-        #scroll-to-results:hover {
-            background-color: var(--rhyto-green-hover);
-            transform: scale(1.1);
+        #true-button {
+            background: linear-gradient(135deg, var(--true-color), var(--true-dark));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(46, 123, 124, 0.35);
+        }
+
+        #true-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(46, 123, 124, 0.5);
+        }
+
+        #false-button {
+            background: linear-gradient(135deg, var(--false-color), var(--false-dark));
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(192, 57, 43, 0.35);
+        }
+
+        #false-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(192, 57, 43, 0.5);
+        }
+
+        /* Begin Button */
+        #begin-button {
+            background: linear-gradient(135deg, var(--begin-color), var(--begin-dark));
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.3rem, 3.5vw, 2rem);
+            font-weight: 700;
+            padding: 1.5rem 4rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 20px rgba(192, 57, 43, 0.35);
+            letter-spacing: 0.04em;
+        }
+
+        #begin-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(192, 57, 43, 0.5);
+        }
+
+        /* Debug (hidden) */
+        #list-of-answers {
+            display: none;
         }
 
         /* ============================================
            PROGRESS BAR
            ============================================ */
+        .progress-wrap {
+            max-width: 820px;
+            margin: 0 auto 1.25rem;
+        }
+
         .progress {
             width: 100%;
-            max-width: 800px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            height: 38px;
+            background: rgba(46, 123, 124, 0.12);
+            border: 1px solid var(--border-card);
             border-radius: 50px;
             overflow: hidden;
             position: relative;
-            margin: 2rem auto;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, var(--rhyto-green), var(--rhyto-green-hover));
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-green));
             height: 100%;
             transition: width 0.5s ease;
+            border-radius: 50px;
         }
 
         #quiz-progress-text {
@@ -402,72 +445,255 @@
             top: 50%;
             transform: translate(-50%, -50%);
             font-weight: 700;
-            font-size: 1.1rem;
-            color: inherit;
+            font-size: 1rem;
+            color: var(--text-primary);
+            pointer-events: none;
+        }
+
+        /* Scroll to results */
+        .scroll-btn-wrap {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #scroll-to-results {
+            display: none;
+            background: var(--accent-teal);
+            border: none;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+            box-shadow: 0 4px 14px rgba(46, 123, 124, 0.4);
+        }
+
+        #scroll-to-results:hover {
+            background: var(--accent-teal2);
+            transform: scale(1.1);
         }
 
         /* ============================================
-           RESULT CARDS
+           RESULTS SECTION
            ============================================ */
         #result-card-container {
             display: none;
             margin-top: 3rem;
+            text-align: center;
         }
 
         #results-header {
-            color: var(--rhyto-green);
-            margin-bottom: 2rem;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: var(--accent-teal);
+            margin-bottom: 1.5rem;
+        }
+
+        #result-card-container > p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .score-warning {
+            color: var(--false-color);
+            font-weight: 700;
+            margin: 1rem auto;
+            max-width: 680px;
+            font-size: 0.95rem;
+        }
+
+        /* Result Cards Grid */
+        .result-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .result-column h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .result-card {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
             width: 100%;
-            max-width: 22rem;
-            margin: 0 auto;
-            transition: all 0.3s ease;
-        }
-
-        body:not(.dark-mode) .result-card {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            max-width: 380px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
         }
 
         .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 206, 124, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 32px rgba(46, 123, 124, 0.25);
         }
 
         .result-card .card-img-top {
-            height: auto;
             width: 100%;
-            border-radius: 20px 20px 0 0;
+            height: auto;
+            display: block;
         }
 
         .result-card .card-body {
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
         }
 
+        /* Category rows inside cards */
+        .category-row {
+            padding: 0.65rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .category-row:last-child {
+            border-bottom: none;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .category-pct {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            background: rgba(46, 123, 124, 0.12);
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .category-checks {
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        /* Custom checkboxes */
         .result-card input[type="checkbox"] {
-            margin: 0 0.25rem;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--border-card);
+            background: rgba(46, 123, 124, 0.08);
+            cursor: default;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            flex-shrink: 0;
+            position: relative;
         }
 
         .result-card input[type="checkbox"]:checked {
-            background-color: var(--rhyto-green);
-            border-color: var(--rhyto-green);
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .result-card input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 3px;
+            top: 1px;
+            width: 8px;
+            height: 5px;
+            border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff;
+            transform: rotate(-45deg);
         }
 
         .info-icon {
-            color: var(--rhyto-green);
+            color: var(--accent-teal);
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease, color 0.2s ease;
+            font-size: 0.85rem;
         }
 
         .info-icon:hover {
             transform: scale(1.2);
+            color: var(--accent-cream);
+        }
+
+        /* Conclusion block */
+        #conclusion {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #conclusion p {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        #copy-results {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-teal2));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.4rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        #copy-results:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(46, 123, 124, 0.4);
+        }
+
+        #conclusion a {
+            color: var(--accent-green);
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: opacity 0.2s;
+        }
+
+        #conclusion a:hover {
+            opacity: 0.75;
         }
 
         /* ============================================
@@ -476,60 +702,115 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            z-index: 500;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            overflow-y: auto;
+            padding: 2rem 1rem;
         }
 
         .modal-content {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            margin: 5% auto;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
+            background: #0D3038;
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 2rem 1.75rem;
+            max-width: 580px;
+            width: 100%;
+            margin: 0 auto;
             position: relative;
-            color: #f2f2f2;
-        }
-
-        body:not(.dark-mode) .modal-content {
-            background: rgba(255, 255, 255, 0.95);
-            color: #1a1a1a;
+            color: var(--text-primary);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .modal-content h2 {
-            color: var(--rhyto-green);
-            margin-bottom: 1.5rem;
+            color: var(--accent-teal);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            text-align: left;
+            padding-right: 2rem;
+        }
+
+        .modal-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .modal-content h3 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            text-align: left;
         }
 
         .modal-content ul {
             text-align: left;
-            padding-left: 1.5rem;
-            line-height: 1.8;
+            padding-left: 1.25rem;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal-content ul li {
+            margin-bottom: 0.4rem;
         }
 
         .close-button {
             position: absolute;
             top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
+            right: 1.25rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--rhyto-green);
+            color: var(--text-muted);
             cursor: pointer;
-            transition: transform 0.3s ease;
+            line-height: 1;
+            transition: color 0.2s ease;
         }
 
         .close-button:hover {
-            transform: scale(1.2);
+            color: var(--accent-teal);
+        }
+
+        /* Exit modal specific buttons */
+        #confirm-exit-button,
+        #cancel-exit-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.3rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        #confirm-exit-button {
+            background: linear-gradient(135deg, var(--false-color), var(--false-dark));
+            color: #fff;
+        }
+
+        #confirm-exit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.4);
+        }
+
+        #cancel-exit-button {
+            background: rgba(46, 123, 124, 0.15);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-card);
+        }
+
+        #cancel-exit-button:hover {
+            background: rgba(46, 123, 124, 0.25);
+            color: var(--text-primary);
         }
 
         /* ============================================
@@ -537,284 +818,135 @@
            ============================================ */
         footer {
             text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
+            padding: 2rem 1.25rem;
+            margin-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.8;
+        }
+
+        footer p + p {
+            margin-top: 0.25rem;
         }
 
         /* ============================================
-           RESPONSIVE DESIGN
+           UTILITIES
            ============================================ */
-        @media (max-width: 768px) {
-            .back-button span {
+        .text-center { text-align: center; }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 1.25rem 1rem 2.5rem;
+            }
+
+            .header-back span {
                 display: none;
             }
 
-            .logo-center img {
-                width: 50px;
+            .header-app-title {
+                font-size: 0.9rem;
             }
 
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .question-card {
-                padding: 2rem 1rem;
-                min-height: 200px;
+            .page-hero {
+                margin-bottom: 1.5rem;
             }
 
             .grid-button {
-                width: 38px;
-                height: 38px;
-                font-size: 0.8rem;
+                width: 36px;
+                height: 36px;
+                font-size: 0.75rem;
+            }
+
+            #question-grid {
+                gap: 0.3rem;
+            }
+
+            .question-card {
+                padding: 1.5rem 1rem;
+                min-height: 150px;
             }
 
             #begin-button {
-                padding: 1.5rem 3rem;
+                padding: 1.2rem 2.5rem;
             }
 
             .button-container {
                 gap: 1rem;
             }
 
+            .result-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
             .result-card {
-                max-width: 95%;
+                max-width: 100%;
+            }
+
+            .modal-content {
+                padding: 1.5rem 1.25rem;
             }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 0.5rem;
-            }
-
-            .header-container {
-                margin-bottom: 1rem;
-            }
-
+        @media (max-width: 400px) {
             .grid-button {
-                width: 32px;
-                height: 32px;
-                font-size: 0.75rem;
+                width: 30px;
+                height: 30px;
+                font-size: 0.68rem;
             }
 
             #question-grid {
-                gap: 0.25rem;
+                gap: 0.2rem;
             }
-        }
 
-        /* ============================================
-           UTILITY CLASSES
-           ============================================ */
-        .text-center {
-            text-align: center;
-        }
-
-        #list-of-answers {
-            display: none;
-        }
-
-        #question-hr {
-            display: none;
-            border-color: rgba(255, 255, 255, 0.2);
-            margin: 2rem 0;
-        }
-
-        /* ============================================
-           VIEW MODE TOGGLE
-           ============================================ */
-        .view-toggle-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            margin-left: 1rem;
-        }
-
-        .view-toggle-wrapper i {
-            font-size: 1.5rem;
-            color: var(--rhyto-green);
-        }
-
-        /* ============================================
-           MOBILE PORTRAIT MODE STYLES
-           ============================================ */
-        body.mobile-mode {
-            padding: 0.5rem;
-        }
-
-        body.mobile-mode .header-container {
-            margin-bottom: 0.75rem;
-            padding: 0.5rem 0;
-        }
-
-        body.mobile-mode .back-button span {
-            display: none;
-        }
-
-        body.mobile-mode .logo-center img {
-            width: 40px;
-        }
-
-        body.mobile-mode h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        body.mobile-mode #why-benefit-header {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        body.mobile-mode #question-grid {
-            gap: 0.25rem;
-            margin-bottom: 1rem;
-            padding: 0 0.5rem;
-        }
-
-        body.mobile-mode .grid-button {
-            width: 28px;
-            height: 28px;
-            font-size: 0.65rem;
-            border-width: 1px;
-        }
-
-        body.mobile-mode #question-number {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        body.mobile-mode .question-card {
-            padding: 1rem 0.75rem;
-            min-height: 120px;
-            margin: 0.75rem auto;
-            border-radius: 15px;
-        }
-
-        body.mobile-mode #question-text {
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        body.mobile-mode #question-hr {
-            margin: 0.75rem 0;
-        }
-
-        body.mobile-mode .button-container {
-            gap: 0.75rem;
-            margin: 1rem 0;
-        }
-
-        body.mobile-mode #true-button,
-        body.mobile-mode #false-button {
-            width: 120px;
-            height: 120px;
-            font-size: 1.2rem;
-            border-radius: 15px;
-        }
-
-        body.mobile-mode #begin-button {
-            font-size: 1.3rem;
-            padding: 1.2rem 2.5rem;
-        }
-
-        body.mobile-mode .progress {
-            height: 30px;
-            margin: 1rem auto;
-        }
-
-        body.mobile-mode #quiz-progress-text {
-            font-size: 0.9rem;
-        }
-
-        body.mobile-mode #scroll-to-results {
-            width: 45px;
-            height: 45px;
-            font-size: 1.2rem;
-        }
-
-        body.mobile-mode footer {
-            padding: 1rem 0;
-            margin-top: 1.5rem;
-            font-size: 0.8rem;
-        }
-
-        body.mobile-mode .theme-toggle-wrapper i,
-        body.mobile-mode .view-toggle-wrapper i {
-            font-size: 1rem;
-        }
-
-        body.mobile-mode .form-check-input {
-            width: 2.5em;
-            height: 1.25em;
-        }
-
-        /* Mobile mode results section */
-        body.mobile-mode #result-card-container {
-            margin-top: 1.5rem;
-        }
-
-        body.mobile-mode #results-header {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        body.mobile-mode .result-card {
-            max-width: 100%;
-            border-radius: 15px;
-        }
-
-        body.mobile-mode .result-card .card-body {
-            padding: 1rem;
-            font-size: 0.85rem;
-        }
-
-        body.mobile-mode .modal-content {
-            margin: 10% auto;
-            padding: 1.5rem;
-            width: 95%;
+            #true-button,
+            #false-button {
+                width: 115px;
+                height: 115px;
+                font-size: 1.2rem;
+                border-radius: 14px;
+            }
         }
     </style>
 </head>
 
-<body class="dark-mode">
-    <!-- Back to All Apps Navigation -->
-    <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
-      <i class="fas fa-arrow-left" style="font-size:0.75rem;"></i> All Apps
-    </a>
-
-    <!-- Header -->
-    <div class="header-container">
-        <a href="../index.html" class="back-button" aria-label="Back to home">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            <span>Back to Home</span>
+<body>
+    <!-- Sticky Header -->
+    <header class="site-header">
+        <!-- Left: Back to All Apps -->
+        <a href="../index.html#apps" class="header-back" aria-label="Back to all apps">
+            <i class="fas fa-arrow-left"></i>
+            <span>All Apps</span>
         </a>
 
-        <div class="logo-center">
-            <img src="../images/logo-icon.png" alt="RhytoLeaf Logo" onclick="showExitQuizModal()">
+        <!-- Center: App logo + name -->
+        <div class="header-center">
+            <img src="../images/styleunderstress-logo.jpg" alt="Style Under Stress logo" class="header-app-logo">
+            <span class="header-app-title">Style Under Stress</span>
         </div>
 
-        <div class="theme-toggle-wrapper">
-            <i id="darkModeIcon" class="fas fa-sun"></i>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="darkModeToggle" checked aria-label="Toggle dark mode">
-            </div>
+        <!-- Right: RhytoLeaf home button (triggers exit modal if quiz active) -->
+        <div class="header-right">
+            <button class="header-home-btn" id="home-btn" aria-label="Back to RhytoLeaf home" onclick="handleHomeClick()">
+                <img src="../images/logo-icon.png" alt="RhytoLeaf">
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Page Hero -->
+        <div class="page-hero">
+            <img src="../images/styleunderstress-logo.jpg" alt="Style Under Stress" class="app-logo-hero">
+            <h1>Style Under Stress</h1>
+            <span id="why-benefit-header">Why take this quiz?</span>
         </div>
 
-        <div class="view-toggle-wrapper">
-            <i id="viewModeIcon" class="fas fa-desktop"></i>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="viewModeToggle" checked aria-label="Toggle view mode">
-            </div>
-        </div>
-    </div>
-
-    <div class="container-xxl">
-        <!-- Title -->
-        <h1>Style Under Stress</h1>
-        <h3 id="why-benefit-header">Why?</h3>
-
-        <!-- Question Grid -->
+        <!-- Question Grid (populated by JS) -->
         <div id="question-grid"></div>
 
         <!-- Question Panel -->
@@ -830,7 +962,7 @@
                 </p>
             </div>
 
-            <!-- Answer Buttons -->
+            <!-- True / False Buttons -->
             <div class="button-container">
                 <button id="true-button" onclick="pressTrue()" aria-label="Answer True">True</button>
                 <button id="false-button" onclick="pressFalse()" aria-label="Answer False">False</button>
@@ -838,190 +970,280 @@
         </div>
 
         <!-- Begin Button -->
-        <div class="text-center my-3">
+        <div class="text-center" style="margin-bottom:1.5rem;">
             <button id="begin-button" onclick="startQuiz()">Begin</button>
         </div>
 
-        <!-- Debug -->
+        <!-- Debug (hidden) -->
         <div id="list-of-answers">
             <h4>Answered True</h4>
             <p id="answered-true">[ ]</p>
         </div>
 
         <!-- Progress Bar -->
-        <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-            <div id="quiz-progress" class="progress-bar"></div>
-            <span id="quiz-progress-text">0%</span>
+        <div class="progress-wrap">
+            <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div id="quiz-progress" class="progress-bar"></div>
+                <span id="quiz-progress-text">0%</span>
+            </div>
         </div>
 
-        <!-- Scroll to Results Button -->
-        <div class="text-center" style="margin-top: 20px;">
+        <!-- Scroll to Results -->
+        <div class="scroll-btn-wrap">
             <button id="scroll-to-results" aria-label="Scroll to results">&#8595;</button>
         </div>
 
         <!-- Results Section -->
-        <div id="result-card-container" class="text-center">
+        <div id="result-card-container">
             <h2 id="results-header">Results</h2>
 
             <p>Your silence and violence scores give you a measure of how frequently you fall into these less-than-perfect strategies.</p>
             <p>These scores represent how you may typically behave during stressful or crucial conversations, but they can change.</p>
 
-            <br>
-            <b style="color: #ef4444;">Your score DOES NOT represent an inalterable character trait or a genetic propensity.</b>
+            <p class="score-warning">Your score DOES NOT represent an inalterable character trait or a genetic propensity.</p>
             <p>It's merely a measure of your behavior and you can change that.</p>
-            <br><br>
 
-            <!-- Result Cards Row -->
-            <div class="row g-4">
+            <!-- Cards Row -->
+            <div class="result-cards-grid">
                 <!-- Silence Card -->
-                <div class="col-sm-12 col-md-6 d-flex flex-column align-items-center">
-                    <h3 class="mb-3">Silence</h3>
+                <div class="result-column">
+                    <h3>Silence</h3>
                     <div class="result-card">
                         <img class="card-img-top" src="../images/silence.png" alt="Silence">
                         <div class="card-body">
-                            <div id="masking-div">
-                                <p>Masking <i class="fas fa-info-circle info-icon" data-category="masking"></i></p>
-                                <input type="checkbox" id="q-5">
-                                <input type="checkbox" id="q-6">
-                                <p id="masking-pct">0%</p>
+                            <!-- Masking -->
+                            <div id="masking-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Masking
+                                        <i class="fas fa-info-circle info-icon" data-category="masking"></i>
+                                    </span>
+                                    <span class="category-pct" id="masking-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-5">
+                                    <input type="checkbox" id="q-6">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="avoiding-div">
-                                <p>Avoiding <i class="fas fa-info-circle info-icon" data-category="avoiding"></i></p>
-                                <input type="checkbox" id="q-3">
-                                <input type="checkbox" id="q-4">
-                                <p id="avoiding-pct">0%</p>
+                            <!-- Avoiding -->
+                            <div id="avoiding-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Avoiding
+                                        <i class="fas fa-info-circle info-icon" data-category="avoiding"></i>
+                                    </span>
+                                    <span class="category-pct" id="avoiding-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-3">
+                                    <input type="checkbox" id="q-4">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="withdrawing-div">
-                                <p>Withdrawing <i class="fas fa-info-circle info-icon" data-category="withdrawing"></i></p>
-                                <input type="checkbox" id="q-1">
-                                <input type="checkbox" id="q-2">
-                                <p id="withdrawing-pct">0%</p>
+                            <!-- Withdrawing -->
+                            <div id="withdrawing-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Withdrawing
+                                        <i class="fas fa-info-circle info-icon" data-category="withdrawing"></i>
+                                    </span>
+                                    <span class="category-pct" id="withdrawing-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-1">
+                                    <input type="checkbox" id="q-2">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="heart-div">
-                                <p>Start with the heart <i class="fas fa-info-circle info-icon" data-category="heart"></i></p>
-                                <input type="checkbox" id="q-13">
-                                <input type="checkbox" id="q-19">
-                                <input type="checkbox" id="q-25">
-                                <p id="heart-pct">0%</p>
+                            <!-- Start with Heart -->
+                            <div id="heart-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Start with the heart
+                                        <i class="fas fa-info-circle info-icon" data-category="heart"></i>
+                                    </span>
+                                    <span class="category-pct" id="heart-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-13">
+                                    <input type="checkbox" id="q-19">
+                                    <input type="checkbox" id="q-25">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="look-div">
-                                <p>Learn to look <i class="fas fa-info-circle info-icon" data-category="look"></i></p>
-                                <input type="checkbox" id="q-14">
-                                <input type="checkbox" id="q-20">
-                                <input type="checkbox" id="q-26">
-                                <p id="look-pct">0%</p>
+                            <!-- Learn to Look -->
+                            <div id="look-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Learn to look
+                                        <i class="fas fa-info-circle info-icon" data-category="look"></i>
+                                    </span>
+                                    <span class="category-pct" id="look-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-14">
+                                    <input type="checkbox" id="q-20">
+                                    <input type="checkbox" id="q-26">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="safe-div">
-                                <p>Make it safe <i class="fas fa-info-circle info-icon" data-category="safe"></i></p>
-                                <input type="checkbox" id="q-15">
-                                <input type="checkbox" id="q-21">
-                                <input type="checkbox" id="q-27">
-                                <p id="safe-pct">0%</p>
+                            <!-- Make it Safe -->
+                            <div id="safe-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Make it safe
+                                        <i class="fas fa-info-circle info-icon" data-category="safe"></i>
+                                    </span>
+                                    <span class="category-pct" id="safe-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-15">
+                                    <input type="checkbox" id="q-21">
+                                    <input type="checkbox" id="q-27">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="stories-div">
-                                <p>Master my stories <i class="fas fa-info-circle info-icon" data-category="stories"></i></p>
-                                <input type="checkbox" id="q-16">
-                                <input type="checkbox" id="q-22">
-                                <input type="checkbox" id="q-28">
-                                <p id="stories-pct">0%</p>
+                            <!-- Master My Stories -->
+                            <div id="stories-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Master my stories
+                                        <i class="fas fa-info-circle info-icon" data-category="stories"></i>
+                                    </span>
+                                    <span class="category-pct" id="stories-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-16">
+                                    <input type="checkbox" id="q-22">
+                                    <input type="checkbox" id="q-28">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Violence Card -->
-                <div class="col-sm-12 col-md-6 d-flex flex-column align-items-center">
-                    <h3 class="mb-3">Violence</h3>
+                <div class="result-column">
+                    <h3>Violence</h3>
                     <div class="result-card">
                         <img class="card-img-top" src="../images/violence.png" alt="Violence">
                         <div class="card-body">
-                            <div id="controlling-div">
-                                <p>Controlling <i class="fas fa-info-circle info-icon" data-category="controlling"></i></p>
-                                <input type="checkbox" id="q-7">
-                                <input type="checkbox" id="q-8">
-                                <p id="controlling-pct">0%</p>
+                            <!-- Controlling -->
+                            <div id="controlling-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Controlling
+                                        <i class="fas fa-info-circle info-icon" data-category="controlling"></i>
+                                    </span>
+                                    <span class="category-pct" id="controlling-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-7">
+                                    <input type="checkbox" id="q-8">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="labeling-div">
-                                <p>Labeling <i class="fas fa-info-circle info-icon" data-category="labeling"></i></p>
-                                <input type="checkbox" id="q-9">
-                                <input type="checkbox" id="q-10">
-                                <p id="labeling-pct">0%</p>
+                            <!-- Labeling -->
+                            <div id="labeling-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Labeling
+                                        <i class="fas fa-info-circle info-icon" data-category="labeling"></i>
+                                    </span>
+                                    <span class="category-pct" id="labeling-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-9">
+                                    <input type="checkbox" id="q-10">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="attacking-div">
-                                <p>Attacking <i class="fas fa-info-circle info-icon" data-category="attacking"></i></p>
-                                <input type="checkbox" id="q-11">
-                                <input type="checkbox" id="q-12">
-                                <p id="attacking-pct">0%</p>
+                            <!-- Attacking -->
+                            <div id="attacking-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Attacking
+                                        <i class="fas fa-info-circle info-icon" data-category="attacking"></i>
+                                    </span>
+                                    <span class="category-pct" id="attacking-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-11">
+                                    <input type="checkbox" id="q-12">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="state-div">
-                                <p>STATE my path <i class="fas fa-info-circle info-icon" data-category="state"></i></p>
-                                <input type="checkbox" id="q-17">
-                                <input type="checkbox" id="q-23">
-                                <input type="checkbox" id="q-29">
-                                <p id="state-pct">0%</p>
+                            <!-- STATE My Path -->
+                            <div id="state-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        STATE my path
+                                        <i class="fas fa-info-circle info-icon" data-category="state"></i>
+                                    </span>
+                                    <span class="category-pct" id="state-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-17">
+                                    <input type="checkbox" id="q-23">
+                                    <input type="checkbox" id="q-29">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="explore-div">
-                                <p>Explore Others' Paths <i class="fas fa-info-circle info-icon" data-category="explore"></i></p>
-                                <input type="checkbox" id="q-18">
-                                <input type="checkbox" id="q-24">
-                                <input type="checkbox" id="q-30">
-                                <p id="explore-pct">0%</p>
+                            <!-- Explore Others' Paths -->
+                            <div id="explore-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Explore Others' Paths
+                                        <i class="fas fa-info-circle info-icon" data-category="explore"></i>
+                                    </span>
+                                    <span class="category-pct" id="explore-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-18">
+                                    <input type="checkbox" id="q-24">
+                                    <input type="checkbox" id="q-30">
+                                </div>
                             </div>
-                            <hr>
 
-                            <div id="action-div">
-                                <p>Move to action <i class="fas fa-info-circle info-icon" data-category="action"></i></p>
-                                <input type="checkbox" id="q-31">
-                                <input type="checkbox" id="q-32">
-                                <input type="checkbox" id="q-33">
-                                <p id="action-pct">0%</p>
+                            <!-- Move to Action -->
+                            <div id="action-div" class="category-row">
+                                <div class="category-header">
+                                    <span class="category-name">
+                                        Move to action
+                                        <i class="fas fa-info-circle info-icon" data-category="action"></i>
+                                    </span>
+                                    <span class="category-pct" id="action-pct">0%</span>
+                                </div>
+                                <div class="category-checks">
+                                    <input type="checkbox" id="q-31">
+                                    <input type="checkbox" id="q-32">
+                                    <input type="checkbox" id="q-33">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <br><br>
-
             <!-- Conclusion -->
             <div id="conclusion">
                 <p>Save and/or share results:</p>
-                <button id="copy-results" class="btn btn-primary" style="background-color: var(--rhyto-green); border-color: var(--rhyto-green);">
+                <button id="copy-results">
                     <i class="fas fa-copy"></i> Copy
                 </button>
 
-                <br><br>
-
                 <p>We have a tool that can help you:</p>
                 <p><a href="https://www.amazon.ca/Crucial-Conversations-Talking-Stakes-Second/dp/0071771328"
-                    target="_blank" rel="noopener noreferrer" style="color: var(--rhyto-green); font-weight: 600;">
+                    target="_blank" rel="noopener noreferrer">
                     Crucial Conversations
                 </a></p>
             </div>
         </div>
-    </div>
 
-    <!-- Modals -->
+    </main>
+
+    <!-- Info Modal -->
     <div id="info-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -1032,16 +1254,18 @@
         </div>
     </div>
 
+    <!-- Exit Quiz Modal -->
     <div id="exit-quiz-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Are you sure you want to exit the quiz?</h2>
             <p>Your progress will not be saved.</p>
-            <button id="confirm-exit-button" class="btn btn-danger">Yes, exit</button>
-            <button id="cancel-exit-button" class="btn btn-secondary">No, stay</button>
+            <button id="confirm-exit-button">Yes, exit</button>
+            <button id="cancel-exit-button">No, stay</button>
         </div>
     </div>
 
+    <!-- Why Benefit Modal -->
     <div id="why-benefit-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
@@ -1051,7 +1275,9 @@
                 <li>Improve relationships and achieve your goals</li>
                 <li>Make conscious choices for more productive conversations</li>
             </ul>
-            <p style="text-align: center; font-weight: bold;">Best of all, it's <span style="color: #ef4444;">FREE</span>!</p>
+            <p style="text-align:center; font-weight:bold; margin-top:1rem;">
+                Best of all, it's <span style="color:#C0392B;">FREE</span>!
+            </p>
         </div>
     </div>
 
@@ -1061,17 +1287,20 @@
         <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All Rights Reserved</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- ================================================
+         JAVASCRIPT — All logic preserved, jQuery removed
+         ================================================ -->
     <script>
 var answeredTrue = [];
 var answeredFalse = [];
 var currentQuestion = 0;
 var questionStatus = new Array(33).fill(0);
+var quizStarted = false;
 
 var questionUpdateInterval = null;
 
 function startQuiz() {
+  quizStarted = true;
   document.getElementById("begin-button").style.display = "none";
   document.getElementById("true-button").style.display = "flex";
   document.getElementById("false-button").style.display = "flex";
@@ -1082,15 +1311,15 @@ function startQuiz() {
   for (let i = 1; i <= 33; i++) {
     const button = document.createElement("button");
     button.innerHTML = i;
-    button.id = `grid-btn-${i}`;
+    button.id = "grid-btn-" + i;
     button.classList.add("grid-button");
-    button.addEventListener("click", () => jumpToQuestion(i));
+    button.addEventListener("click", function() { jumpToQuestion(i); });
     gridContainer.appendChild(button);
   }
 
   currentQuestion = 1;
   document.getElementById("question-text").innerHTML = questions[0];
-  document.getElementById("question-number").innerHTML = 'Question 1';
+  document.getElementById("question-number").innerHTML = "Question 1";
 
   if (questionUpdateInterval) {
     clearInterval(questionUpdateInterval);
@@ -1099,22 +1328,15 @@ function startQuiz() {
 }
 
 function updateQuestionPanel() {
-  $.ajax({
-    url: window.location.href,
-    method: 'GET',
-    cache: false,
-    success: function() {
-      if (currentQuestion >= 1 && currentQuestion <= 33) {
-        document.getElementById("question-text").innerHTML = questions[currentQuestion - 1];
-        document.getElementById("question-number").innerHTML = 'Question ' + currentQuestion;
-      }
+  if (currentQuestion >= 1 && currentQuestion <= 33) {
+    document.getElementById("question-text").innerHTML = questions[currentQuestion - 1];
+    document.getElementById("question-number").innerHTML = "Question " + currentQuestion;
+  }
 
-      const answeredQuestions = questionStatus.filter(status => status !== 0).length;
-      const percentage = (answeredQuestions / 33) * 100;
-      document.getElementById("quiz-progress").style.width = percentage + "%";
-      document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
-    }
-  });
+  var answeredQuestions = questionStatus.filter(function(s) { return s !== 0; }).length;
+  var percentage = (answeredQuestions / 33) * 100;
+  document.getElementById("quiz-progress").style.width = percentage + "%";
+  document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
 }
 
 function setAnsweredTrueText() {
@@ -1128,28 +1350,28 @@ function setQuestionText() {
 
 function pressTrue() {
   questionStatus[currentQuestion - 1] = 1;
-  document.getElementById(`grid-btn-${currentQuestion}`).classList.add('true');
-  document.getElementById(`grid-btn-${currentQuestion}`).classList.remove('false');
+  document.getElementById("grid-btn-" + currentQuestion).classList.add("true");
+  document.getElementById("grid-btn-" + currentQuestion).classList.remove("false");
 
   if (!answeredTrue.includes(currentQuestion)) {
     answeredTrue.push(currentQuestion);
   }
 
   answeredTrue.forEach(setCheckboxValueChecked);
-  document.getElementById("q-"+currentQuestion).checked = true;
+  document.getElementById("q-" + currentQuestion).checked = true;
   findNextQuestion();
 }
 
 function pressFalse() {
   questionStatus[currentQuestion - 1] = 2;
-  document.getElementById(`grid-btn-${currentQuestion}`).classList.add('false');
-  document.getElementById(`grid-btn-${currentQuestion}`).classList.remove('true');
+  document.getElementById("grid-btn-" + currentQuestion).classList.add("false");
+  document.getElementById("grid-btn-" + currentQuestion).classList.remove("true");
 
-  const index = answeredTrue.indexOf(currentQuestion);
+  var index = answeredTrue.indexOf(currentQuestion);
   if (index > -1) {
     answeredTrue.splice(index, 1);
   }
-  document.getElementById("q-"+currentQuestion).checked = false;
+  document.getElementById("q-" + currentQuestion).checked = false;
   findNextQuestion();
 }
 
@@ -1159,10 +1381,10 @@ function jumpToQuestion(questionNumber) {
 }
 
 function findNextQuestion() {
-  let nextQuestion = questionStatus.indexOf(0);
+  var nextQuestion = questionStatus.indexOf(0);
   if (nextQuestion === -1) {
-    const answeredQuestions = questionStatus.filter(status => status !== 0).length;
-    const percentage = (answeredQuestions / 33) * 100;
+    var answeredQuestions = questionStatus.filter(function(s) { return s !== 0; }).length;
+    var percentage = (answeredQuestions / 33) * 100;
     document.getElementById("quiz-progress").style.width = percentage + "%";
     document.getElementById("quiz-progress-text").textContent = Math.round(percentage) + "%";
     endQuiz();
@@ -1173,10 +1395,12 @@ function findNextQuestion() {
 }
 
 function setCheckboxValueChecked(id) {
-  $('#q-' + id).prop('checked', true);
+  var el = document.getElementById("q-" + id);
+  if (el) el.checked = true;
 }
 
 function endQuiz() {
+  quizStarted = false;
   if (questionUpdateInterval) {
     clearInterval(questionUpdateInterval);
     questionUpdateInterval = null;
@@ -1191,8 +1415,8 @@ function endQuiz() {
   calculateResults();
   document.getElementById("result-card-container").style.display = "block";
 
-  const resultCheckboxes = document.querySelectorAll("#result-card-container input[type='checkbox']");
-  resultCheckboxes.forEach(checkbox => {
+  var resultCheckboxes = document.querySelectorAll("#result-card-container input[type='checkbox']");
+  resultCheckboxes.forEach(function(checkbox) {
     checkbox.disabled = true;
   });
 
@@ -1203,44 +1427,46 @@ function calculateResults() {
   document.getElementById("result-card-container").style.display = "block";
 
   document.getElementById("masking-pct").innerHTML = calculatePCT("masking");
-  document.getElementById("avoiding-pct").innerHTML = calculatePCT('avoiding');
-  document.getElementById("withdrawing-pct").innerHTML = calculatePCT('withdrawing');
-  document.getElementById("heart-pct").innerHTML = calculatePCT('heart');
-  document.getElementById("look-pct").innerHTML = calculatePCT('look');
-  document.getElementById("safe-pct").innerHTML = calculatePCT('safe');
-  document.getElementById("stories-pct").innerHTML = calculatePCT('stories');
-  document.getElementById("controlling-pct").innerHTML = calculatePCT('controlling');
-  document.getElementById("labeling-pct").innerHTML = calculatePCT('labeling');
-  document.getElementById("attacking-pct").innerHTML = calculatePCT('attacking');
-  document.getElementById("state-pct").innerHTML = calculatePCT('state');
-  document.getElementById("explore-pct").innerHTML = calculatePCT('explore');
-  document.getElementById("action-pct").innerHTML = calculatePCT('action');
+  document.getElementById("avoiding-pct").innerHTML = calculatePCT("avoiding");
+  document.getElementById("withdrawing-pct").innerHTML = calculatePCT("withdrawing");
+  document.getElementById("heart-pct").innerHTML = calculatePCT("heart");
+  document.getElementById("look-pct").innerHTML = calculatePCT("look");
+  document.getElementById("safe-pct").innerHTML = calculatePCT("safe");
+  document.getElementById("stories-pct").innerHTML = calculatePCT("stories");
+  document.getElementById("controlling-pct").innerHTML = calculatePCT("controlling");
+  document.getElementById("labeling-pct").innerHTML = calculatePCT("labeling");
+  document.getElementById("attacking-pct").innerHTML = calculatePCT("attacking");
+  document.getElementById("state-pct").innerHTML = calculatePCT("state");
+  document.getElementById("explore-pct").innerHTML = calculatePCT("explore");
+  document.getElementById("action-pct").innerHTML = calculatePCT("action");
 }
 
 function calculatePCT(category) {
-  const $div = $('#' + category + '-div');
-  const count = $div.find('input:checked').length;
-  const total = $div.find('input').length;
+  var div = document.getElementById(category + "-div");
+  var inputs = div.querySelectorAll("input");
+  var checked = div.querySelectorAll("input:checked");
+  var count = checked.length;
+  var total = inputs.length;
   var pct = (count / total) * 100;
 
-  if(pct < 34) return 'Unlikely';
-  if(pct >= 50) return 'Fairly often';
-  return pct + '%';
+  if (pct < 34) return "Unlikely";
+  if (pct >= 50) return "Fairly often";
+  return Math.round(pct) + "%";
 }
 
-const inputs = document.querySelectorAll("input");
-inputs.forEach(input => {
+var inputs = document.querySelectorAll("input");
+inputs.forEach(function(input) {
   input.addEventListener("change", function() {
     if (this.checked) {
       this.setAttribute("checked", true);
     } else {
       this.removeAttribute("checked");
     }
-    calculatePCT(this.parentElement.id.split("-")[0]);
+    calculatePCT(this.parentElement.parentElement.id.split("-")[0]);
   });
 });
 
-const questions = [
+var questions = [
   "At times I avoid situations that might bring me into contact with people I'm having problems with.",
   "I have put off returning phone calls or emails because I simply didn't want to deal with the person who sent them.",
   "Sometimes when people bring up a touchy or awkward issue, I try to change the subject.",
@@ -1278,13 +1504,15 @@ const questions = [
     </script>
 
     <script>
+// Scroll to results button
 document.getElementById("scroll-to-results").addEventListener("click", function() {
-    document.getElementById("results-header").scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("results-header").scrollIntoView({ behavior: "smooth" });
 });
     </script>
 
     <script>
-const fallacyDescriptions = {
+// Info modal data
+var fallacyDescriptions = {
     "Straw Man": "Misrepresenting or exaggerating an opponent's argument to make it easier to attack.",
     "Equivocation": "Using a word or phrase with multiple meanings to mislead or create confusion.",
     "Red Herring": "Introducing an irrelevant topic into an argument to divert attention from the main issue.",
@@ -1297,7 +1525,7 @@ const fallacyDescriptions = {
     "Appeal to Spite": "Using spite or ill will to support or reject a claim, rather than logic."
 };
 
-const categoryInfo = {
+var categoryInfo = {
     masking: {
         title: "Masking (Silence)",
         description: "Understating or selectively showing your true opinions. Sarcasm, sugarcoating, and couching are common forms of masking.",
@@ -1365,42 +1593,44 @@ const categoryInfo = {
     }
 };
 
-const modal = document.getElementById("info-modal");
-const modalTitle = document.getElementById("modal-title");
-const modalDescription = document.getElementById("modal-description");
-const modalFallacies = document.getElementById("modal-fallacies");
+var infoModal = document.getElementById("info-modal");
+var modalTitle = document.getElementById("modal-title");
+var modalDescription = document.getElementById("modal-description");
+var modalFallacies = document.getElementById("modal-fallacies");
 
-document.querySelectorAll(".info-icon").forEach(icon => {
+document.querySelectorAll(".info-icon").forEach(function(icon) {
     icon.addEventListener("click", function() {
-        const category = this.dataset.category;
-        const info = categoryInfo[category];
+        var category = this.dataset.category;
+        var info = categoryInfo[category];
 
         modalTitle.textContent = info.title;
         modalDescription.textContent = info.description;
 
         modalFallacies.innerHTML = "";
         if (info.fallacies.length === 0) {
-            const li = document.createElement("li");
+            var li = document.createElement("li");
             li.textContent = "None";
             modalFallacies.appendChild(li);
         } else {
-            info.fallacies.forEach(fallacy => {
-                const li = document.createElement("li");
-                li.innerHTML = `<b>${fallacy}:</b> ${fallacyDescriptions[fallacy]}`;
+            info.fallacies.forEach(function(fallacy) {
+                var li = document.createElement("li");
+                li.innerHTML = "<b>" + fallacy + ":</b> " + fallacyDescriptions[fallacy];
                 modalFallacies.appendChild(li);
             });
         }
 
-        modal.style.display = "block";
+        infoModal.style.display = "block";
     });
 });
 
-document.querySelectorAll(".close-button").forEach(btn => {
+// Close buttons
+document.querySelectorAll(".close-button").forEach(function(btn) {
     btn.addEventListener("click", function() {
         this.closest(".modal").style.display = "none";
     });
 });
 
+// Click outside modal to close
 window.addEventListener("click", function(event) {
     if (event.target.classList.contains("modal")) {
         event.target.style.display = "none";
@@ -1409,8 +1639,9 @@ window.addEventListener("click", function(event) {
     </script>
 
     <script>
+// Copy results
 document.getElementById("copy-results").addEventListener("click", function() {
-    let resultsText = "Style Under Stress Test Results\n\n";
+    var resultsText = "Style Under Stress Test Results\n\n";
     resultsText += "***Your score DOES NOT represent an inalterable character trait or a genetic propensity. It's merely a measure of your behavior and you can change that.***\n\n";
 
     resultsText += "--- SILENCE ---\n\n";
@@ -1447,118 +1678,48 @@ document.getElementById("copy-results").addEventListener("click", function() {
 
     navigator.clipboard.writeText(resultsText).then(function() {
         alert("Results copied to clipboard!");
-    }, function(err) {
+    }, function() {
         alert("Could not copy results to clipboard.");
     });
 });
     </script>
 
     <script>
-const darkModeToggle = document.getElementById('darkModeToggle');
-const body = document.body;
-const darkModeIcon = document.getElementById('darkModeIcon');
-
-function setDarkModeIcon() {
-    if (body.classList.contains('dark-mode')) {
-        darkModeIcon.classList.remove('fa-moon');
-        darkModeIcon.classList.add('fa-sun');
-    } else {
-        darkModeIcon.classList.remove('fa-sun');
-        darkModeIcon.classList.add('fa-moon');
-    }
-}
-
-if (localStorage.getItem('darkMode') === null) {
-    localStorage.setItem('darkMode', 'enabled');
-    body.classList.add('dark-mode');
-    darkModeToggle.checked = true;
-} else if (localStorage.getItem('darkMode') === 'enabled') {
-    body.classList.add('dark-mode');
-    darkModeToggle.checked = true;
-} else {
-    body.classList.remove('dark-mode');
-    darkModeToggle.checked = false;
-}
-setDarkModeIcon();
-
-darkModeToggle.addEventListener('change', () => {
-    if (darkModeToggle.checked) {
-        body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'enabled');
-    } else {
-        body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'disabled');
-    }
-    setDarkModeIcon();
-});
-    </script>
-
-    <script>
-const whyBenefitModal = document.getElementById("why-benefit-modal");
-const whyBenefitHeader = document.getElementById("why-benefit-header");
-
-whyBenefitHeader.addEventListener("click", function() {
+// Why benefit modal
+var whyBenefitModal = document.getElementById("why-benefit-modal");
+document.getElementById("why-benefit-header").addEventListener("click", function() {
     whyBenefitModal.style.display = "block";
 });
     </script>
 
     <script>
-const exitQuizModal = document.getElementById("exit-quiz-modal");
-const confirmExitButton = document.getElementById("confirm-exit-button");
-const cancelExitButton = document.getElementById("cancel-exit-button");
+// Exit quiz modal
+var exitQuizModal = document.getElementById("exit-quiz-modal");
 
 function showExitQuizModal() {
     exitQuizModal.style.display = "block";
 }
 
-confirmExitButton.addEventListener("click", function() {
-    window.location.href = "index.html";
+function handleHomeClick() {
+    if (quizStarted) {
+        showExitQuizModal();
+    } else {
+        window.location.href = "../index.html";
+    }
+}
+
+document.getElementById("confirm-exit-button").addEventListener("click", function() {
+    window.location.href = "../index.html";
 });
 
-cancelExitButton.addEventListener("click", function() {
+document.getElementById("cancel-exit-button").addEventListener("click", function() {
     exitQuizModal.style.display = "none";
 });
     </script>
 
     <script>
+// Current year
 document.getElementById("current-year").textContent = new Date().getFullYear();
-    </script>
-
-    <script>
-const viewModeToggle = document.getElementById('viewModeToggle');
-const viewModeIcon = document.getElementById('viewModeIcon');
-
-function setViewModeUI() {
-    if (document.body.classList.contains('mobile-mode')) {
-        viewModeIcon.classList.remove('fa-desktop');
-        viewModeIcon.classList.add('fa-mobile-alt');
-        viewModeToggle.checked = false;
-    } else {
-        viewModeIcon.classList.remove('fa-mobile-alt');
-        viewModeIcon.classList.add('fa-desktop');
-        viewModeToggle.checked = true;
-    }
-}
-
-if (localStorage.getItem('viewMode') === 'mobile') {
-    document.body.classList.add('mobile-mode');
-    viewModeToggle.checked = false;
-} else {
-    document.body.classList.remove('mobile-mode');
-    viewModeToggle.checked = true;
-}
-setViewModeUI();
-
-viewModeToggle.addEventListener('change', () => {
-    if (viewModeToggle.checked) {
-        document.body.classList.remove('mobile-mode');
-        localStorage.setItem('viewMode', 'desktop');
-    } else {
-        document.body.classList.add('mobile-mode');
-        localStorage.setItem('viewMode', 'mobile');
-    }
-    setViewModeUI();
-});
     </script>
 </body>
 </html>

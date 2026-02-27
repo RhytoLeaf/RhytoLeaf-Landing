@@ -20,7 +20,7 @@
     <meta name="twitter:image" content="https://rhytoleaf.ca/images/econoflo-icon.png">
     <meta property="twitter:url" content="https://rhytoleaf.ca/apps/econoflo.html">
 
-    <link rel="icon" type="image/png" href="../images/econoflo-icon.png">
+    <link rel="icon" type="image/png" href="../images/econoflo-logo.png">
     <title>EconoFlo - Economics 101</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,26 +88,18 @@
         .back-to-rhytoleaf-btn {
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 48px; /* Slightly larger clickable area */
-            height: 48px;
-            border-radius: 8px; /* Square with rounded corners */
-            background: var(--deep); /* Use a darker background */
-            border: 1px solid var(--grid-strong);
-            transition: all 0.2s ease-in-out;
+            gap: 0.45rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s;
             flex-shrink: 0;
-            padding: 8px; /* Add padding to contain image */
         }
         .back-to-rhytoleaf-btn:hover {
-            border-color: var(--cyan);
-            box-shadow: 0 0 10px var(--cyan-glow);
-            transform: translateY(-1px);
-        }
-        .back-to-rhytoleaf-btn img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            color: var(--cyan);
         }
         .logo { display: flex; align-items: center; gap: 12px; }
         .logo-icon { flex-shrink: 0; }
@@ -332,11 +324,6 @@
     </style>
 </head>
 <body>
-    <!-- Back to All Apps Navigation -->
-    <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
-      <i class="fas fa-arrow-left" style="font-size:0.75rem;"></i> All Apps
-    </a>
-
     <!-- Modal Overlay -->
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
@@ -350,15 +337,10 @@
 
     <header class="header">
         <a href="../index.html" class="back-to-rhytoleaf-btn" title="Back to RhytoLeaf Home">
-            <img src="../images/logo-icon.png" alt="RhytoLeaf Home">
+            <i class="fas fa-arrow-left"></i> All Apps
         </a>
         <div class="logo">
-            <svg class="logo-icon" width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Chart line (V-shape) -->
-                <path d="M10 35 L40 70 L90 25" stroke="#1a2342" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- Water droplet -->
-                <path d="M50 12 C50 12 28 42 28 58 C28 74 38 86 50 86 C62 86 72 74 72 58 C72 42 50 12 50 12 Z" stroke="#38bdf8" stroke-width="6" fill="none"/>
-            </svg>
+            <img src="../images/econoflo-logo.png" alt="EconoFlo" style="width:36px;height:36px;border-radius:8px;object-fit:contain;">
             <div class="logo-text">
                 <span class="logo-main">Econo<span style="color: var(--cyan)">Flo</span></span>
                 <span class="logo-sub">Economics 101</span>
