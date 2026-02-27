@@ -1333,6 +1333,111 @@
     }
 
     /* =============================================
+       SUCCESS MODAL
+       ============================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: clamp(2rem, 5vw, 3rem);
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--green-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      font-size: 1.5rem;
+      color: var(--green);
+    }
+
+    .modal-card h3 {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.75rem;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-card p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-note {
+      font-size: 0.85rem !important;
+      color: var(--green) !important;
+      font-weight: 500;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .modal-btn {
+      min-width: 160px;
+    }
+
+    /* =============================================
        FOOTER
        ============================================= */
     .footer {
@@ -1831,14 +1936,16 @@
             <div class="donate-stat-value">9+</div>
             <div class="donate-stat-label">Free Apps</div>
           </div>
+          
           <div class="donate-stat">
             <div class="donate-stat-value">100%</div>
-            <div class="donate-stat-label">Free Forever</div>
+            <div class="donate-stat-label">Free For Personal Use</div>
           </div>
           <div class="donate-stat">
             <div class="donate-stat-value">$0</div>
             <div class="donate-stat-label">Ads Shown</div>
           </div>
+          
         </div>
         <p>
           Tools like Zeek help people with dyslexia read faster — completely free, no ads, no paywalls.
@@ -1873,7 +1980,8 @@
             polished, functional software. Let's build something that matters.
           </p>
           <form class="cta-form" id="craft-idea-form" novalidate>
-            <div class="form-group">
+           
+            <div class="form-group"><!--  
               <label for="craft-name">Your Name</label>
               <input type="text" id="craft-name" name="name" placeholder="e.g. Jordan Lee" required autocomplete="name">
             </div>
@@ -1890,7 +1998,7 @@
               <button type="submit" class="btn-submit" id="craft-submit">
                 <i class="fas fa-paper-plane"></i>
                 Submit Your Idea
-              </button>
+              </button>-->
               <span class="cta-mailto">or email us directly at <a href="mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea&body=Hi%20RhytoLeaf%2C%0A%0AI%20have%20an%20idea%20for%20a%20STEM%20app%3A%0A%0A">rhytoleaf.ops@gmail.com</a></span>
             </div>
           </form>
@@ -1916,6 +2024,18 @@
       </p>
     </div>
   </footer>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="success-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-icon"><i class="fas fa-check"></i></div>
+      <h3 id="modal-title">Idea Received!</h3>
+      <p>Thank you for sharing your STEM app idea with us. We'll review your submission and reach out if we have questions or updates.</p>
+      <p class="modal-note">A confirmation email has been sent to your inbox.</p>
+      <button class="btn-primary-glow modal-btn" id="modal-ok">Got It</button>
+    </div>
+  </div>
 
   <!-- ==========================================
        SCRIPTS
@@ -2028,7 +2148,7 @@
       const statusEl = document.getElementById('form-status');
       const submitBtn = document.getElementById('craft-submit');
       // TODO: Replace with your deployed Firebase Cloud Function URL
-      const FUNCTION_URL = 'https://us-central1-YOUR_PROJECT.cloudfunctions.net/submitIdea';
+      const FUNCTION_URL = 'https://us-central1-rhytoleaf-landing.cloudfunctions.net/submitIdea';
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -2062,9 +2182,12 @@
           });
 
           if (res.ok) {
-            statusEl.textContent = 'Thank you! We received your idea and will be in touch.';
-            statusEl.className = 'form-status success';
             form.reset();
+            // Show success modal
+            var modal = document.getElementById('success-modal');
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
           } else {
             throw new Error('Server error');
           }
@@ -2076,6 +2199,28 @@
           submitBtn.disabled = false;
           submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Your Idea';
         }
+      });
+    })();
+
+    // ---- Success Modal Close Handlers ----
+    (function () {
+      var modal = document.getElementById('success-modal');
+      var closeBtn = document.getElementById('modal-close');
+      var okBtn = document.getElementById('modal-ok');
+
+      function closeModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      okBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
       });
     })();
   </script>

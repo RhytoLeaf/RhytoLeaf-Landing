@@ -24,587 +24,735 @@
     <link rel="icon" type="image/png" href="../images/speedscript-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        /* CSS Variables */
+        /* ===========================
+           Custom Properties
+        =========================== */
         :root {
-            --rhyto-green: #00CE7C;
-            --rhyto-green-hover: #00b56d;
-            --rhyto-green-dark: #009d5e;
+            --ss-blue:      #3B7EE8;
+            --ss-blue-dim:  rgba(59, 126, 232, 0.12);
+            --ss-blue-glow: rgba(59, 126, 232, 0.35);
+            --ss-pink:      #F03272;
+            --ss-pink-dim:  rgba(240, 50, 114, 0.12);
+            --ss-pink-glow: rgba(240, 50, 114, 0.35);
+            --ss-cream:     #E4CF96;
+            --red:          #ff4d6d;
+            --red-dim:      rgba(255, 77, 109, 0.18);
+            --amber:        #f59e0b;
         }
 
         [data-theme="dark"] {
-            --background-start: #0f2027;
-            --background-mid: #203a43;
-            --background-end: #2c5364;
-            --text-color: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
-            --glass-bg: rgba(0, 0, 0, 0.3);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --bg:           #090c0e;
+            --bg-panel:     #0e1317;
+            --bg-card:      rgba(255, 255, 255, 0.04);
+            --border:       rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(59, 126, 232, 0.45);
+            --text:         #dde3e9;
+            --text-muted:   rgba(221, 227, 233, 0.32);
+            --text-dim:     rgba(221, 227, 233, 0.55);
+            --surface:      rgba(14, 19, 23, 0.85);
+            --grid:         rgba(255, 255, 255, 0.025);
         }
 
         [data-theme="light"] {
-            --background-start: #e0f7fa;
-            --background-mid: #b2ebf2;
-            --background-end: #80deea;
-            --text-color: #1a1a1a;
-            --text-muted: rgba(0, 0, 0, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.6);
+            --bg:           #f2f5f8;
+            --bg-panel:     #e6ecf2;
+            --bg-card:      rgba(255, 255, 255, 0.7);
+            --border:       rgba(0, 0, 0, 0.08);
+            --border-focus: rgba(59, 126, 232, 0.55);
+            --text:         #111518;
+            --text-muted:   rgba(17, 21, 24, 0.38);
+            --text-dim:     rgba(17, 21, 24, 0.6);
+            --surface:      rgba(242, 245, 248, 0.9);
+            --grid:         rgba(0, 0, 0, 0.035);
         }
 
-        /* Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ===========================
+           Reset & Base
+        =========================== */
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(135deg, var(--background-start), var(--background-mid), var(--background-end));
-            background-attachment: fixed;
-            color: var(--text-color);
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 44px 44px;
+            color: var(--text);
             font-family: "Montserrat", sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 1rem;
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Glass Effect */
-        .glass {
-            background: var(--glass-bg);
+        /* ===========================
+           Header
+        =========================== */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
 
-        /* Header Section */
-        .header-container {
+        .back-btn {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
-            max-width: 1200px;
+            gap: 0.45rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: var(--ss-blue); }
+
+        .header-logo img {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .theme-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.4rem 0.7rem;
+            color: var(--text-dim);
+            font-size: 0.78rem;
+            cursor: pointer;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            transition: all 0.2s;
+        }
+        .theme-btn:hover {
+            border-color: var(--ss-blue);
+            color: var(--ss-blue);
+        }
+
+        /* ===========================
+           Main Layout
+        =========================== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem 3rem;
+            max-width: 880px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-
-        .back-button:hover {
-            color: var(--rhyto-green);
-        }
-
-        .back-button svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.5rem;
-        }
-
-        .logo-container {
-            flex: 1;
+        /* ===========================
+           Title
+        =========================== */
+        .app-title {
             text-align: center;
+            margin-bottom: 2.5rem;
         }
 
-        .rhyto-logo {
-            width: 60px;
-            height: auto;
-            transition: transform 0.3s ease;
-            border-radius: 20%;
+        .app-title h1 {
+            font-size: clamp(2.8rem, 8vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            color: var(--text);
         }
 
-        .rhyto-logo:hover {
-            transform: scale(1.1);
+        .app-title h1 em {
+            font-style: normal;
+            color: var(--ss-pink);
         }
 
-        /* Theme Switch */
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-        }
-
-        .theme-switch {
-            display: inline-block;
-            height: 34px;
-            position: relative;
-            width: 60px;
-        }
-
-        .theme-switch input {
-            display: none;
-        }
-
-        .slider {
-            background-color: #ccc;
-            bottom: 0;
-            cursor: pointer;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: 0.4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            background-color: #fff;
-            bottom: 4px;
-            content: "";
-            height: 26px;
-            left: 4px;
-            position: absolute;
-            transition: 0.4s;
-            width: 26px;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--rhyto-green);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        /* Main Quiz Container */
-        .quiz-container {
-            text-align: center;
-            max-width: 900px;
-            width: 100%;
-            margin: 2rem auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .quiz-container h1 {
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            margin-bottom: 1rem;
-            color: var(--rhyto-green);
-            font-weight: 700;
-        }
-
-        .quiz-container > p {
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            margin-bottom: 2rem;
+        .app-title p {
+            font-size: 0.72rem;
             color: var(--text-muted);
-        }
-
-        .quiz-container > p a {
-            color: var(--rhyto-green);
-            text-decoration: none;
+            margin-top: 0.6rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
             font-weight: 600;
-            transition: opacity 0.3s ease;
         }
 
-        .quiz-container > p a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
+        /* ===========================
+           Quote Card
+        =========================== */
+        .quote-card {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem 2.25rem;
+            margin-bottom: 1.25rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Quote Display */
+        .quote-card::before {
+            content: '\201C';
+            position: absolute;
+            top: -24px;
+            left: 1.25rem;
+            font-size: 9rem;
+            font-family: "JetBrains Mono", monospace;
+            color: var(--ss-cream);
+            opacity: 0.18;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .quote-progress {
+            position: absolute;
+            top: 1rem;
+            right: 1.25rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            font-family: "JetBrains Mono", monospace;
+        }
+
         #quote-display {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            margin-bottom: 2rem;
-            padding: 2rem;
-            min-height: 100px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            line-height: 1.9;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            line-height: 1.6;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        #quote-display .placeholder {
+            color: var(--text-muted);
+            font-style: italic;
+            font-family: "Montserrat", sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
         }
 
         #quote-display span {
-            transition: color 0.2s ease;
+            color: var(--text-muted);
             white-space: pre;
+            transition: color 0.08s, text-shadow 0.08s;
         }
 
-        .correct {
-            color: var(--rhyto-green) !important;
-            font-weight: 600;
+        #quote-display span.correct {
+            color: var(--ss-blue);
+            text-shadow: 0 0 10px var(--ss-blue-glow);
         }
 
-        /* Dictation Board */
+        #quote-display span.incorrect {
+            color: var(--red);
+            background: var(--red-dim);
+            border-radius: 2px;
+        }
+
+        #quote-display span.cursor-char::after {
+            content: '';
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: var(--ss-pink);
+            margin-left: 1px;
+            vertical-align: middle;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* ===========================
+           Input
+        =========================== */
+        .input-wrapper {
+            width: 100%;
+            margin-bottom: 1.25rem;
+        }
+
         #dictation-board {
             width: 100%;
-            max-width: 800px;
-            height: clamp(120px, 20vh, 180px);
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 2px solid var(--rhyto-green);
-            background-color: rgba(0, 206, 124, 0.1);
-            color: var(--text-color);
-            margin: 0 auto 1.5rem;
+            height: 72px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1.2rem;
+            font-family: "JetBrains Mono", monospace;
+            font-size: clamp(0.9rem, 2vw, 1.05rem);
+            color: var(--text);
             resize: none;
-            font-family: "Montserrat", sans-serif;
-            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #dictation-board::placeholder {
+            color: var(--text-muted);
         }
 
         #dictation-board:focus {
             outline: none;
-            border-color: var(--rhyto-green-hover);
-            box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.2);
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--ss-blue-dim), 0 0 24px var(--ss-blue-dim);
         }
 
         #dictation-board:disabled {
-            opacity: 0.6;
+            opacity: 0.35;
             cursor: not-allowed;
         }
 
-        /* Stats Display */
-        .stats-container {
+        /* ===========================
+           Stats Bar
+        =========================== */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.875rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: border-color 0.2s;
+        }
+
+        .stat-label {
+            font-size: 0.58rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-value {
+            font-family: "JetBrains Mono", monospace;
+            font-size: clamp(1.2rem, 3.5vw, 1.85rem);
+            font-weight: 700;
+            line-height: 1;
+            color: var(--ss-blue);
+        }
+
+        .stat-value.dim   { color: var(--text-dim); }
+        .stat-value.warn  { color: var(--amber); }
+        .stat-value.danger {
+            color: var(--red);
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.55; }
+        }
+
+        /* ===========================
+           Buttons
+        =========================== */
+        .btn-row {
             display: flex;
+            gap: 0.875rem;
             justify-content: center;
-            gap: 2rem;
             flex-wrap: wrap;
+        }
+
+        .btn-start, .btn-pass {
+            font-family: "Montserrat", sans-serif;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.8rem 2.2rem;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 130px;
+            border: none;
+        }
+
+        .btn-start {
+            background: var(--ss-blue);
+            color: #000;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: #5B94F5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px var(--ss-blue-glow);
+        }
+
+        .btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .btn-pass {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .btn-pass:hover:not(:disabled) {
+            border-color: var(--amber);
+            color: var(--amber);
+            transform: translateY(-2px);
+        }
+
+        .btn-pass:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        /* ===========================
+           Results Overlay
+        =========================== */
+        .results-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(5, 8, 10, 0.93);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .results-overlay.show {
+            display: flex;
+            animation: overlayIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .results-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem 2.5rem 2.75rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: cardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .results-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ss-blue), var(--ss-pink), transparent);
+            border-radius: 1px;
+        }
+
+        .results-eyebrow {
+            font-size: 0.65rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--ss-blue);
+            margin-bottom: 1.75rem;
+        }
+
+        .results-eyebrow.dq { color: var(--red); }
+
+        .wpm-block {
             margin-bottom: 2rem;
         }
 
-        #timer {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            color: var(--rhyto-green);
+        .wpm-number {
+            font-family: "JetBrains Mono", monospace;
+            font-size: clamp(4.5rem, 14vw, 7.5rem);
             font-weight: 700;
+            color: var(--ss-pink);
+            line-height: 1;
+            text-shadow: 0 0 50px var(--ss-pink-glow);
         }
 
-        #score {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--text-color);
+        .wpm-number.dq {
+            color: var(--red);
+            text-shadow: 0 0 40px rgba(255, 77, 109, 0.35);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+        }
+
+        .wpm-sub {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
             font-weight: 600;
+            margin-top: 0.35rem;
         }
 
-        #accuracy {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: var(--rhyto-green);
-            font-weight: 600;
-        }
-
-        /* Buttons */
-        .button-container {
+        .results-grid {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
         }
 
-        #start-btn,
-        #pass-btn {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
+        .res-stat-val {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .res-stat-lbl {
+            font-size: 0.6rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
             font-weight: 600;
-            transition: all 0.3s ease;
-            min-width: 140px;
+            margin-top: 0.15rem;
+        }
+
+        .btn-again {
             font-family: "Montserrat", sans-serif;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.875rem 2.75rem;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+            background: var(--ss-blue);
+            color: #000;
+            transition: all 0.2s;
         }
 
-        #start-btn {
-            background-color: var(--rhyto-green);
-            color: white;
+        .btn-again:hover {
+            background: #5B94F5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px var(--ss-blue-glow);
         }
 
-        #start-btn:hover:not(:disabled) {
-            background-color: var(--rhyto-green-hover);
-            transform: scale(1.05);
-        }
-
-        #start-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        #pass-btn {
-            background-color: #f59e0b;
-            color: white;
-        }
-
-        #pass-btn:hover:not(:disabled) {
-            background-color: #d97706;
-            transform: scale(1.05);
-        }
-
-        #pass-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Modal Styling */
-        .modal-content {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            color: var(--text-color);
-            border: 1px solid var(--glass-border);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .modal-footer {
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .modal-body {
-            color: var(--text-color);
-        }
-
-        .modal-body ul {
-            text-align: left;
-        }
-
-        .btn-primary {
-            background-color: var(--rhyto-green);
-            border-color: var(--rhyto-green);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--rhyto-green-hover);
-            border-color: var(--rhyto-green-hover);
-        }
-
-        /* Footer */
+        /* ===========================
+           Footer
+        =========================== */
         footer {
             text-align: center;
-            padding: 1.5rem 0;
-            font-size: 0.9rem;
+            padding: 1.1rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
-            margin-top: auto;
+            border-top: 1px solid var(--border);
         }
 
-        /* Accessibility */
+        /* ===========================
+           Accessibility
+        =========================== */
         a:focus-visible,
         button:focus-visible,
         textarea:focus-visible {
-            outline: 2px solid var(--rhyto-green);
-            outline-offset: 4px;
+            outline: 2px solid var(--ss-blue);
+            outline-offset: 3px;
         }
 
-        /* Responsive Design - Mobile Portrait */
-        @media (max-width: 768px) and (orientation: portrait) {
-            body {
-                padding: 0.5rem;
-            }
+        /* ===========================
+           Responsive
+        =========================== */
+        @media (max-width: 640px) {
+            .site-header { padding: 0.9rem 1rem; }
 
-            .header-container {
-                padding: 0.5rem 0;
-            }
+            .back-btn span { display: none; }
 
-            .back-button span {
-                display: none;
-            }
+            .main { padding: 1.75rem 1rem 2rem; }
 
-            .rhyto-logo {
-                width: 50px;
-            }
+            .app-title { margin-bottom: 1.75rem; }
 
-            .quiz-container {
-                margin: 1rem auto;
-            }
+            .quote-card { padding: 1.5rem 1.25rem; }
 
-            #quote-display {
-                padding: 1.5rem 1rem;
-                min-height: 80px;
-            }
+            .stats-bar { gap: 0.6rem; }
 
-            #dictation-board {
-                padding: 1rem;
-            }
+            .stat-block { padding: 0.75rem 0.6rem; }
 
-            .stats-container {
-                gap: 1rem;
-            }
+            .results-card { padding: 2.5rem 1.5rem 2rem; }
 
-            .button-container {
-                gap: 0.75rem;
-            }
-
-            #start-btn,
-            #pass-btn {
-                padding: 0.9rem 2rem;
-                min-width: 120px;
-            }
+            .results-grid { gap: 1.75rem; }
         }
 
-        /* Responsive Design - Mobile Landscape */
-        @media (max-width: 896px) and (orientation: landscape) {
-            body {
-                padding: 0.5rem;
-            }
-
-            .header-container {
-                padding: 0.25rem 0;
-            }
-
-            .rhyto-logo {
-                width: 40px;
-            }
-
-            .quiz-container {
-                margin: 0.5rem auto;
-            }
-
-            .quiz-container h1 {
-                margin-bottom: 0.5rem;
-            }
-
-            .quiz-container > p {
-                margin-bottom: 1rem;
-            }
-
-            #quote-display {
-                padding: 1rem;
-                margin-bottom: 1rem;
-                min-height: 60px;
-            }
-
-            #dictation-board {
-                height: 80px;
-                margin-bottom: 1rem;
-                padding: 0.75rem;
-            }
-
-            .stats-container {
-                gap: 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .button-container {
-                margin-top: 0.5rem;
-            }
-
-            #start-btn,
-            #pass-btn {
-                padding: 0.7rem 1.8rem;
-                min-width: 110px;
-            }
-
-            footer {
-                padding: 0.75rem 0;
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Responsive Design - Desktop */
-        @media (min-width: 1024px) {
-            .header-container {
-                padding: 1.5rem 0;
-            }
-
-            .quiz-container {
-                margin: 3rem auto;
-            }
-
-            #quote-display {
-                padding: 2.5rem;
-            }
-
-            #dictation-board {
-                padding: 2rem;
-            }
-
-            .stats-container {
-                gap: 3rem;
-            }
+        @media (max-height: 680px) and (orientation: landscape) {
+            .app-title { margin-bottom: 1rem; }
+            .app-title h1 { font-size: 2.5rem; }
+            .main { padding: 1rem; justify-content: flex-start; }
+            .quote-card { min-height: auto; padding: 1rem 1.25rem; }
+            #dictation-board { height: 58px; }
         }
     </style>
 </head>
 <body>
-    <!-- Back to All Apps Navigation -->
-    <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
-      <i class="fas fa-arrow-left" style="font-size:0.75rem;"></i> All Apps
-    </a>
 
-    <!-- Header with Back Button, Logo, and Theme Switch -->
-    <div class="header-container">
-        <a href="../index.html" class="back-button" aria-label="Back to home">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            <span>Back to Home</span>
+    <!-- ===========================
+         Header
+    =========================== -->
+    <header class="site-header">
+        <a href="../index.html" class="back-btn" aria-label="Back to all apps">
+            <i class="fas fa-arrow-left" style="font-size:0.7rem;"></i>
+            <span>All Apps</span>
         </a>
 
-        <div class="logo-container">
-            <img src="../images/logo-icon.png" alt="RhytoLeaf Logo" class="rhyto-logo">
+        <div class="header-logo">
+            <img src="../images/logo-icon.png" alt="RhytoLeaf">
         </div>
 
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox" aria-label="Toggle theme">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider"></div>
-            </label>
-        </div>
-    </div>
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle light/dark theme">
+            <i class="fas fa-moon" id="themeIcon"></i>
+            <span id="themeLabel">Dark</span>
+        </button>
+    </header>
 
-    <!-- Main Quiz Container -->
-    <div class="quiz-container">
-        <h1>SpeedScript</h1>
-        <p>Type the following quotes as fast and accurately as you can. <a href="#" data-bs-toggle="modal" data-bs-target="#whyModal">Why?</a></p>
+    <!-- ===========================
+         Main
+    =========================== -->
+    <main class="main">
 
-        <div id="quote-display" class="glass"></div>
-
-        <textarea id="dictation-board" autofocus aria-label="Type the quote here"></textarea>
-
-        <div class="stats-container">
-            <div id="timer">90.000s</div>
-            <div id="score">Score: 0</div>
+        <!-- Title -->
+        <div class="app-title">
+            <img src="../images/speedscript-logo.png" alt="SpeedScript logo" style="width:72px;height:72px;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,0.3);margin-bottom:1rem;">
+            <h1>Speed<em>Script</em></h1>
+            <p>90 seconds &mdash; type as fast &amp; accurately as you can</p>
         </div>
 
-        <div class="button-container">
-            <button id="start-btn" aria-label="Start the typing test">Start</button>
-            <button id="pass-btn" aria-label="Skip to next quote">Pass</button>
-        </div>
-    </div>
-
-    <!-- Why Modal -->
-    <div class="modal fade" id="whyModal" tabindex="-1" aria-labelledby="whyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="whyModalLabel">Why SpeedScript?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>This typing test helps you:</p>
-                    <ul>
-                        <li>Calculate your typing speed (WPM) in 90 seconds</li>
-                        <li>Improve typing accuracy and efficiency</li>
-                        <li>Enhance productivity and communication skills</li>
-                        <li>Focus on content, not just typing mechanics</li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+        <!-- Quote Display -->
+        <div class="quote-card">
+            <span class="quote-progress" id="quote-progress" aria-live="polite"></span>
+            <div id="quote-display">
+                <span class="placeholder">Press Start to begin&hellip;</span>
             </div>
         </div>
+
+        <!-- Input -->
+        <div class="input-wrapper">
+            <textarea
+                id="dictation-board"
+                placeholder="Type here once the test starts…"
+                disabled
+                aria-label="Type the displayed quote here"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+            ></textarea>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" role="status" aria-label="Test statistics">
+            <div class="stat-block">
+                <div class="stat-label">Time</div>
+                <div class="stat-value dim" id="timer">90.0s</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">WPM</div>
+                <div class="stat-value dim" id="wpm-live">--</div>
+            </div>
+            <div class="stat-block">
+                <div class="stat-label">Score</div>
+                <div class="stat-value dim" id="score-display">0</div>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-row">
+            <button class="btn-start" id="start-btn" aria-label="Start the typing test">
+                <i class="fas fa-play" style="margin-right:0.45rem;font-size:0.72rem;"></i>Start
+            </button>
+            <button class="btn-pass" id="pass-btn" disabled aria-label="Skip to next quote">
+                <i class="fas fa-forward-step" style="margin-right:0.45rem;font-size:0.72rem;"></i>Pass
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ===========================
+         Results Overlay
+    =========================== -->
+    <div class="results-overlay" id="results-overlay" role="dialog" aria-modal="true" aria-label="Test results">
+        <div class="results-card">
+            <div class="results-eyebrow" id="res-eyebrow">Test Complete</div>
+
+            <div class="wpm-block">
+                <div class="wpm-number" id="res-wpm">0</div>
+                <div class="wpm-sub" id="res-wpm-sub">Words Per Minute</div>
+            </div>
+
+            <div class="results-grid">
+                <div>
+                    <div class="res-stat-val" id="res-accuracy">--%</div>
+                    <div class="res-stat-lbl">Accuracy</div>
+                </div>
+                <div>
+                    <div class="res-stat-val" id="res-score">0</div>
+                    <div class="res-stat-lbl">Quotes Done</div>
+                </div>
+                <div>
+                    <div class="res-stat-val" id="res-time">--s</div>
+                    <div class="res-stat-lbl">Time Used</div>
+                </div>
+            </div>
+
+            <button class="btn-again" id="play-again-btn">
+                <i class="fas fa-rotate-right" style="margin-right:0.45rem;font-size:0.72rem;"></i>Play Again
+            </button>
+        </div>
     </div>
 
-    <!-- Footer -->
+    <!-- ===========================
+         Footer
+    =========================== -->
     <footer>
         <p>&copy; <span id="current-year"></span> RhytoLeaf Inc. All rights reserved.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-        const quotes = [
+        // ===========================
+        // Quote Bank
+        // ===========================
+        const QUOTES = [
             "The only way to do great work is to love what you do.",
             "Innovation distinguishes between a leader and a follower.",
             "Strive not to be a success, but rather to be of value.",
@@ -623,188 +771,334 @@
             "I say unto you, Love your enemies and pray for those who persecute you."
         ];
 
-        const quoteDisplay = document.getElementById('quote-display');
-        const dictationBoard = document.getElementById('dictation-board');
-        const timerDisplay = document.getElementById('timer');
-        const startBtn = document.getElementById('start-btn');
-        const passBtn = document.getElementById('pass-btn');
-        const accuracyDisplay = document.createElement('div');
-        accuracyDisplay.id = 'accuracy';
-        document.querySelector('.stats-container').appendChild(accuracyDisplay);
-        const scoreDisplay = document.getElementById('score');
-        passBtn.disabled = true;
+        // ===========================
+        // DOM
+        // ===========================
+        const quoteDisplay   = document.getElementById('quote-display');
+        const quoteProgress  = document.getElementById('quote-progress');
+        const dictation      = document.getElementById('dictation-board');
+        const timerEl        = document.getElementById('timer');
+        const wpmLive        = document.getElementById('wpm-live');
+        const scoreEl        = document.getElementById('score-display');
+        const startBtn       = document.getElementById('start-btn');
+        const passBtn        = document.getElementById('pass-btn');
+        const resultsOverlay = document.getElementById('results-overlay');
+        const playAgainBtn   = document.getElementById('play-again-btn');
 
-        let timer;
-        let timeLeft = 90;
-        let quote = "";
-        let quizQuotes = [];
-        let totalChars = 0;
-        let correctChars = 0;
-        let score = 0;
-        let startTime;
+        // Results elements
+        const resEyebrow  = document.getElementById('res-eyebrow');
+        const resWPM      = document.getElementById('res-wpm');
+        const resWPMSub   = document.getElementById('res-wpm-sub');
+        const resAccuracy = document.getElementById('res-accuracy');
+        const resScore    = document.getElementById('res-score');
+        const resTime     = document.getElementById('res-time');
 
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+        // ===========================
+        // State
+        // ===========================
+        let timerInterval;
+        let timeLeft           = 90;
+        let currentQuote       = "";
+        let quizQueue          = [];
+        let completedChars     = 0;   // chars from fully-finished quotes
+        let totalKeystrokes    = 0;   // all chars typed (excl. backspace)
+        let quotesCompleted    = 0;
+        let startTime          = null;
+        let gameActive         = false;
+        let prevInputLen       = 0;
+
+        // ===========================
+        // Utilities
+        // ===========================
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [a[i], a[j]] = [a[j], a[i]];
             }
-            return array;
+            return a;
         }
 
-        function getQuizQuotes() {
-            const uniqueQuotes = [...new Set(quotes)];
-            if (uniqueQuotes.length < 5) {
-                console.error("Not enough unique quotes to start the quiz.");
-                return [];
-            }
-            const shuffledQuotes = shuffle(uniqueQuotes);
-            return shuffledQuotes.slice(0, 5);
+        function buildQueue() {
+            return shuffle([...new Set(QUOTES)]).slice(0, 5);
         }
 
+        function elapsedMinutes() {
+            return startTime ? (Date.now() - startTime) / 1000 / 60 : 0;
+        }
+
+        function calcLiveWPM(currentCorrect = 0) {
+            const mins = elapsedMinutes();
+            if (mins < 0.008) return 0;
+            return Math.round(((completedChars + currentCorrect) / 5) / mins);
+        }
+
+        // ===========================
+        // Render Quote
+        // ===========================
+        function renderQuote() {
+            quoteDisplay.innerHTML = '';
+            currentQuote.split('').forEach((ch, i) => {
+                const span = document.createElement('span');
+                span.textContent = ch;
+                if (i === 0) span.classList.add('cursor-char');
+                quoteDisplay.appendChild(span);
+            });
+            quoteProgress.textContent =
+                `${quotesCompleted + 1} / ${quotesCompleted + quizQueue.length}`;
+        }
+
+        // ===========================
+        // Game Flow
+        // ===========================
         function startGame() {
-            quizQuotes = getQuizQuotes();
-            totalChars = 0;
-            correctChars = 0;
-            score = 0;
-            scoreDisplay.innerText = `Score: ${score}`;
-            accuracyDisplay.innerText = '';
-            dictationBoard.disabled = false;
-            passBtn.disabled = false;
-            startTime = new Date();
+            quizQueue          = buildQueue();
+            completedChars     = 0;
+            totalKeystrokes    = 0;
+            quotesCompleted    = 0;
+            prevInputLen       = 0;
+            startTime          = Date.now();
+            gameActive         = true;
+
+            scoreEl.textContent  = '0';
+            scoreEl.className    = 'stat-value dim';
+            wpmLive.textContent  = '--';
+            wpmLive.className    = 'stat-value dim';
+            timerEl.textContent  = '90.0s';
+            timerEl.className    = 'stat-value dim';
+
+            dictation.disabled = false;
+            passBtn.disabled   = false;
+            startBtn.disabled  = true;
+
             nextQuote();
             startTimer();
-            startBtn.disabled = true;
+            dictation.focus();
         }
 
         function nextQuote() {
-            if (quizQuotes.length === 0) {
-                endGame();
+            if (quizQueue.length === 0) {
+                endGame(false);
                 return;
             }
-            quote = quizQuotes[0];
-            quoteDisplay.innerHTML = '';
-            quote.split('').forEach(character => {
-                const span = document.createElement('span');
-                span.innerText = character;
-                quoteDisplay.appendChild(span);
-            });
-            dictationBoard.value = '';
-            dictationBoard.focus();
+            currentQuote = quizQueue[0];
+            renderQuote();
+            dictation.value = '';
+            prevInputLen    = 0;
         }
 
         function startTimer() {
             timeLeft = 90;
-            timer = setInterval(() => {
-                timeLeft -= 0.001;
-                timerDisplay.innerText = `${timeLeft.toFixed(3)}s`;
-                if (timeLeft <= 0) {
-                    endGame();
+            timerInterval = setInterval(() => {
+                timeLeft = Math.max(0, timeLeft - 0.1);
+
+                // Update timer display + colour
+                timerEl.textContent = `${timeLeft.toFixed(1)}s`;
+                if (timeLeft <= 10) {
+                    timerEl.className = 'stat-value danger';
+                } else if (timeLeft <= 30) {
+                    timerEl.className = 'stat-value warn';
+                } else {
+                    timerEl.className = 'stat-value dim';
                 }
-            }, 1);
+
+                if (timeLeft <= 0) endGame(false);
+            }, 100);
         }
 
         function endGame(disqualified = false) {
-            clearInterval(timer);
-            dictationBoard.disabled = true;
-            startBtn.disabled = false;
-            passBtn.disabled = true;
-            if (disqualified) {
-                accuracyDisplay.innerText = "Disqualified";
-                accuracyDisplay.style.color = '#ef4444';
-            } else {
-                const accuracy = totalChars > 0 ? (correctChars / totalChars) * 100 : 0;
-                accuracyDisplay.innerText = `Accuracy: ${accuracy.toFixed(2)}%`;
-                accuracyDisplay.style.color = 'var(--rhyto-green)';
-            }
+            if (!gameActive) return;
+            clearInterval(timerInterval);
+            gameActive         = false;
+            dictation.disabled = true;
+            startBtn.disabled  = false;
+            passBtn.disabled   = true;
+
+            const elapsedSec = (Date.now() - startTime) / 1000;
+            const elapsedMin = elapsedSec / 60;
+
+            // WPM is based on correctly completed quote chars only
+            const finalWPM   = elapsedMin > 0
+                ? Math.round((completedChars / 5) / elapsedMin)
+                : 0;
+
+            // Accuracy: correct chars vs all keystrokes (incl. re-types after mistakes)
+            const accuracy   = totalKeystrokes > 0
+                ? Math.round((completedChars / totalKeystrokes) * 100)
+                : 0;
+
+            showResults({ disqualified, finalWPM, accuracy, elapsedSec });
         }
 
-        dictationBoard.addEventListener('paste', (e) => {
+        function showResults({ disqualified, finalWPM, accuracy, elapsedSec }) {
+            if (disqualified) {
+                resEyebrow.textContent  = 'Disqualified';
+                resEyebrow.className    = 'results-eyebrow dq';
+                resWPM.textContent      = 'DQ';
+                resWPM.className        = 'wpm-number dq';
+                resWPMSub.textContent   = 'Cheating detected — paste or WPM > 200';
+                resAccuracy.textContent = '--';
+            } else {
+                resEyebrow.textContent  = 'Test Complete';
+                resEyebrow.className    = 'results-eyebrow';
+                resWPM.textContent      = finalWPM;
+                resWPM.className        = 'wpm-number';
+                resWPMSub.textContent   = 'Words Per Minute';
+                resAccuracy.textContent = `${accuracy}%`;
+            }
+
+            resScore.textContent = quotesCompleted;
+            resTime.textContent  = `${Math.round(elapsedSec)}s`;
+
+            resultsOverlay.classList.add('show');
+        }
+
+        function resetGame() {
+            resultsOverlay.classList.remove('show');
+            quoteDisplay.innerHTML       = '<span class="placeholder">Press Start to begin\u2026</span>';
+            quoteProgress.textContent    = '';
+            dictation.value              = '';
+            dictation.disabled           = true;
+            scoreEl.textContent          = '0';
+            scoreEl.className            = 'stat-value dim';
+            wpmLive.textContent          = '--';
+            wpmLive.className            = 'stat-value dim';
+            timerEl.textContent          = '90.0s';
+            timerEl.className            = 'stat-value dim';
+            startBtn.disabled            = false;
+            passBtn.disabled             = true;
+        }
+
+        // ===========================
+        // Input Handlers
+        // ===========================
+        dictation.addEventListener('paste', (e) => {
             e.preventDefault();
-            endGame(true);
+            endGame(true); // anti-cheat
         });
 
-        dictationBoard.addEventListener('input', () => {
-            const quoteChars = quoteDisplay.querySelectorAll('span');
-            const inputChars = dictationBoard.value.split('');
+        dictation.addEventListener('input', () => {
+            if (!gameActive) return;
 
-            totalChars = inputChars.length;
-            correctChars = 0;
+            const inputChars = dictation.value.split('');
+            const spans      = quoteDisplay.querySelectorAll('span');
 
-            let allCorrect = true;
-            quoteChars.forEach((charSpan, index) => {
-                const character = inputChars[index];
-                if (character == null) {
-                    charSpan.classList.remove('correct');
+            // Count keystrokes (length increases only)
+            const newLen = dictation.value.length;
+            if (newLen > prevInputLen) {
+                totalKeystrokes += newLen - prevInputLen;
+            }
+            prevInputLen = newLen;
+
+            // Highlight characters and find cursor position
+            let correctCount = 0;
+            let allCorrect   = true;
+            const cursorPos  = inputChars.length; // next char to type
+
+            spans.forEach((span, idx) => {
+                span.classList.remove('correct', 'incorrect', 'cursor-char');
+                const ch = inputChars[idx];
+
+                if (ch == null) {
+                    if (idx === cursorPos) span.classList.add('cursor-char');
                     allCorrect = false;
-                } else if (character === charSpan.innerText) {
-                    charSpan.classList.add('correct');
-                    correctChars++;
+                } else if (ch === span.textContent) {
+                    span.classList.add('correct');
+                    correctCount++;
                 } else {
-                    charSpan.classList.remove('correct');
+                    span.classList.add('incorrect');
                     allCorrect = false;
                 }
             });
 
-            if (dictationBoard.value.length >= quote.length && allCorrect) {
-                score++;
-                scoreDisplay.innerText = `Score: ${score}`;
-                quizQuotes.shift();
+            // Live WPM
+            const liveWPM = calcLiveWPM(correctCount);
+            if (liveWPM > 0) {
+                wpmLive.textContent = liveWPM;
+                wpmLive.classList.remove('dim');
+            }
+
+            // Anti-cheat: WPM > 200
+            if (liveWPM > 200) {
+                endGame(true);
+                return;
+            }
+
+            // Quote complete
+            if (inputChars.length >= currentQuote.length && allCorrect) {
+                completedChars += currentQuote.length;
+                quotesCompleted++;
+                scoreEl.textContent = quotesCompleted;
+                scoreEl.classList.remove('dim');
+                quizQueue.shift();
                 nextQuote();
             }
-
-            const timeElapsed = (new Date() - startTime) / 1000 / 60;
-            const wordsTyped = dictationBoard.value.length / 5;
-            const wpm = wordsTyped / timeElapsed;
-            if (wpm > 200) {
-                endGame(true);
-            }
         });
 
-        dictationBoard.addEventListener('keydown', (e) => {
-            const input = dictationBoard.value;
-            const currentInputLength = input.length;
+        dictation.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
 
-            const quoteUpToCurrentChar = quote.substring(0, currentInputLength);
-            if (input !== quoteUpToCurrentChar) {
-                if (e.key !== 'Backspace') {
-                    e.preventDefault();
-                }
+            const input         = dictation.value;
+            const currentLen    = input.length;
+            const correctPrefix = currentQuote.substring(0, currentLen);
+
+            // Block typing past a wrong character
+            if (input !== correctPrefix && e.key !== 'Backspace') {
+                e.preventDefault();
+                return;
             }
 
-            if (e.key === 'Backspace' && currentInputLength > 0) {
-                const charToDelete = input[currentInputLength - 1];
-                const correspondingQuoteChar = quote[currentInputLength - 1];
-
-                if (charToDelete === correspondingQuoteChar) {
+            // Block backspace over a correct character
+            if (e.key === 'Backspace' && currentLen > 0) {
+                if (input[currentLen - 1] === currentQuote[currentLen - 1]) {
                     e.preventDefault();
                 }
             }
         });
 
+        // ===========================
+        // Button Events
+        // ===========================
         startBtn.addEventListener('click', startGame);
 
         passBtn.addEventListener('click', () => {
-            if (quizQuotes.length > 0) {
-                const passedQuote = quizQuotes.shift();
-                quizQuotes.push(passedQuote);
-                nextQuote();
-            }
+            if (!gameActive || quizQueue.length === 0) return;
+            const passed = quizQueue.shift();
+            quizQueue.push(passed);
+            nextQuote();
         });
 
-        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        playAgainBtn.addEventListener('click', resetGame);
 
-        function switchTheme(e) {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'light');
+        // ===========================
+        // Theme Toggle
+        // ===========================
+        const themeBtn   = document.getElementById('themeBtn');
+        const themeIcon  = document.getElementById('themeIcon');
+        const themeLabel = document.getElementById('themeLabel');
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'dark') {
+                themeIcon.className  = 'fas fa-moon';
+                themeLabel.textContent = 'Dark';
             } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.className  = 'fas fa-sun';
+                themeLabel.textContent = 'Light';
             }
         }
 
-        toggleSwitch.addEventListener('change', switchTheme, false);
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
 
+        // ===========================
+        // Init
+        // ===========================
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('current-year').textContent = new Date().getFullYear();
+            applyTheme('dark');
         });
     </script>
 </body>
