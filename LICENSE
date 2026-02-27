@@ -1,0 +1,132 @@
+RhytoLeaf Source License (RSL) v1.0
+Copyright (c) 2026 RhytoLeaf Inc. All rights reserved.
+
+================================================================================
+TERMS AND CONDITIONS
+================================================================================
+
+1. DEFINITIONS
+
+   "Software" means the source code, assets, applications, and all associated
+   files contained in this repository, including but not limited to HTML, CSS,
+   JavaScript, images, and configuration files.
+
+   "Personal Use" means use by an individual solely for non-commercial,
+   private purposes, including learning, personal projects, and non-revenue-
+   generating activities. Personal Use explicitly excludes any use on behalf
+   of a company, organization, or client.
+
+   "Commercial Use" means any use of the Software, in whole or in part, that
+   is intended for or directed toward commercial advantage or monetary
+   compensation. This includes, without limitation: deploying the Software or
+   derivative works as part of a product or service offered to third parties;
+   using the Software internally within a for-profit organization; sublicensing,
+   selling, or distributing the Software or derivative works; or incorporating
+   the Software into any revenue-generating activity.
+
+   "Derivative Work" means any work that is based on or derived from the
+   Software, including modifications, translations, adaptations, or any work
+   that incorporates a substantial portion of the Software.
+
+2. GRANT OF LICENSE — PERSONAL USE
+
+   Subject to the terms of this License, RhytoLeaf Inc. hereby grants you a
+   limited, non-exclusive, non-transferable, royalty-free license to:
+
+   (a) view and study the Software for personal, educational, or research
+       purposes; and
+
+   (b) use and run the Software solely for Personal Use as defined above.
+
+   This Personal Use grant does not permit redistribution, sublicensing,
+   or public deployment without prior written consent from RhytoLeaf Inc.
+
+3. COMMERCIAL USE RESTRICTION
+
+   Commercial Use of the Software, in whole or in part, is strictly prohibited
+   without a separate, written commercial license agreement issued by
+   RhytoLeaf Inc.
+
+   To inquire about or acquire a commercial license, contact:
+
+       RhytoLeaf Inc.
+       Email: rhytoleaf.ops@gmail.com
+       Website: https://rhytoleaf.ca
+
+   Unauthorized Commercial Use of this Software constitutes copyright
+   infringement and may subject the infringing party to civil and/or criminal
+   liability under applicable law.
+
+4. RESTRICTIONS
+
+   Unless expressly permitted under Section 2 or under a separate written
+   commercial license agreement, you may not:
+
+   (a) use the Software for any Commercial Use;
+   (b) redistribute, publish, or make the Software publicly available;
+   (c) sublicense or transfer any rights granted under this License;
+   (d) remove or alter any copyright notices, attribution statements, or
+       license terms appearing in the Software;
+   (e) use the name, logos, or trademarks of RhytoLeaf Inc. to endorse or
+       promote products or services derived from this Software without prior
+       written permission.
+
+5. OWNERSHIP
+
+   The Software is and remains the exclusive intellectual property of
+   RhytoLeaf Inc. This License does not convey any ownership interest in
+   the Software. All rights not expressly granted herein are reserved by
+   RhytoLeaf Inc.
+
+6. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+   RHYTOLEAF INC. BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT
+   OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+7. TERMINATION
+
+   This License and the rights granted hereunder will terminate automatically
+   upon any breach of its terms by you. Upon termination, you must cease all
+   use of the Software and destroy any copies in your possession. Sections 3,
+   4, 5, 6, and 8 shall survive termination.
+
+8. GOVERNING LAW
+
+   This License shall be primarily governed by and construed in accordance with
+   the laws of the Province of Ontario and the federal laws of Canada applicable
+   therein, without regard to its conflict of law provisions.
+
+   For enforcement purposes against parties located in the United States, this
+   License is additionally subject to and enforceable under the United States
+   Copyright Act (17 U.S.C. § 101 et seq.) and other applicable U.S. federal
+   law. Nothing in this section limits RhytoLeaf Inc.'s rights under the Berne
+   Convention for the Protection of Literary and Artistic Works or any other
+   applicable international treaty.
+
+   RhytoLeaf Inc. reserves the right to pursue enforcement in any jurisdiction
+   where infringement occurs.
+
+9. CONSTRUCTIVE NOTICE / ACCEPTANCE
+
+   By accessing, downloading, cloning, forking, or otherwise using this
+   repository or any of its contents, you acknowledge that you have read,
+   understood, and agree to be bound by the terms of this License.
+
+   This constitutes constructive notice of the license terms. Ignorance of the
+   License does not excuse non-compliance.
+
+================================================================================
+SUMMARY (non-binding)
+================================================================================
+
+  Personal use        → FREE. No license required.
+  Commercial use      → REQUIRES a written license from RhytoLeaf Inc.
+  Governing law       → Ontario, Canada + U.S. Copyright Act (17 U.S.C.)
+  Contact             → rhytoleaf.ops@gmail.com
+
+================================================================================
