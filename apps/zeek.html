@@ -447,6 +447,18 @@
       .action-row { grid-template-columns: 1fr; }
     }
 
+    .ocr-status {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 0.4rem 0.75rem;
+      background: var(--elevated);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .ocr-status.error { color: #f87171; }
+
     .btn-scan {
       display: flex;
       align-items: center;
@@ -572,6 +584,13 @@
     .donate-btn svg {
       width: 16px;
       height: 16px;
+      fill: none;
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+
+    .donate-btn:hover svg {
+      fill: #ef4444;
+      stroke: #ef4444;
     }
 
     /* =============================================
@@ -1651,13 +1670,14 @@
         </button>
       </div>
 
+      <div id="ocrStatus" class="ocr-status" style="display:none"></div>
+
       <div class="action-row">
         <button id="scanBtn" class="btn-scan">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
-          Scan Text
+          Upload Photo
         </button>
         <button id="zeekBtn" class="btn-zeek">
           Zeek
@@ -1684,68 +1704,9 @@
     </footer>
   </div>
 
-  <!-- ==================== CAMERA MODAL ==================== -->
-  <div id="cameraModal" class="hidden flex-col">
-    <div class="camera-topbar">
-      <h2>Scan Document</h2>
-      <button id="closeCameraBtn" class="camera-close">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="camera-feed-wrap flex-1 relative">
-      <video id="cameraFeed" autoplay playsinline></video>
-      <img id="capturePreview" class="hidden absolute inset-0" alt="Captured preview">
-
-      <div id="viewfinderGuide" class="absolute inset-0 flex items-center justify-center" style="pointer-events: none;">
-        <div class="viewfinder-guide"></div>
-      </div>
-
-      <div id="processingOverlay" class="processing-overlay hidden absolute inset-0 flex-col items-center justify-center">
-        <div class="processing-spinner"></div>
-        <p id="processingStatus">Initializing OCR...</p>
-        <p id="processingPercent" class="percent">0%</p>
-      </div>
-    </div>
-
-    <div id="cameraControls" class="camera-bottombar">
-      <button id="torchBtn" class="cam-btn-round" title="Toggle torch">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-        </svg>
-      </button>
-      <button id="captureBtn" class="cam-btn-capture" title="Capture photo">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-      </button>
-      <button id="switchCameraBtn" class="cam-btn-round" title="Switch camera">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-      </button>
-    </div>
-
-    <div id="previewControls" class="preview-bottombar hidden">
-      <button id="retakeBtn" class="preview-btn secondary">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Retake
-      </button>
-      <button id="scanTextBtn" class="preview-btn primary">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        Scan Text
-      </button>
-    </div>
-
-    <canvas id="captureCanvas" class="hidden"></canvas>
-  </div>
+  <!-- ==================== OCR FILE UPLOAD ==================== -->
+  <input type="file" id="photoUploadInput" accept="image/*" style="display:none">
+  <canvas id="captureCanvas" style="display:none"></canvas>
 
   <!-- ==================== READER VIEW ==================== -->
   <div id="readerView" class="hidden flex-col">
@@ -2013,9 +1974,6 @@
       isPlaying: false,
       wpm: 200,
       intervalId: null,
-      cameraStream: null,
-      torchEnabled: false,
-      facingMode: 'environment',
       portraitMode: false,
       textSize: 'md',
       touchStartX: 0,
@@ -2027,27 +1985,14 @@
     // ==================== DOM REFS ====================
     const dom = {
       inputView: document.getElementById('inputView'),
-      cameraModal: document.getElementById('cameraModal'),
       readerView: document.getElementById('readerView'),
       textInput: document.getElementById('textInput'),
       scanBtn: document.getElementById('scanBtn'),
       zeekBtn: document.getElementById('zeekBtn'),
       pasteBtn: document.getElementById('pasteBtn'),
-      cameraFeed: document.getElementById('cameraFeed'),
+      photoUploadInput: document.getElementById('photoUploadInput'),
       captureCanvas: document.getElementById('captureCanvas'),
-      capturePreview: document.getElementById('capturePreview'),
-      viewfinderGuide: document.getElementById('viewfinderGuide'),
-      cameraControls: document.getElementById('cameraControls'),
-      previewControls: document.getElementById('previewControls'),
-      closeCameraBtn: document.getElementById('closeCameraBtn'),
-      torchBtn: document.getElementById('torchBtn'),
-      captureBtn: document.getElementById('captureBtn'),
-      switchCameraBtn: document.getElementById('switchCameraBtn'),
-      retakeBtn: document.getElementById('retakeBtn'),
-      scanTextBtn: document.getElementById('scanTextBtn'),
-      processingOverlay: document.getElementById('processingOverlay'),
-      processingStatus: document.getElementById('processingStatus'),
-      processingPercent: document.getElementById('processingPercent'),
+      ocrStatus: document.getElementById('ocrStatus'),
       backBtn: document.getElementById('backBtn'),
       wordDisplay: document.getElementById('wordDisplay'),
       wpmDisplay: document.getElementById('wpmDisplay'),
@@ -2187,46 +2132,12 @@
       dom.inputView.style.display = 'flex';
       dom.readerView.classList.add('hidden');
       dom.readerView.style.display = '';
-      dom.cameraModal.classList.add('hidden');
-      dom.cameraModal.style.display = '';
     }
 
     function showReaderView() {
       dom.inputView.style.display = 'none';
       dom.readerView.classList.remove('hidden');
       dom.readerView.style.display = 'flex';
-      dom.cameraModal.classList.add('hidden');
-      dom.cameraModal.style.display = '';
-    }
-
-    function showCameraModal() {
-      dom.cameraModal.classList.remove('hidden');
-      dom.cameraModal.style.display = 'flex';
-      resetCameraToLive();
-      startCamera();
-    }
-
-    function hideCameraModal() {
-      dom.cameraModal.classList.add('hidden');
-      dom.cameraModal.style.display = '';
-      stopCamera();
-      resetCameraToLive();
-    }
-
-    function resetCameraToLive() {
-      dom.cameraFeed.classList.remove('hidden');
-      dom.capturePreview.classList.add('hidden');
-      dom.viewfinderGuide.classList.remove('hidden');
-      dom.cameraControls.style.display = 'flex';
-      dom.previewControls.style.display = 'none';
-    }
-
-    function showCapturePreview() {
-      dom.cameraFeed.classList.add('hidden');
-      dom.capturePreview.classList.remove('hidden');
-      dom.viewfinderGuide.classList.add('hidden');
-      dom.cameraControls.style.display = 'none';
-      dom.previewControls.style.display = 'flex';
     }
 
     // ==================== READER LOGIC ====================
@@ -2320,80 +2231,54 @@
       }
     }
 
-    // ==================== CAMERA / OCR ====================
-    async function startCamera() {
+    // ==================== PHOTO UPLOAD / OCR ====================
+    async function ocrFromFile(file) {
+      const setStatus = (msg, isError) => {
+        dom.ocrStatus.textContent = msg;
+        dom.ocrStatus.style.display = 'block';
+        dom.ocrStatus.classList.toggle('error', !!isError);
+      };
+
+      setStatus('Loading image...');
+      dom.scanBtn.disabled = true;
+
       try {
-        state.cameraStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: state.facingMode, width: { ideal: 1920 }, height: { ideal: 1080 } }
+        const img = await new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = URL.createObjectURL(file);
         });
-        dom.cameraFeed.srcObject = state.cameraStream;
-      } catch (err) {
-        console.error('Camera error:', err);
-        alert('Could not access camera. Please check permissions.');
-        hideCameraModal();
-      }
-    }
 
-    function stopCamera() {
-      if (state.cameraStream) {
-        state.cameraStream.getTracks().forEach(track => track.stop());
-        state.cameraStream = null;
-      }
-      state.torchEnabled = false;
-    }
+        const canvas = dom.captureCanvas;
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
 
-    async function toggleTorch() {
-      if (!state.cameraStream) return;
-      const track = state.cameraStream.getVideoTracks()[0];
-      const capabilities = track.getCapabilities();
-      if (!capabilities.torch) { alert('Torch not available on this device'); return; }
-      state.torchEnabled = !state.torchEnabled;
-      await track.applyConstraints({ advanced: [{ torch: state.torchEnabled }] });
-      dom.torchBtn.classList.toggle('active', state.torchEnabled);
-    }
-
-    async function switchCamera() {
-      stopCamera();
-      state.facingMode = state.facingMode === 'environment' ? 'user' : 'environment';
-      await startCamera();
-    }
-
-    function capturePhoto() {
-      const video = dom.cameraFeed;
-      const canvas = dom.captureCanvas;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      dom.capturePreview.src = canvas.toDataURL('image/jpeg', 0.9);
-      showCapturePreview();
-    }
-
-    async function scanText() {
-      dom.processingOverlay.classList.remove('hidden');
-      dom.processingOverlay.style.display = 'flex';
-      dom.processingStatus.textContent = 'Initializing OCR...';
-      dom.processingPercent.textContent = '0%';
-      try {
-        const result = await Tesseract.recognize(dom.captureCanvas, 'eng', {
+        setStatus('Running OCR…');
+        const result = await Tesseract.recognize(canvas, 'eng', {
           logger: m => {
             if (m.status === 'recognizing text') {
-              dom.processingPercent.textContent = `${Math.round(m.progress * 100)}%`;
-              dom.processingStatus.textContent = 'Recognizing text...';
+              setStatus(`Recognizing text… ${Math.round(m.progress * 100)}%`);
             } else if (m.status === 'loading language traineddata') {
-              dom.processingStatus.textContent = 'Loading language data...';
+              setStatus('Loading language data…');
             }
           }
         });
+
         const text = result.data.text.trim();
-        if (text) { dom.textInput.value = text; hideCameraModal(); }
-        else { alert('No text detected. Try adjusting lighting or position.'); resetCameraToLive(); }
+        if (text) {
+          dom.textInput.value = text;
+          dom.ocrStatus.style.display = 'none';
+        } else {
+          setStatus('No text detected — try a clearer photo.', true);
+        }
       } catch (err) {
         console.error('OCR error:', err);
-        alert('OCR failed. Please try again.');
-        resetCameraToLive();
+        setStatus('OCR failed — please try again.', true);
       } finally {
-        dom.processingOverlay.classList.add('hidden');
-        dom.processingOverlay.style.display = '';
+        dom.scanBtn.disabled = false;
+        dom.photoUploadInput.value = '';
       }
     }
 
@@ -2532,7 +2417,11 @@
     // ==================== INIT ====================
     function init() {
       dom.zeekBtn.addEventListener('click', () => initReader(dom.textInput.value));
-      dom.scanBtn.addEventListener('click', showCameraModal);
+      dom.scanBtn.addEventListener('click', () => dom.photoUploadInput.click());
+      dom.photoUploadInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) ocrFromFile(file);
+      });
       dom.pasteBtn.addEventListener('click', async () => {
         try {
           dom.textInput.value = await navigator.clipboard.readText();
@@ -2542,12 +2431,6 @@
           alert('Clipboard access denied. Please use Ctrl+V / Cmd+V to paste.');
         }
       });
-      dom.closeCameraBtn.addEventListener('click', hideCameraModal);
-      dom.torchBtn.addEventListener('click', toggleTorch);
-      dom.switchCameraBtn.addEventListener('click', switchCamera);
-      dom.captureBtn.addEventListener('click', capturePhoto);
-      dom.retakeBtn.addEventListener('click', resetCameraToLive);
-      dom.scanTextBtn.addEventListener('click', scanText);
       dom.backBtn.addEventListener('click', showInputView);
       dom.playPauseBtn.addEventListener('click', togglePlayback);
       dom.rewindBtn.addEventListener('click', () => { state.currentIndex = Math.max(0, state.currentIndex - 10); updateDisplay(); });
