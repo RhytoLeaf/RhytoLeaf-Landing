@@ -1456,6 +1456,121 @@
       margin: 0;
     }
 
+    /* =============================================
+       SCREENSHOT CAROUSEL
+       ============================================= */
+    .seo-screenshots > p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+
+    .zeek-carousel {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+      margin-top: 1.5rem;
+      background: #0a0a0a;
+    }
+
+    .zeek-carousel-track {
+      position: relative;
+    }
+
+    .zeek-carousel-slide {
+      display: none;
+      position: relative;
+    }
+
+    .zeek-carousel-slide.active {
+      display: block;
+    }
+
+    .zeek-carousel-img {
+      width: 100%;
+      display: block;
+      object-fit: contain;
+      max-height: 540px;
+      background: #0a0a0a;
+    }
+
+    .zeek-carousel-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.78) 0%, transparent 100%);
+      padding: 2rem 1.5rem 1rem;
+    }
+
+    .zeek-carousel-caption h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 0.2rem;
+      letter-spacing: 0.03em;
+    }
+
+    .zeek-carousel-caption p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
+      margin: 0;
+    }
+
+    .zeek-carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 1.8rem;
+      line-height: 1;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 10;
+      padding: 0;
+    }
+
+    .zeek-carousel-btn:hover {
+      background: rgba(0,206,124,0.55);
+    }
+
+    .zeek-carousel-prev { left: 12px; }
+    .zeek-carousel-next { right: 12px; }
+
+    .zeek-carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 0 8px;
+      background: #0a0a0a;
+    }
+
+    .zeek-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .zeek-dot.active {
+      background: var(--accent, #00CE7C);
+      transform: scale(1.25);
+    }
+
     .seo-footer {
       margin-top: 3rem;
       padding-top: 1.5rem;
@@ -1743,6 +1858,44 @@
         <h2>What Is RSVP Reading?</h2>
         <p>RSVP stands for <strong>Rapid Serial Visual Presentation</strong> — a technique developed in cognitive psychology research where text is shown one word (or chunk) at a time in the same location. Traditional reading requires your eyes to move across each line, jump back to the start of the next, and occasionally regress to re-read missed words. RSVP eliminates all of that movement.</p>
         <p>By presenting each word in a fixed position, RSVP reduces the time spent on <em>saccades</em> (eye jumps between words) and suppresses <em>subvocalization</em> (the habit of silently pronouncing each word). The result is faster reading with sustained comprehension.</p>
+      </section>
+
+      <section class="seo-section seo-screenshots">
+        <h2>See Zeek in Action</h2>
+        <p>Three modes to match how you read — paste a use case, read word by word, or flow through full paragraphs.</p>
+
+        <div id="zeekCarousel" class="zeek-carousel" role="region" aria-label="Zeek screenshots">
+          <div class="zeek-carousel-track">
+            <div class="zeek-carousel-slide active">
+              <img src="../images/zeek-sc-use-case.png" class="zeek-carousel-img" alt="Zeek use case — paste text to start reading">
+              <div class="zeek-carousel-caption">
+                <h5>Paste &amp; Go</h5>
+                <p>Drop any text into Zeek and hit the button — no setup, no account needed.</p>
+              </div>
+            </div>
+            <div class="zeek-carousel-slide">
+              <img src="../images/zeek-sc-word-mode.png" class="zeek-carousel-img" alt="Zeek word mode — single word RSVP display">
+              <div class="zeek-carousel-caption">
+                <h5>Word Mode</h5>
+                <p>One word at a time with ORP highlighting — the core RSVP experience.</p>
+              </div>
+            </div>
+            <div class="zeek-carousel-slide">
+              <img src="../images/zeek-sc-paragraph-mode.png" class="zeek-carousel-img" alt="Zeek paragraph mode — flowing paragraph reading">
+              <div class="zeek-carousel-caption">
+                <h5>Paragraph Mode</h5>
+                <p>Flowing paragraph view for readers who prefer more context while reading fast.</p>
+              </div>
+            </div>
+          </div>
+          <button class="zeek-carousel-btn zeek-carousel-prev" aria-label="Previous screenshot">&#8249;</button>
+          <button class="zeek-carousel-btn zeek-carousel-next" aria-label="Next screenshot">&#8250;</button>
+          <div class="zeek-carousel-dots" role="tablist" aria-label="Slide indicators">
+            <button class="zeek-dot active" data-idx="0" aria-label="Slide 1" aria-selected="true"></button>
+            <button class="zeek-dot" data-idx="1" aria-label="Slide 2" aria-selected="false"></button>
+            <button class="zeek-dot" data-idx="2" aria-label="Slide 3" aria-selected="false"></button>
+          </div>
+        </div>
       </section>
 
       <section class="seo-section">
@@ -2441,8 +2594,47 @@
     }
 
     document.readyState === 'loading'
-      ? document.addEventListener('DOMContentLoaded', () => { init(); initEyeBlink(); })
-      : (init(), initEyeBlink());
+      ? document.addEventListener('DOMContentLoaded', () => { init(); initEyeBlink(); initCarousel(); })
+      : (init(), initEyeBlink(), initCarousel());
+
+    function initCarousel() {
+      const carousel = document.getElementById('zeekCarousel');
+      if (!carousel) return;
+      const slides = carousel.querySelectorAll('.zeek-carousel-slide');
+      const dots   = carousel.querySelectorAll('.zeek-dot');
+      let current  = 0;
+      let timer;
+
+      function goTo(idx) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        dots[current].setAttribute('aria-selected', 'false');
+        current = (idx + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+        dots[current].setAttribute('aria-selected', 'true');
+      }
+
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+
+      function startAuto() {
+        clearInterval(timer);
+        timer = setInterval(next, 3500);
+      }
+
+      carousel.querySelector('.zeek-carousel-next').addEventListener('click', () => { next(); startAuto(); });
+      carousel.querySelector('.zeek-carousel-prev').addEventListener('click', () => { prev(); startAuto(); });
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => { goTo(Number(dot.dataset.idx)); startAuto(); });
+      });
+
+      // Pause on hover
+      carousel.addEventListener('mouseenter', () => clearInterval(timer));
+      carousel.addEventListener('mouseleave', startAuto);
+
+      startAuto();
+    }
   </script>
 </body>
 </html>
