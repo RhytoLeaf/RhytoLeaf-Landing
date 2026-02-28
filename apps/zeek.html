@@ -243,7 +243,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem 1.5rem;
+      padding: 5rem 1.5rem 3rem; /* Added top padding for header */
       position: relative;
     }
 
@@ -785,10 +785,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.65rem 1rem;
+      height: 64px;
+      padding: 0 1rem;
       border-bottom: 1px solid var(--border-subtle);
       background: var(--surface);
       flex-shrink: 0;
+    }
+
+    .reader-topbar-left { width: 44px; }
+    .reader-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     .reader-topbar-btn {
@@ -1625,14 +1633,68 @@
     @media (min-width: 768px) {
       .textarea-wrap textarea { height: 240px; }
     }
+
+    /* =============================================
+       GLOBAL APP HEADER
+       ============================================= */
+    .main-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .main-header * { pointer-events: auto; }
+    .header-logo-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+    }
+    .header-logo-center img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    .header-arrow-link {
+      color: #7A8B9C;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .header-arrow-link:hover { 
+      color: #00CE7C;
+      background: rgba(0, 206, 124, 0.08);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Back to All Apps Navigation -->
-  <a href="../index.html#apps" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;font-size:0.85rem;font-weight:500;color:#7A8B9C;text-decoration:none;position:fixed;top:1rem;left:1rem;z-index:100;transition:color 0.2s;" onmouseover="this.style.color='#00CE7C'" onmouseout="this.style.color='#7A8B9C'">
-    <i class="fas fa-arrow-left" style="font-size:0.75rem;"></i> All Apps
-  </a>
+  <!-- Global App Header -->
+  <header class="main-header">
+    <div class="header-left">
+      <a id="headerBackBtn" href="../index.html#apps" class="header-arrow-link" title="Back">
+        &lt;
+      </a>
+    </div>
+    <!-- <div class="header-logo-center"> -->
+      <!-- <img src="../images/logo-icon.png" alt="Zeek"> -->
+    <!-- </div> -->
+  </header>
 
   <!-- ==================== INPUT VIEW ==================== -->
   <div id="inputView">
@@ -1712,28 +1774,26 @@
   <div id="readerView" class="hidden flex-col">
     <!-- Top bar -->
     <div class="reader-topbar">
-      <button id="backBtn" class="reader-topbar-btn" title="Back to input">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
-      </button>
-      <span id="wordCounter" class="word-counter">0 / 0</span>
-      <button id="textSizeBtn" class="reader-topbar-btn" title="Text size">
-        <span id="textSizeLabel" style="font-weight:700;font-size:13px;font-family:var(--font-mono);color:var(--text-dim);">M</span>
-      </button>
-      <button id="portraitToggle" class="reader-topbar-btn" title="Toggle portrait mode">
-        <svg id="portraitIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-        </svg>
-        <svg id="landscapeIcon" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-        </svg>
-      </button>
-      <button id="sentenceToggle" class="reader-topbar-btn" title="Toggle sentence view">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/>
-        </svg>
-      </button>
+      <div class="reader-topbar-left"></div>
+      <div class="reader-topbar-right">
+        <span id="wordCounter" class="word-counter">0 / 0</span>
+        <button id="textSizeBtn" class="reader-topbar-btn" title="Text size">
+          <span id="textSizeLabel" style="font-weight:700;font-size:13px;font-family:var(--font-mono);color:var(--text-dim);">M</span>
+        </button>
+        <button id="portraitToggle" class="reader-topbar-btn" title="Toggle portrait mode">
+          <svg id="portraitIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+          <svg id="landscapeIcon" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </button>
+        <button id="sentenceToggle" class="reader-topbar-btn" title="Toggle sentence view">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h10"/>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Reading stage -->
@@ -1993,7 +2053,7 @@
       photoUploadInput: document.getElementById('photoUploadInput'),
       captureCanvas: document.getElementById('captureCanvas'),
       ocrStatus: document.getElementById('ocrStatus'),
-      backBtn: document.getElementById('backBtn'),
+      backBtn: document.getElementById('headerBackBtn'),
       wordDisplay: document.getElementById('wordDisplay'),
       wpmDisplay: document.getElementById('wpmDisplay'),
       wordCounter: document.getElementById('wordCounter'),
@@ -2431,7 +2491,12 @@
           alert('Clipboard access denied. Please use Ctrl+V / Cmd+V to paste.');
         }
       });
-      dom.backBtn.addEventListener('click', showInputView);
+      dom.backBtn.addEventListener('click', (e) => {
+        if (!dom.readerView.classList.contains('hidden')) {
+          e.preventDefault();
+          showInputView();
+        }
+      });
       dom.playPauseBtn.addEventListener('click', togglePlayback);
       dom.rewindBtn.addEventListener('click', () => { state.currentIndex = Math.max(0, state.currentIndex - 10); updateDisplay(); });
       dom.forwardBtn.addEventListener('click', () => { state.currentIndex = Math.min(state.words.length - 1, state.currentIndex + 10); updateDisplay(); });
