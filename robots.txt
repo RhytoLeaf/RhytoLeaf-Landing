@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /images/*.jpg
+Disallow: /images/*.png
 
+# Sitemap location
 Sitemap: https://rhytoleaf.ca/sitemap.xml
+
+# Crawl delay for server load management (optional)
+# Crawl-delay: 5

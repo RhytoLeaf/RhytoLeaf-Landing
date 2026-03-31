@@ -1,0 +1,135 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774999025342,
+  "projectRoot": "/Users/saint-rhyto/Documents/Projects/Github/RhytoLeaf-Landing",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "assets"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "apps": {
+      "path": "apps",
+      "purpose": null,
+      "fileCount": 13,
+      "lastAccessed": 1774999025337,
+      "keyFiles": [
+        "bmi-calculator.html",
+        "cachehax-PRD.md",
+        "cachehax.html",
+        "econoflo-PRD.md",
+        "econoflo.html"
+      ]
+    },
+    "assets": {
+      "path": "assets",
+      "purpose": "Static assets",
+      "fileCount": 1,
+      "lastAccessed": 1774999025337,
+      "keyFiles": []
+    },
+    "functions": {
+      "path": "functions",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1774999025337,
+      "keyFiles": [
+        "index.js",
+        "package-lock.json",
+        "package.json"
+      ]
+    },
+    "images": {
+      "path": "images",
+      "purpose": null,
+      "fileCount": 30,
+      "lastAccessed": 1774999025338,
+      "keyFiles": [
+        "androne18.png",
+        "basic-calc-logo.jpg",
+        "beebs.png",
+        "bmi-calc-logo.png",
+        "cache-hax-logo.png"
+      ]
+    },
+    "zeek-extension-chrome": {
+      "path": "zeek-extension-chrome",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1774999025338,
+      "keyFiles": [
+        "background.js",
+        "content.js",
+        "manifest.json",
+        "zeek-ext-install.md"
+      ]
+    },
+    "zeek-extension-safari": {
+      "path": "zeek-extension-safari",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1774999025338,
+      "keyFiles": [
+        "background.js",
+        "content.js",
+        "manifest.json",
+        "zeek-ext-install.md"
+      ]
+    },
+    "assets/dist": {
+      "path": "assets/dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 1,
+      "lastAccessed": 1774999025339,
+      "keyFiles": []
+    },
+    "zeek-extension-chrome/lib": {
+      "path": "zeek-extension-chrome/lib",
+      "purpose": "Library code",
+      "fileCount": 2,
+      "lastAccessed": 1774999025339,
+      "keyFiles": [
+        "rsvp-engine.js",
+        "text-parser.js"
+      ]
+    },
+    "zeek-extension-safari/lib": {
+      "path": "zeek-extension-safari/lib",
+      "purpose": "Library code",
+      "fileCount": 2,
+      "lastAccessed": 1774999025339,
+      "keyFiles": [
+        "rsvp-engine.js",
+        "text-parser.js"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

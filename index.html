@@ -10,10 +10,19 @@
     content="RhytoLeaf, STEM, software development, app development, science, technology, engineering, mathematics, innovation">
   <title>RhytoLeaf - Cultivating Innovators, One App at a Time</title>
 
+  <!-- Favicon variants -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/logo-icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/logo-icon-16.png">
+  <link rel="icon" type="image/svg+xml" href="./images/logo-icon.svg">
+  <link rel="icon" type="image/x-icon" href="./images/logo-icon.ico">
   <link rel="icon" type="image/png" href="./images/logo-icon.png">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://rhytoleaf.ca/">
+
+  <!-- Robots and Sitemap -->
+  <link rel="robots" href="/robots.txt">
+  <link rel="sitemap" href="/sitemap.xml">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -31,6 +40,11 @@
   <meta property="twitter:description"
     content="RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life — from speed readers to financial calculators.">
   <meta property="twitter:image" content="https://rhytoleaf.ca/images/logo-primary-light.png">
+  <meta property="twitter:site" content="@rhytoleaf">
+  <meta property="twitter:creator" content="@rhytoleaf">
+
+  <!-- Differential Privacy -->
+  <meta name="differential-privacy" content="yes">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,6 +110,66 @@
         "author": { "@id": "https://rhytoleaf.ca/#organization" }
       },
       {
+        "@type": "SoftwareApplication",
+        "name": "Shoganai",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/shoganai.html",
+        "description": "Japanese culture learning application.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Style Under Stress",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/style-under-stress.html",
+        "description": "Fashion stress management tool.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "SpeedScript",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/speedscript.html",
+        "description": "Speed reading practice tool.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Cache Hax",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/cachehax.html",
+        "description": "Browser caching utilities and optimization tools.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Wuxi (We Watch)",
+        "applicationCategory": "MediaApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/wuxi-we-watch.html",
+        "description": "Media watching and organization application.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "BMI Calculator",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "url": "https://rhytoleaf.ca/apps/bmi-calculator.html",
+        "description": "Body Mass Index calculation tool.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
+        "author": { "@id": "https://rhytoleaf.ca/#organization" }
+      },
+      {
         "@type": "DonateAction",
         "name": "Support RhytoLeaf's Free STEM Tools",
         "recipient": { "@id": "https://rhytoleaf.ca/#organization" },
@@ -103,6 +177,20 @@
         "description": "Donate to help RhytoLeaf continue building free, accessible STEM applications."
       }
     ]
+  }
+  </script>
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://rhytoleaf.ca/"
+    }]
   }
   </script>
 
@@ -1616,6 +1704,20 @@
       }
     }
   </style>
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://rhytoleaf.ca/"
+    }]
+  }
+  </script>
 </head>
 
 <body>
