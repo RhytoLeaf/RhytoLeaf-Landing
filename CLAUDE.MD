@@ -8,7 +8,7 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 ## Hosting
 - **Live site**: GitHub Pages (deployed from `main`)
 - **Custom domain**: `CNAME` → rhytoleaf.ca
-- **Contact form**: `functions/` contains the Firebase Cloud Function source for the "Craft Your Idea" handler. The live site currently uses a mailto CTA (no backend); the function is deployed separately and needs a Gmail app password in `functions/.env` (gitignored).
+- **Contact form**: the homepage form posts to `formsubmit.co/ajax/rhytoleaf.ops@gmail.com` (no site backend needed). The handler in `main.js` falls back to a mailto link if the request fails. **First submission sends a one-time activation email to rhytoleaf.ops@gmail.com — click it or the form will never deliver.** `functions/` holds the old Firebase Cloud Function source (never deployed; kept for reference).
 - `firebase.json` is legacy config; the site is not hosted on Firebase.
 
 ## Page Architecture
@@ -16,7 +16,7 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 
 - `styles.css` — main site styles (theme variables, layout, components)
 - `orbits.css` — "Tech Stack Orbits" section styles
-- `main.js` — theme toggle (FOUC-safe), nav, mobile nav, scroll reveal, particles
+- `main.js` — theme toggle (FOUC-safe), nav, mobile nav, scroll reveal, particles, idea-form submit (FormSubmit + mailto fallback)
 - `orbits.js` — orbits data (`APPS`, `LOGO` as inline base64 WebP) + rendering
 
 Both theme and orbits assets stay in the repo root so relative paths (`./images/...`) keep working.
@@ -60,6 +60,7 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 │   ├── zeek.html
 │   ├── zeek-vs-alternatives.html
 │   ├── econoflo.html
+│   ├── econoflo-vs-alternatives.html
 │   ├── cachehax.html
 │   ├── style-under-stress.html
 │   ├── speedscript.html
@@ -75,12 +76,16 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 ```
 
 ## Contact
-- **Email**: rhytoleaf.ops@gmail.com (the contact section is a mailto CTA — no form backend on the site)
+- **Email**: rhytoleaf.ops@gmail.com — the contact section is a real form (FormSubmit) with a mailto fallback
 - **Donations**: Stripe payment link (single button; any amount)
+- **Social**: LinkedIn `linkedin.com/company/rhytoleaf`, GitHub `github.com/RhytoLeaf` (footer)
 - **Copyright**: © 2026 RhytoLeaf Inc.
 
 ## Development Notes
-- The contact form was removed from the live site (its Cloud Function was never deployed); if you restore the form, deploy `functions/` first and point `FUNCTION_URL` in `main.js` at it.
+- The hero leads with the flagship product (Zeek): screenshot `images/zeek-sc-paragraph-mode.png`, concrete headline, "Try Zeek Free" CTA. Keep the hero product-first — do not revert to abstract slogan copy.
+- A spotlight ribbon under the orbits links to `apps/zeek-vs-alternatives.html`; `apps/econoflo-vs-alternatives.html` is its sibling comparison page (self-contained inline styles, dark-first). Comparison pages are the SEO growth engine — clone the pattern for new flagships.
+- `images/og-cover.png` is the 1200×630 social card used by og:image / twitter:image; regenerate it if the wordmark changes.
+- The contact form was rebuilt on FormSubmit (Oct 2026) after the old Cloud Function form 404'd; if FormSubmit stops working, the handler degrades to mailto automatically.
 - Orbits app logos are embedded base64 WebP in `orbits.js` so the page works offline.
 - Untracked app pages (`gomoku-frontier.html`, `touch-grass.html`) have SEO meta prepped; commit + add to `sitemap.xml` when ready to publish.
 
@@ -88,4 +93,4 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 - Canonical: `https://rhytoleaf.ca/`
 - JSON-LD: Organization + WebSite + WebPage + one SoftwareApplication per app + DonateAction (kept in sync with the orbits list)
 - Open Graph + Twitter Card configured
-- Sitemap: 10 URLs (home + 9 app pages), with real lastmod dates
+- Sitemap: 11 URLs (home + app pages incl. both comparison pages), with real lastmod dates

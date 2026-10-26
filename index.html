@@ -49,10 +49,9 @@
       property="og:description"
       content="RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life — from speed readers to financial calculators."
     />
-    <meta
-      property="og:image"
-      content="https://rhytoleaf.ca/images/logo-primary-light.png"
-    />
+    <meta property="og:image" content="https://rhytoleaf.ca/images/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="RhytoLeaf" />
 
     <!-- Twitter -->
@@ -66,15 +65,7 @@
       property="twitter:description"
       content="RhytoLeaf builds free applications that weave Science, Technology, Engineering, and Mathematics into daily life — from speed readers to financial calculators."
     />
-    <meta
-      property="twitter:image"
-      content="https://rhytoleaf.ca/images/logo-primary-light.png"
-    />
-    <meta property="twitter:site" content="@rhytoleaf" />
-    <meta property="twitter:creator" content="@rhytoleaf" />
-
-    <!-- Differential Privacy -->
-    <meta name="differential-privacy" content="yes" />
+    <meta property="twitter:image" content="https://rhytoleaf.ca/images/og-cover.png" />
 
     <!-- Theme bootstrap: apply the saved (or OS-preferred) theme before first paint to avoid a dark flash -->
     <script>
@@ -91,11 +82,11 @@
       })();
     </script>
 
-    <!-- Fonts -->
+    <!-- Fonts: single request for all three families to save a round-trip -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
@@ -277,31 +268,10 @@
       }
     </script>
 
-    <!-- Breadcrumb Schema -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://rhytoleaf.ca/"
-          }
-        ]
-      }
-    </script>
-
         <link rel="stylesheet" href="./styles.css" />
 
     <!-- RhytoLeaf Tech Stack Orbits -->
         <link rel="stylesheet" href="./orbits.css" />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
     <!-- tsParticles 2.12.0 (same pinned bundle the Cache Hax app uses). Deferred, so a slow or blocked CDN never delays the page;
        without it the cards fall back to CSS stars. -->
     <script
@@ -366,37 +336,47 @@
        HERO
        ========================================== -->
     <section class="hero" id="hero">
-      <div class="container">
+      <div class="container hero-grid">
         <div class="hero-content">
           <div class="hero-badge">
             <span class="dot"></span>
-            STEM-Powered Software
+            Free · No ads · No paywalls
           </div>
           <h1>
-            Cultivating<br />
-            <span class="green">Innovators,</span><br />
-            One App at a Time.
+            Read <span class="green">2× faster.</span><br />
+            Free, for <span class="green">dyslexic</span> minds.
           </h1>
           <p>
-            We build applications that seamlessly weave Science, Technology,
-            Engineering, and Mathematics into everyday life — sparking curiosity
-            and fostering real understanding.
+            Zeek is our flagship: a speed reader built from the ground up for
+            dyslexia and ADHD — ORP highlighting, camera OCR, distraction-free
+            dark mode. And it's just one of <strong>nine free STEM tools</strong>
+            we build and keep ad-free for everyone.
           </p>
           <div class="hero-actions">
-            <a href="#apps" class="btn-primary-glow">
-              Explore Our Apps
-              <i class="fas fa-arrow-down" style="font-size: 0.85rem"></i>
+            <a href="./apps/zeek.html" class="btn-primary-glow">
+              Try Zeek Free
+              <i class="fas fa-arrow-right" style="font-size: 0.85rem"></i>
             </a>
-            <a href="#contact" class="btn-ghost">Get in Touch</a>
+            <a href="#apps" class="btn-ghost">Explore All Nine Apps</a>
+          </div>
+        </div>
+        <div class="hero-visual reveal">
+          <div class="hero-shot-frame">
+            <img
+              src="./images/zeek-sc-paragraph-mode.png"
+              class="hero-shot"
+              alt="Zeek reading a paragraph in RSVP mode, one word at a time"
+              width="540"
+              height="642"
+              loading="eager"
+            />
+            <div class="hero-shot-caption">
+              <span class="dot"></span>
+              Zeek — reading a paragraph, one word at a time
+            </div>
           </div>
         </div>
       </div>
-      <img
-        src="./images/logo-icon.png"
-        class="hero-deco"
-        alt=""
-        aria-hidden="true"
-      />
     </section>
 
     <!-- ==========================================
@@ -588,6 +568,21 @@
 
           <div id="grid"></div>
 
+          <div class="spotlight reveal">
+            <div>
+              <strong>Zeek vs. the field.</strong>
+              We benchmarked Zeek against AccelaReader, Spreeder, SwiftRead and
+              Sprint Reader — what each is good at, what it costs, where each
+              falls short.
+            </div>
+            <a
+              href="./apps/zeek-vs-alternatives.html"
+              class="spotlink"
+              >Read the honest comparison
+              <i class="fas fa-arrow-right"></i></a
+            >
+          </div>
+
           <div
             id="pop"
             role="dialog"
@@ -679,18 +674,56 @@
               matters.
             </p>
             <div class="cta-form">
-              <div class="cta-form-actions">
-                <a
-                  class="btn-submit"
-                  href="mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea&body=Hi%20RhytoLeaf%2C%0A%0AI%20have%20an%20idea%20for%20a%20STEM%20app%3A%0A%0A"
-                >
-                  <i class="fas fa-paper-plane"></i>
-                  Send Us Your Idea
-                </a>
-                <span class="cta-mailto"
-                  >Opens your email app — no form, no waiting. We read every message.</span
-                >
-              </div>
+              <form
+                id="idea-form"
+                action="https://formsubmit.co/ajax/rhytoleaf.ops@gmail.com"
+                method="POST"
+              >
+                <input type="hidden" name="_subject" value="New STEM app idea" />
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="idea-name">Your name</label>
+                    <input
+                      id="idea-name"
+                      name="name"
+                      type="text"
+                      placeholder="Ada Lovelace"
+                      required
+                      autocomplete="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="idea-email">Email (so we can reply)</label>
+                    <input
+                      id="idea-email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      required
+                      autocomplete="email"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="idea-msg">Your idea</label>
+                  <textarea
+                    id="idea-msg"
+                    name="message"
+                    rows="4"
+                    placeholder="A STEM-inspired app that would make someone's life better…"
+                    required
+                  ></textarea>
+                </div>
+                <div class="cta-form-actions">
+                  <button type="submit" class="btn-submit" id="idea-submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Us Your Idea
+                  </button>
+                  <span class="cta-mailto" id="idea-status" role="status" aria-live="polite">
+                    Prefer email? <a href="mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea">rhytoleaf.ops@gmail.com</a> — we read every message.
+                  </span>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -716,6 +749,20 @@
         </p>
         <p class="footer-contact">
           <a href="mailto:rhytoleaf.ops@gmail.com">rhytoleaf.ops@gmail.com</a>
+          &nbsp;&middot;&nbsp;
+          <a
+            href="https://www.linkedin.com/company/rhytoleaf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >LinkedIn</a
+          >
+          &nbsp;&middot;&nbsp;
+          <a
+            href="https://github.com/RhytoLeaf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
           &nbsp;&middot;&nbsp;
           <a href="#donate" style="color: var(--green)"
             ><i class="fas fa-heart" style="font-size: 0.75rem"></i> Support

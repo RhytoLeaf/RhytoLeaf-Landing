@@ -98,6 +98,55 @@
         }
       })();
 
+      // ---- Idea form (FormSubmit; falls back to mailto on failure) ----
+      (function () {
+        const form = document.getElementById("idea-form");
+        const button = document.getElementById("idea-submit");
+        const status = document.getElementById("idea-status");
+        if (!form || !button || !status) return;
+
+        const MAILTO =
+          "mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea";
+        const DEFAULT_STATUS = status.innerHTML;
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          button.disabled = true;
+          status.textContent = "Sending…";
+
+          const data = {};
+          new FormData(form).forEach((value, key) => {
+            data[key] = value;
+          });
+          data._template = "table";
+          data._captcha = "false";
+
+          try {
+            const res = await fetch(form.action, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            if (res.ok) {
+              form.reset();
+              status.innerHTML =
+                "✓ Thanks — your idea landed in our inbox. We read every message and reply from rhytoleaf.ops@gmail.com.";
+            } else {
+              throw new Error(String(res.status));
+            }
+          } catch (err) {
+            status.innerHTML =
+              "Hmm, that didn't go through. No idea lost — email us directly at " +
+              '<a href="' +
+              MAILTO +
+              '">rhytoleaf.ops@gmail.com</a>' +
+              " instead.";
+          } finally {
+            button.disabled = false;
+          }
+        });
+      })();
+
       // ---- Smooth scroll for anchor links ----
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener("click", function (e) {
