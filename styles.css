@@ -415,13 +415,9 @@
         padding-bottom: 6rem;
       }
 
-      /* Brand hero: logo card inside the floating frame */
-      .hero-logo {
-        display: block;
-        width: min(240px, 55%);
-        height: auto;
-        margin: 3rem auto;
-        filter: drop-shadow(0 0 32px var(--green-glow));
+      /* Brand hero is text-only (no visual card) */
+      .hero--brand .hero-grid {
+        grid-template-columns: 1fr;
       }
 
       .hero-grid {
