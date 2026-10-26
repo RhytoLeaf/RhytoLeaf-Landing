@@ -84,7 +84,9 @@ exports.submitIdea = onRequest({ region: "us-central1" }, (req, res) => {
 
       if (gmailPassword) {
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
           auth: {
             user: gmailEmail,
             pass: gmailPassword,
