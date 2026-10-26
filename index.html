@@ -315,6 +315,7 @@
           <span>RhytoLeaf</span>
         </a>
         <ul class="nav-links" id="nav-links">
+          <li><a href="#flagship">Flagship</a></li>
           <li><a href="#mission">Mission</a></li>
           <li><a href="#apps">Apps</a></li>
           <li><a href="#donate">Donate</a></li>
@@ -333,33 +334,81 @@
     </nav>
 
     <!-- ==========================================
-       HERO — FLAGSHIP SLOT
+       HERO — BRAND (fixed, never rotates)
 
-       This hero is a rotation slot, not a brand statement. It currently
-       leads with Zeek (our only app with a ranking comparison page).
-
-       When another app earns the slot (shipped comparison page + real
-       usage signal), swap these five points:
-         1. Badge text            ("Flagship of N free tools...")
-         2. <h1> + sub-copy       (concrete product argument)
-         3. Screenshot src + alt  (images/<app>-*.png, keep 540×642 5:6-ish crop)
-         4. Primary CTA href+text ("Try <App> Free" → ./apps/<app>.html)
-         5. Shot caption          (one-line description of the screenshot)
-       Do NOT auto-rotate in JS — rotation is a deliberate decision per launch.
+       The company identity lives here. The product argument lives in the
+       FLAGSHIP SLOT section immediately below. Keep this section about
+       RhytoLeaf, not about any single app.
        ========================================== -->
     <section class="hero" id="hero">
       <div class="container hero-grid">
         <div class="hero-content">
           <div class="hero-badge">
             <span class="dot"></span>
-            Flagship of 9 free tools · No ads · No paywalls
+            Free · No ads · No paywalls
           </div>
           <h1>
-            Read <span class="green">2× faster.</span><br />
-            Free, for <span class="green">dyslexic</span> minds.
+            Nine free STEM tools,<br />
+            one <span class="green">leaf</span>.
           </h1>
           <p>
-            Zeek is our flagship: a speed reader built from the ground up for
+            RhytoLeaf builds free, ad-free applications that turn science,
+            technology and math into tools you'll actually use every day —
+            no paywalls, no tracking, built in the open.
+          </p>
+          <div class="hero-actions">
+            <a href="#apps" class="btn-primary-glow">
+              Explore All Nine Apps
+              <i class="fas fa-arrow-right" style="font-size: 0.85rem"></i>
+            </a>
+            <a href="./apps/zeek.html" class="btn-ghost">Try Zeek Free</a>
+          </div>
+        </div>
+        <div class="hero-visual reveal">
+          <div class="hero-shot-frame">
+            <img
+              src="./images/logo-icon.png"
+              class="hero-logo"
+              alt="RhytoLeaf logo"
+              width="540"
+              height="540"
+              loading="eager"
+            />
+            <div class="hero-shot-caption">
+              <span class="dot"></span>
+              Cultivating innovators, one app at a time
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+       FLAGSHIP SLOT (rotates; the hero above stays brand)
+
+       Currently: Zeek (our only app with a ranking comparison page).
+       When another app earns the slot (shipped comparison page + real
+       usage signal), swap these five points:
+         1. Badge text            ("Flagship · <App>")
+         2. <h2> + sub-copy       (concrete product argument)
+         3. Screenshot src + alt  (images/<app>-*.png, keep 540×642 5:6-ish crop)
+         4. Primary CTA href+text ("Try <App> Free" → ./apps/<app>.html)
+         5. Shot caption          (one-line description of the screenshot)
+       Do NOT auto-rotate in JS — rotation is a deliberate decision per launch.
+       ========================================== -->
+    <section class="hero hero--flagship" id="flagship">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            Flagship · Zeek
+          </div>
+          <h2>
+            Read <span class="green">2× faster.</span><br />
+            Free, for <span class="green">dyslexic</span> minds.
+          </h2>
+          <p>
+            Our flagship is a speed reader built from the ground up for
             dyslexia and ADHD — ORP highlighting, camera OCR, distraction-free
             dark mode. And it's just one of <strong>nine free STEM tools</strong>
             we build and keep ad-free for everyone.
@@ -369,7 +418,9 @@
               Try Zeek Free
               <i class="fas fa-arrow-right" style="font-size: 0.85rem"></i>
             </a>
-            <a href="#apps" class="btn-ghost">Explore All Nine Apps</a>
+            <a href="./apps/zeek-vs-alternatives.html" class="btn-ghost"
+              >See How It Compares</a
+            >
           </div>
         </div>
         <div class="hero-visual reveal">
