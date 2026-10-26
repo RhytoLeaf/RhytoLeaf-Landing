@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 — Page Not Found · RhytoLeaf</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://rhytoleaf.ca/" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-icon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-icon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-icon-180.png" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #080c0f;
+        color: #e8edf2;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 24px;
+      }
+      .card {
+        text-align: center;
+        max-width: 520px;
+      }
+      .leaf {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 16px;
+        object-fit: contain;
+      }
+      .code {
+        font-size: clamp(64px, 16vw, 112px);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #00ce7c;
+        line-height: 1;
+      }
+      h1 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      p {
+        margin-top: 12px;
+        color: #7a8b9c;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .actions {
+        margin-top: 28px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      a {
+        text-decoration: none;
+        border-radius: 100px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+      }
+      a.primary {
+        background: #00ce7c;
+        color: #080c0f;
+      }
+      a.primary:hover {
+        background: #00f090;
+        transform: translateY(-2px);
+      }
+      a.ghost {
+        border: 1px solid #1e2a35;
+        color: #e8edf2;
+      }
+      a.ghost:hover {
+        border-color: #00ce7c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img class="leaf" src="/images/logo-icon.png" alt="" aria-hidden="true" />
+      <div class="code">404</div>
+      <h1>This page seems to have withered.</h1>
+      <p>
+        The leaf you're looking for doesn't exist (anymore). Let's get you back
+        to the garden.
+      </p>
+      <div class="actions">
+        <a class="primary" href="/">Back to Home</a>
+        <a class="ghost" href="/#orbits">Browse Our Apps</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,12 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /private/
-Disallow: /images/*.jpg
-Disallow: /images/*.png
 
-# Sitemap location
+# Cloud Functions source (infrastructure, not user content) — keep out of search indexes
+Disallow: /functions/
+
 Sitemap: https://rhytoleaf.ca/sitemap.xml
-
-# Crawl delay for server load management (optional)
-# Crawl-delay: 5

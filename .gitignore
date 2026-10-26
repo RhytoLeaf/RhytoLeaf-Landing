@@ -3,5 +3,11 @@ competitive-analysis.html
 03-27-2026-rhytoleaf-landing-plan.md
 RhytoLeaf-Adjacent-Industry-Analysis.docx
 .fuse_hidden0000002500000001
-robots.txt
 claude.md
+
+# OS / editor noise
+.DS_Store
+**/.DS_Store
+
+# Local agent/tooling state (contains machine-specific paths)
+.omc/
