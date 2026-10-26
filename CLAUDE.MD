@@ -82,7 +82,7 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 - **Copyright**: © 2026 RhytoLeaf Inc.
 
 ## Development Notes
-- The hero leads with the flagship product (Zeek): screenshot `images/zeek-sc-paragraph-mode.png`, concrete headline, "Try Zeek Free" CTA. Keep the hero product-first — do not revert to abstract slogan copy.
+- The hero is a **flagship rotation slot**, not a brand statement. It currently leads with Zeek: screenshot `images/zeek-sc-paragraph-mode.png`, concrete headline, "Try Zeek Free" CTA. Keep the hero product-first — do not revert to abstract slogan copy. To rotate the slot to a new flagship, change the 5 swap-points documented in the `HERO — FLAGSHIP SLOT` comment in `index.html` (badge, headline+sub-copy, screenshot, CTA, caption). Promotion criterion: a new app earns the slot only when it has a shipped comparison page + real usage signal. Do not build a JS auto-rotator/carousel in the hero — rotation is a deliberate manual decision per launch.
 - A spotlight ribbon under the orbits links to `apps/zeek-vs-alternatives.html`; `apps/econoflo-vs-alternatives.html` is its sibling comparison page (self-contained inline styles, dark-first). Comparison pages are the SEO growth engine — clone the pattern for new flagships.
 - `images/og-cover.png` is the 1200×630 social card used by og:image / twitter:image; regenerate it if the wordmark changes.
 - The contact form was rebuilt on FormSubmit (Oct 2026) after the old Cloud Function form 404'd; if FormSubmit stops working, the handler degrades to mailto automatically.

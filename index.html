@@ -333,14 +333,26 @@
     </nav>
 
     <!-- ==========================================
-       HERO
+       HERO — FLAGSHIP SLOT
+
+       This hero is a rotation slot, not a brand statement. It currently
+       leads with Zeek (our only app with a ranking comparison page).
+
+       When another app earns the slot (shipped comparison page + real
+       usage signal), swap these five points:
+         1. Badge text            ("Flagship of N free tools...")
+         2. <h1> + sub-copy       (concrete product argument)
+         3. Screenshot src + alt  (images/<app>-*.png, keep 540×642 5:6-ish crop)
+         4. Primary CTA href+text ("Try <App> Free" → ./apps/<app>.html)
+         5. Shot caption          (one-line description of the screenshot)
+       Do NOT auto-rotate in JS — rotation is a deliberate decision per launch.
        ========================================== -->
     <section class="hero" id="hero">
       <div class="container hero-grid">
         <div class="hero-content">
           <div class="hero-badge">
             <span class="dot"></span>
-            Free · No ads · No paywalls
+            Flagship of 9 free tools · No ads · No paywalls
           </div>
           <h1>
             Read <span class="green">2× faster.</span><br />
