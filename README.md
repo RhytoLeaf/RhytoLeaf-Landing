@@ -60,7 +60,7 @@ All apps are self-contained single-page HTML files (no server required) and link
 
 - **Vanilla HTML/CSS/JS** — no framework, no bundler. App cards in the orbits grid render from data in `orbits.js`.
 - **Theming** — dark/light via the `data-theme` attribute; preference saved to `localStorage["rhytoleaf-theme"]` with an OS-preference fallback. An inline `<head>` bootstrap script applies the theme before first paint to prevent a flash.
-- **CDN assets** — Google Fonts (Outfit, Playfair Display, JetBrains Mono), Font Awesome 6.5.1 (cdnjs), Simple Icons + Devicons 2.18 (jsDelivr), tsParticles 2.12 (jsDelivr, with a pure-CSS star-field fallback if the CDN fails).
+- **CDN assets** — Google Fonts (Montserrat, Playfair Display, JetBrains Mono), Font Awesome 6.5.1 (cdnjs), Simple Icons + Devicons 2.18 (jsDelivr), tsParticles 2.12 (jsDelivr, with a pure-CSS star-field fallback if the CDN fails).
 - **Orbit app logos** are embedded as base64 WebP inside `orbits.js` so the grid keeps working offline.
 - **SEO** — JSON-LD (Organization, WebSite, per-app `SoftwareApplication`, DonateAction), Open Graph / Twitter cards, canonical URL, `robots.txt`, `sitemap.xml` (kept in sync with the orbits list).
 

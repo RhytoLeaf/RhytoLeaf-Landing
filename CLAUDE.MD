@@ -40,7 +40,7 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 - Vanilla HTML/CSS/JS (no framework); Orbit app cards render from JS data in `orbits.js`
 - **Theme**: dark/light via `data-theme` attribute; saved in `localStorage["rhyto-theme"]`; OS preference is the fallback (bootstrap script in `<head>` prevents flash)
 - **Icons**: Font Awesome 6.5.1 (cdnjs), Simple Icons + Devicons `v2.18.0` (jsDelivr) for orbit tech badges
-- **Fonts**: Google Fonts — Outfit (body), Playfair Display (display), JetBrains Mono (orbits)
+- **Fonts**: Google Fonts — Montserrat (brand/body), Playfair Display (display), JetBrains Mono (orbits)
 - **Particles**: tsParticles 2.12.0 (jsDelivr, deferred; CSS stars fallback if the CDN fails)
 
 ## Design Elements

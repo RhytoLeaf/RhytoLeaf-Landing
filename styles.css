@@ -31,7 +31,7 @@
         --radius-xl: 32px;
 
         --font-display: "Playfair Display", Georgia, serif;
-        --font-body: "Outfit", system-ui, sans-serif;
+        --font-body: "Montserrat", system-ui, sans-serif;
 
         /* Active theme vars (dark default) */
         --bg: var(--dark-base);
