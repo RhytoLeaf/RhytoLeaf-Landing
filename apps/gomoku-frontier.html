@@ -1881,7 +1881,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    let board = [];
+    // Start with a fully-sized grid: drawBoard() runs on load (via updateCanvasScale)
+    // before initGame(), and an empty `board` used to crash the whole script here.
+    let board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
     let moveHistory = [];
     let currentPlayer = 1; // 1 = Black, 2 = White
     let gameOver = false;
