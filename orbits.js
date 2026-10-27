@@ -49,7 +49,7 @@
       const APPS = [
         {
           name: "Gomoku Frontier",
-          url: "https://rhytoleaf.ca/apps/gomoku-frontier.html",
+          url: "./apps/gomoku-frontier.html",
           icon: LOGO["Gomoku Frontier"],
           desc: "Five in a Row against a deep Alpha-Beta minimax AI — difficulty levels, a practice coach and live AI commentary.",
           tags: ["Game", "AI"],
@@ -78,7 +78,7 @@
         },
         {
           name: "Touch Grass",
-          url: "https://rhytoleaf.ca/apps/touch-grass.html",
+          url: "./apps/touch-grass.html",
           icon: LOGO["Touch Grass"],
           desc: "A full-screen interactive meadow — wave the grass with your cursor or fingers, tune the wind and field health.",
           tags: ["Lifestyle", "Relaxation"],
@@ -101,7 +101,7 @@
         },
         {
           name: "Zeek",
-          url: "https://rhytoleaf.ca/apps/zeek.html",
+          url: "./apps/zeek.html",
           icon: LOGO["Zeek"],
           desc: "RSVP speed reader for dyslexia, ADHD and visual processing support, with OCR text scanning.",
           tags: ["Accessibility", "OCR", "Reading"],
@@ -131,7 +131,7 @@
         },
         {
           name: "EconoFlo",
-          url: "https://rhytoleaf.ca/apps/econoflo.html",
+          url: "./apps/econoflo.html",
           icon: LOGO["EconoFlo"],
           desc: "Time Value of Money explained with generative visualizations and a financial calculator.",
           tags: ["Finance", "Productivity"],
@@ -150,7 +150,7 @@
         },
         {
           name: "Cache Hax",
-          url: "https://rhytoleaf.ca/apps/cachehax.html",
+          url: "./apps/cachehax.html",
           icon: LOGO["Cache Hax"],
           desc: "Simple budgeting tool for financial literacy.",
           tags: ["Finance", "Math"],
@@ -174,7 +174,7 @@
         },
         {
           name: "Style Under Stress",
-          url: "https://rhytoleaf.ca/apps/style-under-stress.html",
+          url: "./apps/style-under-stress.html",
           icon: LOGO["Style Under Stress"],
           desc: "Communication aptitude quiz for personal development.",
           tags: ["Lifestyle"],
@@ -192,7 +192,7 @@
         },
         {
           name: "SpeedScript",
-          url: "https://rhytoleaf.ca/apps/speedscript.html",
+          url: "./apps/speedscript.html",
           icon: LOGO["SpeedScript"],
           desc: "Free practice tool for measuring typing speed.",
           tags: ["Productivity"],
@@ -210,7 +210,7 @@
         },
         {
           name: "Wuxi",
-          url: "https://rhytoleaf.ca/apps/wuxi-we-watch.html",
+          url: "./apps/wuxi-we-watch.html",
           icon: LOGO["Wuxi"],
           desc: "Movie discovery platform with accessibility features and text-to-speech.",
           tags: ["Media", "A11y"],
@@ -234,7 +234,7 @@
         },
         {
           name: "Shoganai",
-          url: "https://rhytoleaf.ca/apps/shoganai.html",
+          url: "./apps/shoganai.html",
           icon: LOGO["Shoganai"],
           desc: "Japanese chess (Shogi) with AI opponents, tutorials and multilingual support.",
           tags: ["Game", "AI"],
