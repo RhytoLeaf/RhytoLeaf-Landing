@@ -161,6 +161,7 @@
         object-fit: cover;
         flex: none;
         background: #0f1419;
+        cursor: pointer;
       }
       #orbits .app-icon.fallback {
         display: grid;
@@ -224,6 +225,7 @@
         background: #0f1419;
         border: 1px solid var(--o-card-edge);
         box-shadow: 0 0 40px rgba(63, 207, 142, 0.18);
+        cursor: pointer;
       }
       #orbits .center img {
         width: 100%;

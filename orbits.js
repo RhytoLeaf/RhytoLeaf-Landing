@@ -795,17 +795,17 @@
         return box;
       }
 
-      /* Click the central app icon to open the app in a new tab */
+      /* Click an app icon (header tile or orbit center) to open the app in the current tab */
       document.addEventListener("click", (e) => {
-        const center = e.target.closest(".center");
-        if (!center) return;
-        const card = center.closest(".card");
+        const icon = e.target.closest(".center, .app-icon");
+        if (!icon) return;
+        const card = icon.closest(".card");
         if (!card) return;
         const idx = Array.from(document.querySelectorAll(".card")).indexOf(
           card,
         );
         const app = APPS[idx];
-        if (app) window.open(app.url, "_blank", "noopener");
+        if (app) window.location.href = app.url;
       });
 
       /* Guard: an item can appear only once per app. Later repeats of the same name are dropped,
