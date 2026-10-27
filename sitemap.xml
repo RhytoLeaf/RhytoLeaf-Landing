@@ -7,6 +7,18 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://rhytoleaf.ca/apps/gomoku-frontier.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rhytoleaf.ca/apps/touch-grass.html</loc>
+    <lastmod>2026-10-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://rhytoleaf.ca/apps/zeek.html</loc>
     <lastmod>2026-02-28</lastmod>
     <changefreq>monthly</changefreq>

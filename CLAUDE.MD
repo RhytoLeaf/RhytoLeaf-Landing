@@ -22,17 +22,19 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 Both theme and orbits assets stay in the repo root so relative paths (`./images/...`) keep working.
 
 ## Featured Applications (orbits section)
-1. **Zeek** — `apps/zeek.html` (speed reader for dyslexia/ADHD; logos in `images/zeek-logo.*`)
-2. **EconoFlo** — `apps/econoflo.html` (time value of money visualizer)
-3. **Cache Hax** — `apps/cachehax.html` (budgeting tool)
-4. **Style Under Stress** — `apps/style-under-stress.html`
-5. **SpeedScript** — `apps/speedscript.html`
-6. **Wuxi (We Watch)** — `apps/wuxi-we-watch.html`
-7. **Shoganai** — `apps/shoganai.html` (shogi with AI)
-8. **Superchat** — external: https://rhyto-superchat.web.app
-9. **BMI Calculator** — external: https://rhytoleaf.github.io/Rhyto-BMI/ (copy at `apps/bmi-calculator.html`)
+1. **Gomoku Frontier** — `apps/gomoku-frontier.html` (Gomoku vs. alpha-beta minimax AI; logo in `images/gomoku-frontier-logo.png`)
+2. **Touch Grass** — `apps/touch-grass.html` (full-screen interactive grass simulation; logo in `images/touch-grass-logo.png`)
+3. **Zeek** — `apps/zeek.html` (speed reader for dyslexia/ADHD; logos in `images/zeek-logo.*`)
+4. **EconoFlo** — `apps/econoflo.html` (time value of money visualizer)
+5. **Cache Hax** — `apps/cachehax.html` (budgeting tool)
+6. **Style Under Stress** — `apps/style-under-stress.html`
+7. **SpeedScript** — `apps/speedscript.html`
+8. **Wuxi (We Watch)** — `apps/wuxi-we-watch.html`
+9. **Shoganai** — `apps/shoganai.html` (shogi with AI)
+10. **Superchat** — external: https://rhyto-superchat.web.app
+11. **BMI Calculator** — external: https://rhytoleaf.github.io/Rhyto-BMI/ (copy at `apps/bmi-calculator.html`)
 - **Beebs** — retired from the site (was "under maintenance"); external: https://appadvice.com/app/beebs/1247188870
-- Also in `apps/` (not yet in orbits): `zeek-vs-alternatives.html`, `gomoku-frontier.html`, `touch-grass.html`
+- Also in `apps/` (not yet in orbits): `zeek-vs-alternatives.html`
 
 ## Technology Stack
 - Vanilla HTML/CSS/JS (no framework); Orbit app cards render from JS data in `orbits.js`
@@ -87,10 +89,10 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 - `images/og-cover.png` is the 1200×630 social card used by og:image / twitter:image; regenerate it if the wordmark changes.
 - The contact form was rebuilt on FormSubmit (Oct 2026) after the old Cloud Function form 404'd; if FormSubmit stops working, the handler degrades to mailto automatically.
 - Orbits app logos are embedded base64 WebP in `orbits.js` so the page works offline.
-- Untracked app pages (`gomoku-frontier.html`, `touch-grass.html`) have SEO meta prepped; commit + add to `sitemap.xml` when ready to publish.
+- `gomoku-frontier.html` and `touch-grass.html` joined the orbits in Oct 2026 (orbits data, JSON-LD, sitemap entries and embedded 160px WebP logos all in place; they lead the listing).
 
 ## SEO & Meta Information
 - Canonical: `https://rhytoleaf.ca/`
 - JSON-LD: Organization + WebSite + WebPage + one SoftwareApplication per app + DonateAction (kept in sync with the orbits list)
 - Open Graph + Twitter Card configured
-- Sitemap: 11 URLs (home + app pages incl. both comparison pages), with real lastmod dates
+- Sitemap: 13 URLs (home + app pages incl. both comparison pages), with real lastmod dates
