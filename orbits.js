@@ -100,36 +100,6 @@
           ],
         },
         {
-          name: "Zeek",
-          url: "./apps/zeek.html",
-          icon: LOGO["Zeek"],
-          desc: "RSVP speed reader for dyslexia, ADHD and visual processing support, with OCR text scanning.",
-          tags: ["Accessibility", "OCR", "Reading"],
-          langs: [L.html, L.css, L.js],
-          libs: [
-            {
-              abbr: "OCR",
-              name: "Tesseract.js",
-              ver: "v5 (jsDelivr)",
-              kind: "lib",
-            },
-            gfont("DM Serif Display, JetBrains Mono, Inter"),
-            {
-              abbr: "MV3",
-              name: "Chrome & Safari extensions",
-              ver: "Manifest V3, side panel",
-              kind: "svc",
-            },
-            {
-              abbr: "LS",
-              name: "Web Storage API",
-              ver: "localStorage",
-              kind: "svc",
-            },
-            { abbr: "Clip", name: "Clipboard API", kind: "svc" },
-          ],
-        },
-        {
           name: "EconoFlo",
           url: "./apps/econoflo.html",
           icon: LOGO["EconoFlo"],
@@ -300,6 +270,36 @@
             },
             { abbr: "Pop", name: "Popper.js", ver: "1.16.0", kind: "lib" },
             { abbr: "GHP", name: "GitHub Pages", kind: "svc" },
+          ],
+        },
+        {
+          name: "Zeek",
+          url: "./apps/zeek.html",
+          icon: LOGO["Zeek"],
+          desc: "RSVP speed reader for dyslexia, ADHD and visual processing support, with OCR text scanning.",
+          tags: ["Accessibility", "OCR", "Reading"],
+          langs: [L.html, L.css, L.js],
+          libs: [
+            {
+              abbr: "OCR",
+              name: "Tesseract.js",
+              ver: "v5 (jsDelivr)",
+              kind: "lib",
+            },
+            gfont("DM Serif Display, JetBrains Mono, Inter"),
+            {
+              abbr: "MV3",
+              name: "Chrome & Safari extensions",
+              ver: "Manifest V3, side panel",
+              kind: "svc",
+            },
+            {
+              abbr: "LS",
+              name: "Web Storage API",
+              ver: "localStorage",
+              kind: "svc",
+            },
+            { abbr: "Clip", name: "Clipboard API", kind: "svc" },
           ],
         },
       ];

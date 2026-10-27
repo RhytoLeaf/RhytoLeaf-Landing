@@ -24,15 +24,15 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 ## Featured Applications (orbits section)
 1. **Gomoku Frontier** — `apps/gomoku-frontier.html` (Gomoku vs. alpha-beta minimax AI; logo in `images/gomoku-frontier-logo.png`)
 2. **Touch Grass** — `apps/touch-grass.html` (full-screen interactive grass simulation; logo in `images/touch-grass-logo.png`)
-3. **Zeek** — `apps/zeek.html` (speed reader for dyslexia/ADHD; logos in `images/zeek-logo.*`)
-4. **EconoFlo** — `apps/econoflo.html` (time value of money visualizer)
-5. **Cache Hax** — `apps/cachehax.html` (budgeting tool)
-6. **Style Under Stress** — `apps/style-under-stress.html`
-7. **SpeedScript** — `apps/speedscript.html`
-8. **Wuxi (We Watch)** — `apps/wuxi-we-watch.html`
-9. **Shoganai** — `apps/shoganai.html` (shogi with AI)
-10. **Superchat** — external: https://rhyto-superchat.web.app
-11. **BMI Calculator** — external: https://rhytoleaf.github.io/Rhyto-BMI/ (copy at `apps/bmi-calculator.html`)
+3. **EconoFlo** — `apps/econoflo.html` (time value of money visualizer)
+4. **Cache Hax** — `apps/cachehax.html` (budgeting tool)
+5. **Style Under Stress** — `apps/style-under-stress.html`
+6. **SpeedScript** — `apps/speedscript.html`
+7. **Wuxi (We Watch)** — `apps/wuxi-we-watch.html`
+8. **Shoganai** — `apps/shoganai.html` (shogi with AI)
+9. **Superchat** — external: https://rhyto-superchat.web.app
+10. **BMI Calculator** — external: https://rhytoleaf.github.io/Rhyto-BMI/ (copy at `apps/bmi-calculator.html`)
+11. **Zeek** — `apps/zeek.html` (speed reader for dyslexia/ADHD; logos in `images/zeek-logo.*`) — sits at the bottom of the grid so it leads directly into the "Zeek vs. the field" spotlight ribbon below it
 - **Beebs** — retired from the site (was "under maintenance"); external: https://appadvice.com/app/beebs/1247188870
 - Also in `apps/` (not yet in orbits): `zeek-vs-alternatives.html`
 
