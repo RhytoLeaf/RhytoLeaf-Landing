@@ -1783,11 +1783,11 @@ const AIBubbleSystem = (() => {
         if (type === 'taunt') {
             avatar.textContent = '😏';
             avatar.classList.add('shocked');
-            playSound(SoundManager.playTaunt);
+            if (window.playSound) window.playSound(SoundManager.playTaunt);
         } else if (type === 'compliment') {
             avatar.textContent = '🤔';
             avatar.classList.add('happy');
-            playSound(SoundManager.playCompliment);
+            if (window.playSound) window.playSound(SoundManager.playCompliment);
         } else if (type === 'win') {
             avatar.textContent = '🏆';
             avatar.classList.add('happy');
@@ -1855,7 +1855,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const muteLabel = document.getElementById('muteLabel');
     if (muteToggle) {
         muteToggle.addEventListener('change', () => {
-            isMuted = muteToggle.checked;
+            isMuted = !muteToggle.checked;
             muteLabel.textContent = isMuted ? 'Muted' : 'Unmuted';
         });
     }
@@ -1870,7 +1870,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const soundLabel = document.getElementById('soundLabel');
     if (soundToggle) {
         soundToggle.addEventListener('change', () => {
-            isSoundMuted = soundToggle.checked;
+            isSoundMuted = !soundToggle.checked;
             soundLabel.textContent = isSoundMuted ? 'Muted' : 'Unmuted';
         });
     }
@@ -1880,6 +1880,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fn();
         }
     }
+    window.playSound = playSound;
 
     // Start with a fully-sized grid: drawBoard() runs on load (via updateCanvasScale)
     // before initGame(), and an empty `board` used to crash the whole script here.
@@ -2283,6 +2284,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Quick heuristic to detect blunders
     function detectBlunder(r, c, player) {
+        const prevCell = board[r][c];
         board[r][c] = player;
         // Check if this move creates a vulnerable pattern
         // (e.g., blocks nothing, creates no threats)
@@ -2297,11 +2299,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (count >= 3) threatCount++;
         }
-        board[r][c] = 0;
+        board[r][c] = prevCell;
         return threatCount === 0; // No threats created = possible blunder
     }
 
     function detectGreatMove(r, c, player) {
+        const prevCell = board[r][c];
         board[r][c] = player;
         let greatCount = 0;
         const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
@@ -2326,7 +2329,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (count >= 3 && openEnds === 2) greatCount++;
             if (count === 4 && openEnds >= 1) greatCount++;
         }
-        board[r][c] = 0;
+        board[r][c] = prevCell;
         return greatCount > 0;
     }
 
