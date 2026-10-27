@@ -696,10 +696,14 @@
       #orbits .node.big:hover {
         transform: none;
       }
+      #orbits .d-head > div {
+        min-width: 0; /* let long names (e.g. requestAnimationFrame) shrink and wrap */
+      }
       #orbits .d-head h3 {
         margin: 0;
         font-size: 22px;
         line-height: 1.2;
+        overflow-wrap: anywhere;
       }
       #orbits .d-head p {
         margin: 4px 0 0;
