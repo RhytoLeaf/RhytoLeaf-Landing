@@ -8,8 +8,8 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 ## Hosting
 - **Live site**: GitHub Pages (deployed from `main`)
 - **Custom domain**: `CNAME` → rhytoleaf.ca
-- **Contact form**: the homepage form posts to `formsubmit.co/ajax/rhytoleaf.ops@gmail.com` (no site backend needed). The handler in `main.js` falls back to a mailto link if the request fails. **First submission sends a one-time activation email to rhytoleaf.ops@gmail.com — click it or the form will never deliver.** `functions/` holds the old Firebase Cloud Function source (never deployed; kept for reference). Deps bumped Oct 2026 (firebase-admin 14, functions 7, nodemailer 10, cors 2.8.6) so `npm audit` is clean; SMTP transport uses explicit `smtp.gmail.com:587` (nodemailer ≥7 removed the `service: "gmail"` shorthand).
-- `firebase.json` is legacy config; the site is not hosted on Firebase.
+- **Contact form**: the homepage form posts to `formsubmit.co/ajax/rhytoleaf.ops@gmail.com` (no site backend needed). The handler in `main.js` falls back to a mailto link if the request fails. **First submission sends a one-time activation email to rhytoleaf.ops@gmail.com — click it or the form will never deliver.** The legacy Firebase Cloud Function that once backed this form was removed Oct 2026 — it was never deployed; the live form has always run on FormSubmit.
+- The site is hosted **only** on GitHub Pages; the legacy `firebase.json` and `functions/` were removed Oct 2026.
 
 ## Page Architecture
 `index.html` is the homepage shell. Styles and scripts live in separate files (extracted Oct 2026):
@@ -72,7 +72,6 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 │   ├── gomoku-frontier.html
 │   └── touch-grass.html
 ├── images/                 # Logos, screenshots, favicons
-├── functions/              # Firebase Cloud Function (contact form backend)
 ├── zeek-extension-chrome/  # Zeek Chrome browser extension
 └── zeek-extension-safari/  # Zeek Safari browser extension
 ```

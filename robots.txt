@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
 
-# Cloud Functions source (infrastructure, not user content) — keep out of search indexes
-Disallow: /functions/
-
 Sitemap: https://rhytoleaf.ca/sitemap.xml
