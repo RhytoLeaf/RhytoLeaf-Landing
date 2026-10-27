@@ -336,6 +336,12 @@
             translateY(calc(var(--radius) * 1px))
             rotate(calc(var(--angle) * -1deg));
         }
+        /* Tell visitors why the icons stand still (their phone/browser froze the
+           animation via the accessibility setting above) instead of looking broken.
+           span.l-motion: higher specificity than the display:none default below. */
+        #orbits .legend span.l-motion {
+          display: inline-flex;
+        }
       }
       #orbits .stack {
         margin: 10px 0 0;
@@ -787,6 +793,11 @@
       }
       #orbits .legend .l-lib {
         color: var(--o-lib);
+      }
+      /* Hidden unless prefers-reduced-motion is on (see media query below). */
+      #orbits .legend .l-motion {
+        display: none;
+        color: var(--o-green);
       }
       #orbits .card h2,
       #orbits #pop h3 {

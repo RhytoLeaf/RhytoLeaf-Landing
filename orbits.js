@@ -501,7 +501,11 @@
       function tick() {
         raf = 0;
         easing.forEach((w) => {
-          const a = w._a || (w._a = w.getAnimations()[0]);
+          /* Re-query live every tick instead of caching: a stored Animation
+             reference can go stale if the browser recreates the element's
+             animation (e.g. a media-query flip such as Reduced Motion), and
+             easing a dead object would silently stop the icon from moving. */
+          const a = w.getAnimations()[0];
           if (!a) {
             easing.delete(w);
             return;

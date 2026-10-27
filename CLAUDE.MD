@@ -19,6 +19,8 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 - `main.js` — theme toggle (FOUC-safe), nav, mobile nav, scroll reveal, particles, idea-form submit (FormSubmit + mailto fallback)
 - `orbits.js` — orbits data (`APPS`, `LOGO` as inline base64 WebP) + rendering
 
+Motion & accessibility: orbit motion is a pure-CSS keyframe animation. `prefers-reduced-motion: reduce` freezes it (WCAG 2.3.3) and reveals the `.l-motion` hint in the legend ("Reduced motion is on, so the orbits rest in place") so frozen icons don't look like a bug. Hover/pin slowdown eases each animation's `playbackRate` — the easing loop (`tick()`) re-queries `getAnimations()` live every frame instead of caching the Animation object, so a media-query flip (e.g. toggling Reduce Motion) can't strand the easing on a dead reference.
+
 Both theme and orbits assets stay in the repo root so relative paths (`./images/...`) keep working.
 
 ## Featured Applications (orbits section)
