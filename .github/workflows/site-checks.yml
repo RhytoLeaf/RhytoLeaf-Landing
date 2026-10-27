@@ -1,0 +1,31 @@
+name: Site checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    name: Static site smoke checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax-check site scripts
+        run: |
+          node --check main.js
+          node --check orbits.js
+
+      - name: Validate extension manifests
+        run: |
+          node -e 'for (const p of ["zeek-extension-chrome/manifest.json", "zeek-extension-safari/manifest.json"]) { JSON.parse(require("fs").readFileSync(p, "utf8")); console.log("OK manifest: " + p); }'
+
+      - name: Check sitemap and app pages stay in sync
+        run: node scripts/sitemap-check.js
