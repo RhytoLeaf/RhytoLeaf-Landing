@@ -267,6 +267,28 @@
         animation-direction: var(--dir, normal);
         will-change: transform;
       }
+      /* Orbit geometry lives in STATIC transforms (var() is fine there);
+         the keyframes use no vars at all — WebKit can't reliably substitute
+         var() inside @keyframes, which is what froze the icons on mobile.
+         .orbit spins 0→360deg, .lift carries radius+angle, .upright
+         counter-rotates so the icon stays upright. */
+      #orbits .orbit .lift,
+      #orbits .orbit .upright {
+        width: 100%;
+        height: 100%;
+      }
+      #orbits .orbit .lift {
+        transform: rotate(calc(var(--angle) * 1deg))
+          translateY(calc(var(--radius) * 1px));
+      }
+      #orbits .orbit .upright {
+        animation: o-upright calc(var(--duration) * 1s) linear infinite;
+        animation-direction: var(--dir, normal);
+        will-change: transform;
+      }
+      #orbits .orbit .node {
+        transform: rotate(calc(var(--angle, 0) * -1deg));
+      }
       #orbits .node {
         --c: #8a98a4;
         width: 100%;
@@ -310,31 +332,39 @@
         stroke-linejoin: round;
       }
       #orbits .node:hover {
-        transform: scale(1.25);
+        transform: rotate(calc(var(--angle, 0) * -1deg)) scale(1.25);
         background: color-mix(in srgb, var(--c) 26%, #10161b);
         z-index: 5;
       }
+      /* No CSS variables inside keyframes (WebKit compatibility): the
+         per-icon angle/radius come from the static .lift / .node transforms. */
       @keyframes o-orbit {
         from {
-          transform: rotate(calc(var(--angle) * 1deg))
-            translateY(calc(var(--radius) * 1px))
-            rotate(calc(var(--angle) * -1deg));
+          transform: rotate(0deg);
         }
         to {
-          transform: rotate(calc(var(--angle) * 1deg + 360deg))
-            translateY(calc(var(--radius) * 1px))
-            rotate(calc(var(--angle) * -1deg - 360deg));
+          transform: rotate(360deg);
         }
       }
-      body.paused #orbits .orbit {
+      @keyframes o-upright {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      body.paused #orbits .orbit,
+      body.paused #orbits .orbit .upright {
         animation-play-state: paused;
       }
       @media (prefers-reduced-motion: reduce) {
-        #orbits .orbit {
+        /* With both animations off, the static .lift/.node transforms already
+           place each icon at its resting spot, so only the animations are
+           removed here. */
+        #orbits .orbit,
+        #orbits .orbit .upright {
           animation: none;
-          transform: rotate(calc(var(--angle) * 1deg))
-            translateY(calc(var(--radius) * 1px))
-            rotate(calc(var(--angle) * -1deg));
         }
         /* Tell visitors why the icons stand still (their phone/browser froze the
            animation via the accessibility setting above) instead of looking broken.

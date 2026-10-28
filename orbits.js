@@ -501,20 +501,28 @@
       function tick() {
         raf = 0;
         easing.forEach((w) => {
-          /* Re-query live every tick instead of caching: a stored Animation
-             reference can go stale if the browser recreates the element's
-             animation (e.g. a media-query flip such as Reduced Motion), and
-             easing a dead object would silently stop the icon from moving. */
-          const a = w.getAnimations()[0];
-          if (!a) {
+          /* Re-query live every tick (never cache Animation objects): a
+             media-query flip such as Reduced Motion can destroy them, and
+             easing a dead reference would silently stop the icon from moving.
+             Each icon runs two animations — the orbit spin on the wrapper
+             and the counter-rotation on .upright — and both are eased. */
+          const anims = w.getAnimations().concat(
+            w._u ? w._u.getAnimations() : [],
+          );
+          if (!anims.length) {
             easing.delete(w);
-            return;
-          } // e.g. reduced-motion: nothing animates
-          const next = a.playbackRate + (w._t - a.playbackRate) * EASE;
-          if (Math.abs(next - w._t) < 0.002) {
-            a.playbackRate = w._t;
-            easing.delete(w);
-          } else a.playbackRate = next;
+            return; // e.g. reduced-motion: nothing animates
+          }
+          let done = true;
+          anims.forEach((a) => {
+            const next = a.playbackRate + (w._t - a.playbackRate) * EASE;
+            if (Math.abs(next - w._t) < 0.002) a.playbackRate = w._t;
+            else {
+              a.playbackRate = next;
+              done = false;
+            }
+          });
+          if (done) easing.delete(w);
         });
         if (easing.size) raf = requestAnimationFrame(tick);
       }
@@ -743,7 +751,16 @@
           wrap.style.setProperty("--angle", (360 / n) * i);
           wrap.style.setProperty("--icon", iconSize + "px");
           if (reverse) wrap.style.setProperty("--dir", "reverse");
+          /* Layered so the keyframes need no CSS vars (WebKit can't
+             substitute vars inside @keyframes and would freeze the orbit):
+             .orbit spins, .lift carries radius+angle, .upright counter-rotates,
+             the node de-tilts statically. */
+          const lift = $("div", "lift");
+          const upright = $("div", "upright");
           const node = renderNode(item);
+          lift.appendChild(upright);
+          upright.appendChild(node);
+          wrap._u = upright;
           wraps.push(wrap);
           const slow = () => {
             state.hover = true;
@@ -760,7 +777,7 @@
           node.addEventListener("click", () =>
             openPop(app, item, wrap, node, state),
           );
-          wrap.appendChild(node);
+          wrap.appendChild(lift);
           stage.appendChild(wrap);
         });
       }
