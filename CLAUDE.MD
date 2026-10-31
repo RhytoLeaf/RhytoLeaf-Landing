@@ -8,7 +8,7 @@ This is the landing page for **rhytoleaf.ca** - a software development company t
 ## Hosting
 - **Live site**: GitHub Pages (deployed from `main`)
 - **Custom domain**: `CNAME` → rhytoleaf.ca
-- **Contact form**: the homepage form posts to `formsubmit.co/ajax/rhytoleaf.ops@gmail.com` (no site backend needed). The handler in `main.js` falls back to a mailto link if the request fails. **First submission sends a one-time activation email to rhytoleaf.ops@gmail.com — click it or the form will never deliver.** The legacy Firebase Cloud Function that once backed this form was removed Oct 2026 — it was never deployed; the live form has always run on FormSubmit.
+- **Contact form**: the homepage form posts to `formsubmit.co/ajax/rhytoleaf.ops@gmail.com` (no site backend needed). The handler in `main.js` trusts FormSubmit's JSON `success` flag — not the HTTP status, which is 200 even for activation prompts — and falls back to a mailto link whenever the idea did not actually deliver. Anti-spam is a hidden `_honey` honeypot field plus `_blacklist` spam phrases (FormSubmit does not support reCAPTCHA in AJAX mode). **First submission sends a one-time activation email to rhytoleaf.ops@gmail.com — click it or the form will never deliver.** The legacy Firebase Cloud Function that once backed this form was removed Oct 2026 — it was never deployed; the live form has always run on FormSubmit.
 - The site is hosted **only** on GitHub Pages; the legacy `firebase.json` and `functions/` were removed Oct 2026.
 
 ## Page Architecture

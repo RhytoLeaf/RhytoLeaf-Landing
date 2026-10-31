@@ -107,10 +107,21 @@
 
         const MAILTO =
           "mailto:rhytoleaf.ops@gmail.com?subject=STEM%20App%20Idea";
-        const DEFAULT_STATUS = status.innerHTML;
+        const FAILED =
+          "Hmm, that didn't go through. No idea lost — email us directly at " +
+          '<a href="' +
+          MAILTO +
+          '">rhytoleaf.ops@gmail.com</a>' +
+          " instead.";
 
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
+
+          // Honeypot: bots fill every field; a human never sees _honey.
+          // FormSubmit silently drops a submission that has a value in it.
+          const honey = form.querySelector('input[name="_honey"]');
+          if (honey && honey.value) return;
+
           button.disabled = true;
           status.textContent = "Sending…";
 
@@ -119,6 +130,10 @@
             data[key] = value;
           });
           data._template = "table";
+          // AJAX submissions must keep reCAPTCHA off — FormSubmit does not
+          // support it in AJAX mode (it would return a captcha HTML page and
+          // break the JSON flow). The _honey field + _blacklist above are the
+          // anti-spam for this form instead.
           data._captcha = "false";
 
           try {
@@ -127,20 +142,26 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(data),
             });
-            if (res.ok) {
+            // FormSubmit answers HTTP 200 even for activation prompts and
+            // other non-delivery outcomes, so trust the JSON `success` flag
+            // — not the status code — before claiming success.
+            const out = await res.json().catch(() => null);
+            if (res.ok && out && String(out.success) === "true") {
               form.reset();
               status.innerHTML =
-                "✓ Thanks — your idea landed in our inbox. We read every message and reply from rhytoleaf.ops@gmail.com.";
+                "✓ Thanks — your idea was received. We read every message and reply from rhytoleaf.ops@gmail.com.";
+            } else if (out && /activat/i.test(out.message || "")) {
+              status.innerHTML =
+                "Our inbox is still being set up — no idea lost. Email us directly at " +
+                '<a href="' +
+                MAILTO +
+                '">rhytoleaf.ops@gmail.com</a>' +
+                " for now and we'll get back to you.";
             } else {
-              throw new Error(String(res.status));
+              throw new Error(out ? out.message : String(res.status));
             }
           } catch (err) {
-            status.innerHTML =
-              "Hmm, that didn't go through. No idea lost — email us directly at " +
-              '<a href="' +
-              MAILTO +
-              '">rhytoleaf.ops@gmail.com</a>' +
-              " instead.";
+            status.innerHTML = FAILED;
           } finally {
             button.disabled = false;
           }

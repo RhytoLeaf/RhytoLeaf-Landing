@@ -84,9 +84,11 @@ Then open <http://localhost:8000>. Individual app pages (e.g. `apps/zeek.html`) 
 
 ## Contact form
 
-The homepage "Craft Your Idea" form posts to **FormSubmit** (`formsubmit.co/ajax/rhytoleaf.ops@gmail.com`) — no site backend of its own. `main.js` automatically falls back to a `mailto:` link if the request fails.
+The homepage "Craft Your Idea" form posts to **FormSubmit** (`formsubmit.co/ajax/rhytoleaf.ops@gmail.com`) — no site backend of its own. `main.js` checks FormSubmit's JSON `success` flag (FormSubmit answers HTTP 200 even when the form is not yet activated) and falls back to a `mailto:` link whenever the idea did not actually deliver.
 
-> **Operational note:** the first-ever submission sends a one-time activation email to `rhytoleaf.ops@gmail.com`; it must be clicked before any form submissions will deliver.
+Anti-spam: FormSubmit does not support reCAPTCHA in AJAX mode, so the form uses a hidden `_honey` honeypot field plus a `_blacklist` of common spam phrases instead.
+
+> **Operational note:** the first-ever submission sends a one-time activation email to `rhytoleaf.ops@gmail.com`; it must be clicked before any form submissions will deliver. Until it is clicked, the form shows a "inbox still being set up" notice and points submitters at the direct mailto link.
 
 ## Contributing
 

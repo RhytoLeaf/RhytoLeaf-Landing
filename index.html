@@ -771,6 +771,21 @@
                 method="POST"
               >
                 <input type="hidden" name="_subject" value="New STEM app idea" />
+                <!-- Honeypot: bots fill every field, humans never see this; if it holds a value, FormSubmit silently drops the submission. -->
+                <input
+                  type="text"
+                  name="_honey"
+                  style="display: none"
+                  tabindex="-1"
+                  autocomplete="off"
+                  aria-hidden="true"
+                />
+                <!-- Common spam phrases are silently rejected by FormSubmit. -->
+                <input
+                  type="hidden"
+                  name="_blacklist"
+                  value="viagra, casino, lottery, cheap replica, work from home, crypto giveaway"
+                />
                 <div class="form-row">
                   <div class="form-group">
                     <label for="idea-name">Your name</label>
