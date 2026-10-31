@@ -93,7 +93,7 @@ Anti-spam: FormSubmit does not support reCAPTCHA in AJAX mode, so the form uses 
 ## Contributing
 
 - Small changes: open a pull request against `main`.
-- The design system, hero, and flagship-slot conventions are documented in [`CLAUDE.MD`](CLAUDE.MD) (development notes) — read it before touching `index.html` layout.
+- Design system, hero, and flagship-slot conventions are documented in the maintainer's local development notes — read them before touching `index.html` layout.
 - This is a proprietary production site: the license in [LICENSE](LICENSE) grants personal/educational use only. Commercial use or redistribution requires a written license from RhytoLeaf Inc.
 
 ## Security

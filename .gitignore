@@ -11,3 +11,7 @@ claude.md
 
 # Local agent/tooling state (contains machine-specific paths)
 .omc/
+
+# Agent-specific docs (do not publish)
+CLAUDE.MD
+claude.md
