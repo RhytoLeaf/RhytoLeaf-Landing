@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RhytOSINT — Forensics Analyzer</title>
+<!--
+  RhytOSINT Forensics — single-file client-side metadata analyzer.
+  Drag & drop images, documents, PDFs and audio; every field a file
+  remembers is extracted in your browser. Nothing is uploaded anywhere.
+
+  CDN libraries (gracefully optional — features degrade with a visible note):
+    JSZip (OOXML .docx/.xlsx/.pptx) and cfb (legacy OLE .doc/.xls/.ppt).
+  JPEG/EXIF, PDF, ID3, FLAC, OGG, WAV and MP4 parsers are hand-rolled below.
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" onerror="window.__JSZIP_FAILED=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/cfb@0.2.0/dist/cfb.js" onerror="window.__CFB_FAILED=true"></script>
+<style id="appcss">
+:root{
+  --bg:#0b0f14; --panel:#111722; --panel2:#0e1420; --line:#1e2836;
+  --fg:#dbe4f0; --dim:#8b98ab; --acc:#4cc9f0;
+  --c-location:#f4646c; --c-identity:#f0b429; --c-timing:#4c9eeb;
+  --c-device:#a78bfa; --c-software:#2dd4bf; --c-content:#67d96b;
+  --c-structure:#94a3b8; --c-note:#64748b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
+header{padding:1.4rem 2rem .6rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.8rem}
+header h1{margin:0;font-size:1.35rem;letter-spacing:.02em}
+header h1 b{color:var(--acc)}
+.privacy{font-size:.8rem;color:var(--dim)}
+.privacy b{color:var(--c-content)}
+main{padding:0 2rem 2rem;max-width:1100px;margin:0 auto}
+#dropzone{
+  border:2px dashed var(--line);border-radius:12px;padding:2.2rem 1rem;text-align:center;
+  color:var(--dim);cursor:pointer;transition:.15s;background:var(--panel2);margin-bottom:1.2rem
+}
+#dropzone:hover,#dropzone.over{border-color:var(--acc);color:var(--fg);background:var(--panel)}
+#dropzone .big{font-size:1.05rem;color:var(--fg);margin-bottom:.3rem}
+#dropzone .hint{font-size:.78rem}
+#fileInput{display:none}
+.toolbar{display:flex;gap:.6rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+button{
+  background:var(--panel);border:1px solid var(--line);color:var(--fg);
+  padding:.45rem .9rem;border-radius:8px;cursor:pointer;font-size:.85rem
+}
+button:hover:not(:disabled){border-color:var(--acc)}
+button:disabled{opacity:.4;cursor:not-allowed}
+#libstatus{margin-left:auto;font-size:.75rem;color:var(--dim)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:1rem;overflow:hidden}
+.card-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.6rem;padding:.8rem 1rem;background:var(--panel2);border-bottom:1px solid var(--line)}
+.fname{font-weight:600;word-break:break-all}
+.badges{display:flex;gap:.4rem;flex-wrap:wrap}
+.badge{font-size:.7rem;padding:.15rem .5rem;border-radius:99px;border:1px solid var(--line);color:var(--dim);letter-spacing:.04em}
+.badge.busy{color:var(--c-timing);border-color:var(--c-timing)}
+.badge.done{color:var(--c-content);border-color:var(--c-content)}
+.hashrow{padding:.5rem 1rem;border-bottom:1px solid var(--line)}
+.hash{font:11px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--dim);word-break:break-all}
+.hash.na{font-family:inherit;font-size:.78rem}
+.findings{padding:.8rem 1rem 1rem}
+.empty{color:var(--dim);font-size:.85rem;margin:0}
+.cat{margin-bottom:.8rem}
+.cat-h{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem}
+.cat-n{font-size:.7rem;color:var(--dim)}
+.chip{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.12rem .55rem;border-radius:99px;border:1px solid}
+.cat[data-cat=location] .chip{color:var(--c-location);border-color:var(--c-location)}
+.cat[data-cat=identity] .chip{color:var(--c-identity);border-color:var(--c-identity)}
+.cat[data-cat=timing] .chip{color:var(--c-timing);border-color:var(--c-timing)}
+.cat[data-cat=device] .chip{color:var(--c-device);border-color:var(--c-device)}
+.cat[data-cat=software] .chip{color:var(--c-software);border-color:var(--c-software)}
+.cat[data-cat=content] .chip{color:var(--c-content);border-color:var(--c-content)}
+.cat[data-cat=structure] .chip{color:var(--c-structure);border-color:var(--c-structure)}
+.cat[data-cat=note] .chip{color:var(--c-note);border-color:var(--c-note)}
+table{width:100%;border-collapse:collapse}
+td{padding:.3rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+td.fld{width:220px;color:var(--dim);font-size:.82rem;white-space:nowrap}
+td.val{word-break:break-word}
+.maplink{color:var(--c-location);font-size:.78rem;text-decoration:none;border-bottom:1px dotted}
+footer{padding:0 2rem 2rem;color:var(--dim);font-size:.75rem;max-width:1100px;margin:0 auto}
+a{color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Rhyt<b>OSINT</b> — Forensics Analyzer</h1>
+  <span class="privacy"><b>100% client-side.</b> Files are parsed in your browser and never uploaded anywhere.</span>
+</header>
+<main>
+  <div id="dropzone">
+    <div class="big">Drop files here, or click to browse</div>
+    <div class="hint">JPEG · PNG · DOCX · XLSX · PPTX · PDF · DOC · XLS · PPT · MP3 · M4A · OGG · FLAC · WAV (up to 25 files)</div>
+  </div>
+  <!-- Sibling of the dropzone (not a child: a click on it would bubble into the dropzone's
+       click handler and re-trigger the picker in a loop). Kept inside <main> so it comes
+       right after the dropzone in tab order. -->
+  <input
+    id="fileInput"
+    type="file"
+    multiple
+    hidden
+    accept=".jpg,.jpeg,.png,.tiff,.tif,.gif,.bmp,.heic,.heif,.webp,.docx,.xlsx,.pptx,.pdf,.doc,.xls,.ppt,.mp3,.m4a,.m4b,.aac,.mp4,.ogg,.flac,.wav,.opus"
+  />
+  <div class="toolbar">
+    <button id="clearBtn">Clear</button>
+    <button id="exportBtn" disabled>Export report (HTML)</button>
+    <span id="libstatus"></span>
+  </div>
+  <div id="cards"></div>
+</main>
+<footer>
+  Part of the RhytOSINT Suite · analyze <em>copies</em> of evidence — keep originals untouched and hash-verified.
+  HEIC images and non-standard audio containers are not parsed in this build.
+</footer>
+<script>
+/* RhytOSINT Forensics — client-side metadata analyzer (single-file build) */
+'use strict';
+
+/* ---------------- helpers ---------------- */
+
+const $ = (s) => document.querySelector(s);
+
+const CATS = ['location', 'identity', 'timing', 'device', 'software', 'content', 'structure', 'note'];
+const CAT_LABEL = {
+  location: 'Location', identity: 'Identity', timing: 'Timing', device: 'Device',
+  software: 'Software', content: 'Content', structure: 'Structure', note: 'Note'
+};
+
+const state = { items: [] };
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtBytes(n) {
+  if (!n && n !== 0) return '?';
+  const u = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  let v = Number(n);
+  while (v >= 1024 && i < u.length - 1) { v /= 1024; i++; }
+  return v.toFixed(v >= 10 || i === 0 ? 0 : 1) + ' ' + u[i];
+}
+
+function f(cat, field, value) {
+  const s = String(value == null ? '' : value).trim();
+  if (!s) return null;
+  return { cat, field, value: s };
+}
+
+function pushF(out, cat, field, value) {
+  const x = f(cat, field, value);
+  if (x) out.push(x);
+}
+
+function str4(b, p) {
+  return String.fromCharCode(b[p], b[p + 1], b[p + 2], b[p + 3]);
+}
+
+function latin1(buf, start, len) {
+  const b = new Uint8Array(buf, start, len);
+  return new TextDecoder('iso-8859-1').decode(b);
+}
+
+async function sha256(buf) {
+  try {
+    const d = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(d)).map((x) => x.toString(16).padStart(2, '0')).join('');
+  } catch (e) {
+    return null;
+  }
+}
+
+function fmtDate(s) {
+  const d = new Date(s);
+  return isNaN(d) ? s : d.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+}
+
+/* ---------------- JPEG / PNG (hand-rolled EXIF) ---------------- */
+
+function parseTiff(u, off, bo, out) {
+  // u: whole buffer, off: position of the TIFF byte-order mark ('II'/'MM').
+  // All TIFF-internal offsets are relative to `off`.
+  const dv = new DataView(u.buffer, u.byteOffset, u.byteLength);
+  const boByte = bo & 0xFF;
+  if (boByte !== 0x49 && boByte !== 0x4D) return; // 'II' (little) or 'MM' (big)
+  const le = boByte === 0x49;
+  const s16 = (p) => dv.getUint16(p, le);
+  const s32 = (p) => dv.getUint32(p, le);
+  if (off + 4 > u.length || s16(off + 2) !== 0x002A) return;
+  const ok = (p, n) => p >= off && p >= 0 && p + n <= u.length;
+  // Resolve an entry's 8-byte value field to a data position.
+  // TIFF-internal offsets are relative to the TIFF header; ASCII strings of 4
+  // chars or fewer may be inline, anything longer is stored at an offset.
+  const resolve = (valOff, inline) => {
+    if (!ok(valOff, 8)) return null;
+    const p = inline ? valOff : off + s32(valOff);
+    return ok(p, 8) ? p : null;
+  };
+
+  function strAt(valOff, typ, cnt) {
+    if (typ !== 2) return null;
+    const p = resolve(valOff, cnt <= 4);
+    if (p === null || !ok(p, cnt)) return null;
+    let end = p;
+    while (end < p + cnt && u[end] !== 0) end++;
+    return latin1(u.buffer, u.byteOffset + p, end - p).trim();
+  }
+  function ratAt(valOff, i) {
+    // a 3-rational GPS value (24 bytes) is always out-of-line in TIFF
+    if (!ok(valOff, 8)) return null;
+    const p = off + s32(valOff);
+    if (!ok(p, 8)) return null;
+    const num = s32(p + i * 8), den = s32(p + i * 8 + 4);
+    return den ? num / den : 0;
+  }
+  function readIfd(base, handler) {
+    if (!ok(base, 2)) return;
+    const n = s16(base);
+    let p = base + 2;
+    for (let i = 0; i < n && ok(p, 12); i++) {
+      const tag = s16(p), typ = s16(p + 2), cnt = s32(p + 4);
+      handler(tag, typ, cnt, p + 8);
+      p += 12;
+    }
+  }
+  const ifd0 = off + s32(off + 4);
+
+  let exifPtr = null, gpsPtr = null;
+  readIfd(ifd0, (tag, typ, cnt, vo) => {
+    switch (tag) {
+      case 0x010f: pushF(out, 'device', 'Camera make', strAt(vo, typ, cnt)); break;
+      case 0x0110: pushF(out, 'device', 'Camera model', strAt(vo, typ, cnt)); break;
+      case 0x0131: pushF(out, 'software', 'Software', strAt(vo, typ, cnt)); break;
+      case 0x013b: pushF(out, 'identity', 'Artist', strAt(vo, typ, cnt)); break;
+      case 0x013e: pushF(out, 'identity', 'Copyright', strAt(vo, typ, cnt)); break;
+      case 0x0132: pushF(out, 'timing', 'File date', strAt(vo, typ, cnt)); break;
+      case 0x0135: pushF(out, 'content', 'Description', strAt(vo, typ, cnt)); break;
+      case 0x8769: exifPtr = ok(vo, 4) ? s32(vo) : null; break;
+      case 0x8825: gpsPtr = ok(vo, 4) ? s32(vo) : null; break;
+      default: break;
+    }
+  });
+
+  // Exif IFD (DateTimeOriginal / DateTime)
+  if (exifPtr) {
+    const e = off + exifPtr;
+    if (ok(e, 2)) {
+      readIfd(e, (tag, typ, cnt, vo) => {
+        if (tag === 0x9003) pushF(out, 'timing', 'Captured', strAt(vo, typ, cnt));
+        else if (tag === 0x0132) pushF(out, 'timing', 'Modified', strAt(vo, typ, cnt));
+      });
+    }
+  }
+
+  // GPS IFD
+  if (gpsPtr) {
+    const g = off + gpsPtr;
+    if (ok(g, 2)) {
+      const n = s16(g);
+      let p = g + 2;
+      const entries = [];
+      for (let i = 0; i < n && ok(p, 12); i++) { entries.push({ tag: s16(p), typ: s16(p + 2), cnt: s32(p + 4), vo: p + 8 }); p += 12; }
+      const get = (tag) => {
+        const en = entries.find((x) => x.tag === tag);
+        return en ? strAt(en.vo, en.typ, en.cnt) : null;
+      };
+      const tri = (tag) => {
+        const en = entries.find((x) => x.tag === tag);
+        if (!en) return null;
+        const vals = [0, 1, 2].map((k) => ratAt(en.vo, k));
+        return vals.every((v) => v !== null) ? vals : null;
+      };
+      const latRef = get(0x0001), lonRef = get(0x0003);
+      const latT = tri(0x0002), lonT = tri(0x0004);
+      if (latT && lonT) {
+        let lat = latT[0] + latT[1] / 60 + latT[2] / 3600;
+        let lon = lonT[0] + lonT[1] / 60 + lonT[2] / 3600;
+        if (latRef === 'S') lat = -lat;
+        if (lonRef === 'W') lon = -lon;
+        pushF(out, 'location', 'GPS', lat.toFixed(6) + ', ' + lon.toFixed(6));
+      }
+    }
+  }
+}
+
+function analyzeImage(name, buf, out) {
+  const b = new Uint8Array(buf);
+  if (b.length > 1 && b[0] === 0xFF && b[1] === 0xD8) {
+    // JPEG segment walk
+    let p = 2;
+    let sawExif = false;
+    while (p + 4 <= b.length) {
+      if (b[p] !== 0xFF) { p++; continue; }
+      const marker = b[p + 1];
+      if (marker === 0xD9) break; // EOI
+      if ((marker & 0xF0) !== 0xD0) {
+        const len = (b[p + 2] << 8) | b[p + 3];
+        if (marker === 0xE1 && p + 14 <= b.length &&
+            latin1(buf, p + 4, 6) === 'Exif\0\0') {
+          sawExif = true;
+          const tiff = p + 4 + 6;
+          parseTiff(b, tiff, b[tiff] << 8 | b[tiff + 1], out);
+        }
+        if (len < 2) break;
+        p += 2 + len;
+      } else {
+        p += 2;
+      }
+    }
+    if (!sawExif) pushF(out, 'note', 'EXIF', 'No EXIF segment found in this JPEG.');
+  } else if (b.length > 8 && str4(b, 0) === '\x89PNG') {
+    let p = 8;
+    let sawMeta = false;
+    while (p + 8 <= b.length) {
+      const len = new DataView(buf).getUint32(p);
+      const type = str4(b, p + 4);
+      if (type === 'tEXt') {
+        sawMeta = true;
+        const s = latin1(buf, p + 8, Math.min(len, b.length - p - 12));
+        const i = s.indexOf('\0');
+        const key = s.slice(0, i), val = s.slice(i + 1);
+        if (/software/i.test(key)) pushF(out, 'software', key, val);
+        else if (/author|artist|description/i.test(key)) pushF(out, 'identity', key, val);
+      } else if (type === 'IEND') break;
+      p += 12 + len;
+    }
+    if (!sawMeta) pushF(out, 'note', 'PNG text chunks', 'None (PNG tEXt/iTXt absent).');
+  } else {
+    pushF(out, 'note', 'Image container', 'Not a JPEG/PNG with readable metadata (HEIC and other containers are not parsed by this build).');
+  }
+}
+
+/* ---------------- Office Open XML (.docx/.xlsx/.pptx) via JSZip ---------------- */
+
+function xmlField(xml, tag) {
+  if (!xml) return null;
+  const m = xml.match(new RegExp('<' + tag.replace(':', '\\:') + '(?:\\s[^>]*)?>([^<]*)</' + tag.replace(':', '\\:') + '>'));
+  return m && m[1].trim() || null;
+}
+
+async function analyzeOoxml(name, buf, out) {
+  if (typeof JSZip === 'undefined') {
+    pushF(out, 'note', 'JSZip library', 'JSZip failed to load (offline?) — OOXML metadata skipped.');
+    return;
+  }
+  let zip;
+  try { zip = await JSZip.loadAsync(buf); }
+  catch (e) {
+    pushF(out, 'note', 'Container', 'Not a valid ZIP/OOXML file — cannot be read as ' + name.split('.').pop() + '.');
+    return;
+  }
+  const get = async (p) => { const e = zip.file(p); return e ? e.async('string') : null; };
+
+  const core = await get('docProps/core.xml');
+  if (core) {
+    pushF(out, 'identity', 'Author', xmlField(core, 'dc:creator'));
+    pushF(out, 'identity', 'Last modified by', xmlField(core, 'cp:lastModifiedBy'));
+    pushF(out, 'content', 'Title', xmlField(core, 'dc:title'));
+    pushF(out, 'content', 'Subject', xmlField(core, 'dc:subject'));
+    pushF(out, 'content', 'Keywords', xmlField(core, 'cp:keywords'));
+    pushF(out, 'content', 'Category', xmlField(core, 'cp:category'));
+    const rev = xmlField(core, 'cp:revision');
+    if (rev) pushF(out, 'structure', 'Revision', rev);
+    pushF(out, 'timing', 'Created', core && xmlField(core, 'dcterms:created'));
+    pushF(out, 'timing', 'Modified', xmlField(core, 'dcterms:modified'));
+    pushF(out, 'timing', 'Last printed', xmlField(core, 'dcterms:lastPrinted'));
+  } else {
+    pushF(out, 'note', 'Metadata', 'No docProps/core.xml embedded — metadata appears stripped or minimal.');
+  }
+
+  const app = await get('docProps/app.xml');
+  if (app) {
+    pushF(out, 'software', 'Application', xmlField(app, 'Application'));
+    pushF(out, 'software', 'App version', xmlField(app, 'AppVersion'));
+    pushF(out, 'identity', 'Organization', xmlField(app, 'Company'));
+    pushF(out, 'structure', 'Templates', xmlField(app, 'Templates'));
+  }
+
+  const doc = await get('word/document.xml');
+  if (doc) {
+    const paras = (doc.match(/<w:p[ >]/g) || []).length;
+    const tables = (doc.match(/<w:tbl[ >]/g) || []).length;
+    if (paras) pushF(out, 'structure', 'Paragraphs', String(paras));
+    if (tables) pushF(out, 'structure', 'Tables', String(tables));
+  }
+  const comments = zip.file('word/comments.xml');
+  if (comments) {
+    const c = await comments.async('string');
+    const n = (c.match(/<w:comment /g) || []).length;
+    pushF(out, 'content', 'Hidden comments', n ? n + ' comment block(s) embedded' : 'present (empty)');
+  }
+  pushF(out, 'structure', 'Package parts', zip.file ? String(Object.keys(zip.files).length) + ' entries' : null);
+}
+
+/* ---------------- PDF (hand-rolled Info dict + XMP) ---------------- */
+
+function pdfDateToIso(s) {
+  const m = String(s).match(/^D:(\d{4})(\d{2})(\d{2})(?:(\d{2})(\d{2})(\d{2}))?/);
+  if (!m) return s;
+  const iso = m[1] + '-' + (m[2] || '01') + '-' + (m[3] || '01') + ' ' +
+    (m[4] || '00') + ':' + (m[5] || '00') + ':' + (m[6] || '00');
+  return iso + ' (PDF date)';
+}
+
+function analyzePdf(name, buf, out) {
+  const b = new Uint8Array(buf);
+  if (b.length < 5 || b[0] !== 0x25 || b[1] !== 0x50 || b[2] !== 0x44 || b[3] !== 0x46) {
+    pushF(out, 'note', 'Container', 'Not a valid PDF (%PDF header missing).');
+    return;
+  }
+  const s = latin1(buf, 0, b.length);
+  if (/%PDF-(\d+\.\d+)/.test(s)) pushF(out, 'structure', 'PDF version', s.match(/%PDF-(\d+\.\d+)/)[1]);
+  if (/\ntrailer/.test(s) && /\/Encrypt/.test(s)) pushF(out, 'note', 'Encryption', '/Encrypt entry present — PDF is password/permission protected.');
+  if (!/\/Info\s+\d+\s+0\s+R/.test(s)) pushF(out, 'note', 'Metadata', 'No /Info dictionary referenced — metadata stripped or absent.');
+
+  const ref = s.match(/\/Info\s+(\d+)\s+0\s+R/);
+  if (ref) {
+    const objRe = new RegExp('\\b' + ref[1] + '\\s+0\\s+obj([^]*?)endobj');
+    const m = s.match(objRe);
+    if (m) {
+      const dict = m[1];
+      const re = /\/([A-Za-z_][A-Za-z0-9_*.%-]*)\s*((?:\((?:\\.|[^()\\])*\))|(?:<[^>]*>))/g;
+      let dm;
+      const fields = {};
+      while ((dm = re.exec(dict)) !== null) {
+        let v = dm[2];
+        if (v[0] === '<') {
+          const hex = v.slice(1, -1).replace(/[^0-9a-fA-F]/g, '');
+          let txt = '';
+          for (let i = 0; i + 1 < hex.length; i += 2) txt += String.fromCharCode(parseInt(hex.slice(i, i + 2), 16));
+          v = txt;
+        } else {
+          v = v.slice(1, -1)
+            .replace(/\\([0-7]{1,3})/g, (_, o) => String.fromCharCode(parseInt(o, 8)))
+            .replace(/\\([()\\])/g, '$1')
+            .replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t');
+        }
+        fields[dm[1]] = v.trim();
+      }
+      const map = {
+        Title: ['content', 'Title'], Author: ['identity', 'Author'],
+        Subject: ['content', 'Subject'], Keywords: ['content', 'Keywords'],
+        Creator: ['software', 'Creator'], Producer: ['software', 'Producer']
+      };
+      let got = false;
+      for (const k of Object.keys(map)) {
+        if (fields[k]) { pushF(out, map[k][0], map[k][1], fields[k]); got = true; }
+      }
+      if (fields.CreationDate) { pushF(out, 'timing', 'Created', pdfDateToIso(fields.CreationDate)); got = true; }
+      if (fields.ModDate) { pushF(out, 'timing', 'Modified', pdfDateToIso(fields.ModDate)); got = true; }
+      if (!got) pushF(out, 'note', 'Metadata', '/Info dict present but empty of readable fields.');
+    }
+  }
+
+  // XMP packet
+  const xi = s.indexOf('<x:xmpmeta');
+  if (xi >= 0) {
+    const xe = s.indexOf('</x:xmpmeta>', xi);
+    const xmp = s.slice(xi, xe > 0 ? xe + 12 : Math.min(xi + 8192, s.length));
+    const xm = xmp.match(/<dc:title[^>]*>\s*<dc:literal[^>]*>([^<]*)</);
+    if (xm && xm[1].trim()) pushF(out, 'content', 'XMP title', xm[1].trim());
+    const cre = xmp.match(/<dc:creator[^>]*>[\s\S]*?<dc:literal[^>]*>([^<]*)</);
+    if (cre && cre[1].trim()) pushF(out, 'identity', 'XMP creator', cre[1].trim());
+    const ct = xmp.match(/<xmp:CreatorTool[^>]*>([^<]*)</);
+    if (ct && ct[1].trim()) pushF(out, 'software', 'XMP creator tool', ct[1].trim());
+    const pp = xmp.match(/<pdf:Producer[^>]*>([^<]*)</);
+    if (pp && pp[1].trim()) pushF(out, 'software', 'XMP producer', pp[1].trim());
+    const cd = xmp.match(/<xmp:CreateDate[^>]*>([^<]*)</);
+    if (cd && cd[1].trim()) pushF(out, 'timing', 'XMP created', cd[1].trim());
+    const md = xmp.match(/<xmp:ModifyDate[^>]*>([^<]*)</);
+    if (md && md[1].trim()) pushF(out, 'timing', 'XMP modified', md[1].trim());
+  }
+
+  const pages = (s.match(/\/Type\s*\/Page(?!s)/g) || []).length - (s.match(/\/Type\s*\/Pages(?!s)/g) || []).length;
+  if (pages > 0) pushF(out, 'structure', 'Page objects (approx.)', String(pages));
+  if (b.length) pushF(out, 'structure', 'File size', fmtBytes(b.length));
+}
+
+/* ---------------- Legacy Office (OLE/CFB) via cfb lib ---------------- */
+
+function filetimeToDate(ms100ns) {
+  const d = new Date(ms100ns / 1e4 - 11644473600000); // 100-ns units -> ms
+  return isNaN(d) ? null : d.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
+}
+
+function analyzeOle(name, buf, out) {
+  const b = new Uint8Array(buf);
+  if (!(b[0] === 0xD0 && b[1] === 0xCF && b[2] === 0x11 && b[3] === 0xE0)) {
+    pushF(out, 'note', 'Container', 'Not an OLE2 compound file — legacy Office metadata not applicable.');
+    return;
+  }
+  if (typeof CFB === 'undefined') {
+    pushF(out, 'note', 'CFB library', 'cfb.js failed to load (offline?) — OLE property set skipped.');
+    return;
+  }
+  let zip;
+  try { zip = CFB.read(b); } catch (e) {
+    pushF(out, 'note', 'Container', 'OLE2 structure unreadable (corrupt or non-Office).');
+    return;
+  }
+  pushF(out, 'structure', 'Container', 'OLE2 compound document (' + Object.keys(zip.files).length + ' streams)');
+  let entry = null;
+  for (const k of Object.keys(zip.files)) {
+    if (k.replace(/^\//, '').toLowerCase() === 'summaryinformation') { entry = zip.files[k]; break; }
+  }
+  if (!entry || !entry.content) {
+    pushF(out, 'note', 'Property set', 'No SummaryInformation stream — metadata stripped or minimal.');
+    return;
+  }
+  const u = entry.content;
+  const dv = new DataView(u.buffer, u.byteOffset, u.byteLength);
+  const ids = { 2: ['identity', 'Author'], 3: ['identity', 'Last saved by'], 4: ['structure', 'Revision'],
+    5: ['timing', 'Created'], 6: ['timing', 'Last saved'], 7: ['structure', 'Pages'],
+    8: ['structure', 'Words'], 9: ['structure', 'Characters'], 11: ['timing', 'Last printed'],
+    14: ['content', 'Title'], 15: ['content', 'Subject'] };
+  let i = 12;
+  let got = 0;
+  while (i + 16 <= u.length) {
+    const id = dv.getUint32(i, true);
+    const type = dv.getUint32(i + 4, true);
+    const meta = ids[id];
+    if (meta) {
+      let v = null;
+      const val8 = i + 8;
+      if (type === 10) { // FILETIME (always 8 bytes inline)
+        const lo = dv.getUint32(val8, true), hi = dv.getUint32(val8 + 4, true);
+        v = filetimeToDate(Math.pow(2, 32) * hi + lo);
+      } else if (type === 3 || type === 23) {
+        v = String(type === 3 ? dv.getInt16(val8, true) : dv.getInt32(val8, true));
+      } else if (type === 31 || type === 41) { // LPWSTR / LPSTR, possibly offset
+        const off = dv.getUint32(val8, true);
+        const bases = [];
+        if (off > 0 && off < u.length - 4) bases.push(8 + off);
+        bases.push(val8);
+        outer: for (const base of bases) {
+          if (base + 4 > u.length) continue;
+          let end = base;
+          if (type === 31) { while (end + 1 < u.length && !(u[end] === 0 && u[end + 1] === 0)) end += 2; }
+          else { while (end < u.length && u[end] !== 0) end++; }
+          const len = type === 31 ? end - base : end - base;
+          if (len > 0 && len < 1024) {
+            let s;
+            if (type === 31) s = new TextDecoder('utf-16le').decode(u.subarray(base, end));
+            else s = new TextDecoder('iso-8859-1').decode(u.subarray(base, end));
+            if (/^[\x20-\x7e -￿\n\r\t ]+$/u.test(s.replace(/[\u0080-\uFFFF]/g, 'x')) || /^[\x20-\x7e]+$/.test(s)) { v = s.trim(); break outer; }
+          }
+        }
+      }
+      if (v && v !== '0') { pushF(out, meta[0], meta[1], v); got++; }
+    }
+    i += 16;
+    if (got > 24) break;
+  }
+  if (!got) pushF(out, 'note', 'Property set', 'SummaryInformation present but no readable standard properties.');
+}
+
+/* ---------------- Audio ---------------- */
+
+function id3Text(b, off, len, enc) {
+  if (len <= 0) return '';
+  const c = b.subarray(off, off + len);
+  let s;
+  if (enc === 1) {
+    const be = c[0] === 0xFF && c[1] === 0xFE;
+    s = new TextDecoder(be ? 'utf-16be' : 'utf-16le').decode(c.subarray(2));
+  } else if (enc === 2) {
+    let t = '';
+    for (let i = 0; i + 1 < c.length; i += 2) t += String.fromCharCode((c[i] << 8) | c[i + 1]);
+    s = t;
+  } else if (enc === 3) {
+    s = new TextDecoder('utf-8').decode(c);
+  } else {
+    s = new TextDecoder('iso-8859-1').decode(c);
+  }
+  return s.replace(/\0+$/, '').trim();
+}
+
+function syncsafe(b, p) {
+  return ((b[p] & 0x7F) << 21) | ((b[p + 1] & 0x7F) << 14) | ((b[p + 2] & 0x7F) << 7) | (b[p + 3] & 0x7F);
+}
+
+function readVorbisComments(dv, b, off, out) {
+  if (off + 8 > b.length) return;
+  const vLen = dv.getUint32(off, true);
+  off += 4;
+  if (vLen > 0 && off + vLen <= b.length) {
+    const vendor = new TextDecoder('utf-8').decode(b.subarray(off, off + vLen)).trim();
+    if (vendor) pushF(out, 'software', 'Encoder (vendor)', vendor);
+  }
+  let p = off + Math.min(vLen, b.length - off);
+  if (p + 4 > b.length) return;
+  const n = dv.getUint32(p, true);
+  p += 4;
+  for (let i = 0; i < n; i++) {
+    if (p + 4 > b.length) break;
+    const len = dv.getUint32(p, true);
+    p += 4;
+    if (p + len > b.length) break;
+    const kv = new TextDecoder('utf-8').decode(b.subarray(p, p + len));
+    p += len;
+    const idx = kv.indexOf('=');
+    if (idx < 0) continue;
+    const key = kv.slice(0, idx).toUpperCase(), val = kv.slice(idx + 1).trim();
+    if (!val) continue;
+    if (key === 'ARTIST') pushF(out, 'identity', 'Artist', val);
+    else if (key === 'ALBUMARTIST') pushF(out, 'identity', 'Album artist', val);
+    else if (key === 'ALBUM') pushF(out, 'content', 'Album', val);
+    else if (key === 'TITLE') pushF(out, 'content', 'Title', val);
+    else if (key === 'TRACKNUMBER') pushF(out, 'content', 'Track', val);
+    else if (key === 'DATE') pushF(out, 'timing', 'Date', val);
+    else if (key === 'ENCODER') pushF(out, 'software', 'Encoder', val);
+    else if (key === 'COMPOSER') pushF(out, 'identity', 'Composer', val);
+  }
+}
+
+function analyzeAudio(name, buf, out) {
+  const b = new Uint8Array(buf);
+  const dv = new DataView(buf);
+
+  if (b.length > 10 && b[0] === 0x49 && b[1] === 0x44 && b[2] === 0x33) { // 'ID3'
+    const ver = b[3];
+    const size = syncsafe(b, 6);
+    let pos = 10;
+    if (b[5] & 0x40) {
+      if (ver === 4) pos += dv.getUint32(pos, false) + 4;
+      else pos += syncsafe(b, pos) + 4;
+      if (b[pos] === 1) pos++;
+    }
+    const end = Math.min(10 + size, b.length);
+    while (pos + 10 <= end) {
+      const id = str4(b, pos);
+      if (!/^[A-Z0-9]{4}$/.test(id)) break;
+      const fsize = ver === 3 ? syncsafe(b, pos + 4) : dv.getUint32(pos + 4, false);
+      const enc = b[pos + 10];
+      const t = id3Text(b, pos + 11, fsize - 1, enc);
+      const map = {
+        TIT2: ['content', 'Title'], TPE1: ['identity', 'Artist'], TPE2: ['identity', 'Album artist'],
+        TALB: ['content', 'Album'], TRCK: ['content', 'Track'], TCON: ['content', 'Genre'],
+        TCOM: ['identity', 'Composer'], TDRC: ['timing', 'Recorded'], TDAR: ['timing', 'Recorded (artist)'],
+        TDRL: ['timing', 'Released']
+      };
+      if (map[id] && t) pushF(out, map[id][0], map[id][1], t);
+      pos += 10 + Math.max(fsize, 0);
+    }
+    pushF(out, 'structure', 'Tag', 'ID3v2.' + ver);
+  } else if (b.length > 4 && str4(b, 0) === 'fLaC') {
+    let pos = 4, last = false;
+    while (pos + 8 <= b.length && !last) {
+      last = (b[pos] & 0x80) !== 0;
+      const btype = b[pos] & 0x7F;
+      const len = dv.getUint32(pos + 1, false);
+      const d = pos + 5; // 1-byte header + 4-byte length
+      if (btype === 0 && d + 5 <= b.length) {
+        // STREAMINFO bits: 0-19 sample rate, 20-22 channels, 23-27 bits/sample
+        const sr = ((b[d] >> 4) << 16) | ((b[d] & 0x0F) << 12) | (b[d + 1] << 4) | (b[d + 2] >> 4);
+        const ch = ((b[d + 2] & 0x0E) >> 1) + 1;
+        const bps = (((b[d + 2] & 1) << 4) | (b[d + 3] >> 4)) + 1;
+        if (sr) pushF(out, 'structure', 'Audio', sr + ' Hz, ' + ch + ' ch, ' + bps + '-bit (FLAC)');
+      }
+      if (btype === 4) readVorbisComments(dv, b, d, out);
+      pos += 5 + len;
+    }
+  } else if (b.length > 4 && str4(b, 0) === 'OggS') {
+    const s = latin1(buf, 0, Math.min(b.length, 262144));
+    const i = s.indexOf('vorbiscomment=');
+    if (i >= 0 && i + 20 < s.length) {
+      // The comment field: identifier "vorbiscomment=" (14 bytes) then u32 count, then (u32 len + text)*
+      const cstart = i + 14;
+      // In OGG the vendor field comes first: u32 len + vendor string, then the comment count.
+      const vLen = (b[cstart] | (b[cstart + 1] << 8) | (b[cstart + 2] << 16) | (b[cstart + 3] << 24));
+      if (vLen > 0) {
+        const vendor = latin1(buf, cstart + 4, Math.min(vLen, s.length - cstart - 4)).trim();
+        if (vendor) pushF(out, 'software', 'Encoder (vendor)', vendor);
+      }
+      const nOff = cstart + 4 + vLen;
+      const n = (b[nOff] | (b[nOff + 1] << 8) | (b[nOff + 2] << 16) | (b[nOff + 3] << 24));
+      let p = nOff + 4;
+      for (let k = 0; k < n; k++) {
+        if (p + 4 > b.length) break;
+        const len = b[p] | (b[p + 1] << 8) | (b[p + 2] << 16) | (b[p + 3] << 24);
+        p += 4;
+        if (p + len > b.length) break;
+        const kv = latin1(buf, p, len);
+        p += len;
+        const idx = kv.indexOf('=');
+        if (idx < 0) continue;
+        const key = kv.slice(0, idx).toUpperCase(), val = kv.slice(idx + 1).trim();
+        if (key === 'ARTIST') pushF(out, 'identity', 'Artist', val);
+        else if (key === 'ALBUM') pushF(out, 'content', 'Album', val);
+        else if (key === 'TITLE') pushF(out, 'content', 'Title', val);
+        else if (key === 'ENCODER') pushF(out, 'software', 'Encoder', val);
+        else if (key === 'DATE') pushF(out, 'timing', 'Date', val);
+      }
+    } else {
+      pushF(out, 'note', 'Container', 'Ogg container detected but no vorbiscomment block found in the first 256 KB.');
+    }
+  } else if (b.length > 12 && str4(b, 0) === 'RIFF' && str4(b, 8) === 'WAVE') {
+    let p = 12;
+    while (p + 8 <= b.length) {
+      const id = str4(b, p);
+      const size = dv.getUint32(p + 4, true);
+      if (id === 'LIST' && str4(b, p + 8) === 'INFO') {
+        let q = p + 12;
+        const lim = p + size;
+        while (q + 8 <= Math.min(lim, b.length)) {
+          const cid = str4(b, q);
+          const csize = dv.getUint32(q + 4, true);
+          const val = latin1(buf, q + 8, Math.min(csize, b.length - q - 8)).replace(/\0+$/, '').trim();
+          if (cid === 'INAM') pushF(out, 'content', 'Title', val);
+          else if (cid === 'IART') pushF(out, 'identity', 'Artist', val);
+          else if (cid === 'ICOP') pushF(out, 'identity', 'Copyright', val);
+          else if (cid === 'ISFT') pushF(out, 'software', 'Software', val);
+          else if (cid === 'ICRD') pushF(out, 'timing', 'Created', val);
+          else if (cid === 'IPRD') pushF(out, 'content', 'Product', val);
+          q += 8 + csize + (csize % 2);
+        }
+      }
+      if (size === 0) break;
+      p += 8 + size + (size % 2);
+    }
+  } else if (b.length > 12 && str4(b, 4) === 'ftyp') {
+    parseMp4(b, dv, 0, b.length, 0, out);
+  } else {
+    pushF(out, 'note', 'Audio container', 'Unrecognized audio container (no ID3/FLAC/OGG/RIFF/MP4 signature).');
+  }
+}
+
+function parseMp4(b, dv, off, len, depth, out) {
+  if (depth > 6) return;
+  let p = off;
+  while (p + 8 <= off + len) {
+    let size = dv.getUint32(p, false);
+    const id = str4(b, p + 4);
+    if (size === 1) {
+      if (p + 16 > off + len) break;
+      size = Math.pow(2, 32) * dv.getUint32(p + 8, false) + dv.getUint32(p + 12, false);
+    }
+    if (size < 8 || p + size > off + len + 8) break;
+    const body = p + 8;
+    const bodyLen = Math.min(size - 8, off + len - p);
+    if (id === 'moov' || id === 'udta') {
+      parseMp4(b, dv, body, bodyLen, depth + 1, out);
+    } else if (id === 'meta') {
+      parseMp4(b, dv, body + 4, Math.max(0, bodyLen - 4), depth + 1, out); // full box: 4 header bytes
+    } else if (id === 'ilst') {
+      let q = body;
+      while (q + 8 <= body + bodyLen) {
+        const ts = dv.getUint32(q, false);
+        const tid = str4(b, q + 4);
+        if (ts < 8 || q + ts > body + bodyLen) break;
+        // find 'data' atom inside
+        let r = q + 8;
+        while (r + 16 <= q + ts) {
+          const ds = dv.getUint32(r, false);
+          if (str4(b, r + 4) === 'data' && ds >= 16 && r + ds <= q + ts) {
+            const valBytes = b.subarray(r + 16, r + ds);
+            let val = null;
+            if (tid === 'trkn') {
+              if (valBytes.length >= 12) {
+                const t = dv.getUint32(r + 16 + 4, false);
+                val = String(t || dv.getUint32(r + 16 + 8, false));
+              }
+            } else if (tid === 'gnre') {
+              val = null; // genre IDs are numeric; skip
+            } else {
+              val = new TextDecoder('utf-8').decode(valBytes).trim();
+            }
+            const map = {
+              '©nam': ['content', 'Title'], '©ART': ['identity', 'Artist'], aART: ['identity', 'Album artist'],
+              '©alb': ['content', 'Album'], trkn: ['content', 'Track'], '©day': ['timing', 'Date'],
+              '©yr': ['timing', 'Year'], '©too': ['software', 'Encoder'], '©wrt': ['identity', 'Composer']
+            };
+            if (map[tid] && val) pushF(out, map[tid][0], map[tid][1], val);
+            r += ds;
+          } else r += 8;
+        }
+        q += ts;
+      }
+    }
+    p += size;
+  }
+}
+
+/* ---------------- dispatch + UI ---------------- */
+
+const EXT_ROUTES = {
+  jpg: analyzeImage, jpeg: analyzeImage, png: analyzeImage, tiff: analyzeImage, tif: analyzeImage,
+  gif: analyzeImage, bmp: analyzeImage, heic: analyzeImage, heif: analyzeImage, webp: analyzeImage,
+  docx: analyzeOoxml, xlsx: analyzeOoxml, pptx: analyzeOoxml,
+  pdf: analyzePdf,
+  doc: analyzeOle, xls: analyzeOle, ppt: analyzeOle,
+  mp3: analyzeAudio, m4a: analyzeAudio, m4b: analyzeAudio, aac: analyzeAudio, mp4: analyzeAudio,
+  ogg: analyzeAudio, flac: analyzeAudio, wav: analyzeAudio, opus: analyzeAudio
+};
+
+function extOf(name) {
+  const i = name.lastIndexOf('.');
+  return i >= 0 ? name.slice(i + 1).toLowerCase() : '';
+}
+
+async function analyzeFile(file) {
+  const buf = await file.arrayBuffer();
+  const hash = await sha256(buf);
+  const ext = extOf(file.name);
+  const out = [];
+  const route = EXT_ROUTES[ext] || (file.type && file.type.startsWith('image/') ? analyzeImage : null);
+  if (!route) {
+    out.push(f('note', 'Type', 'No parser for this file type — nothing extracted.'));
+  } else {
+    try {
+      const r = route(file.name, buf, out);
+      if (r && r.catch) await r;
+    } catch (e) {
+      out.push(f('note', 'Error', 'Parser failed: ' + e.message));
+    }
+    if (!out.length) out.push(f('note', 'Metadata', 'Container read but no standard metadata fields present (possibly stripped on export).'));
+  }
+  return { file, size: file.size, ext, hash, findings: out };
+}
+
+function osmLink(value) {
+  const m = String(value).match(/^(-?[\d.]+),\s*(-?[\d.]+)$/);
+  if (!m) return null;
+  const lat = parseFloat(m[1]), lon = parseFloat(m[2]);
+  if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+  return 'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lon + '#map=15/' + lat + '/' + lon;
+}
+
+function renderFindings(item) {
+  const groups = CATS.map((c) => ({ c, rows: item.findings.filter((x) => x.cat === c) })).filter((g) => g.rows.length);
+  if (!groups.length) return '<p class="empty">No findings.</p>';
+  let html = '';
+  for (const g of groups) {
+    html += '<div class="cat" data-cat="' + g.c + '"><div class="cat-h"><span class="chip">' + CAT_LABEL[g.c] + '</span><span class="cat-n">' + g.rows.length + '</span></div><table>';
+    for (const row of g.rows) {
+      let val = esc(row.value);
+      if (row.cat === 'location') {
+        const link = osmLink(row.value);
+        if (link) val += ' <a class="maplink" href="' + link + '" target="_blank" rel="noopener">open map ↗</a>';
+      }
+      html += '<tr><td class="fld">' + esc(row.field) + '</td><td class="val">' + val + '</td></tr>';
+    }
+    html += '</table></div>';
+  }
+  return html;
+}
+
+function renderCard(item, skeleton) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.name = item.file.name;
+  const hashHtml = item.hash
+    ? '<code class="hash" title="SHA-256">' + item.hash + '</code>'
+    : '<span class="hash na">hash unavailable (needs secure context)</span>';
+  card.innerHTML =
+    '<div class="card-h">' +
+    '<div class="fname">' + esc(item.file.name) + '</div>' +
+    '<div class="badges"><span class="badge">' + (item.ext ? item.ext.toUpperCase() : 'FILE') + '</span>' +
+    '<span class="badge">' + fmtBytes(item.size) + '</span>' +
+    (skeleton ? '<span class="badge busy">analyzing…</span>' : '<span class="badge done">done</span>') +
+    '</div></div>' +
+    '<div class="hashrow">' + hashHtml + '</div>' +
+    '<div class="findings">' + (skeleton ? '<p class="empty">Working…</p>' : renderFindings(item)) + '</div>';
+  return card;
+}
+
+async function handleFiles(fileList) {
+  const files = Array.from(fileList).slice(0, 25);
+  for (const file of files) {
+    const skeleton = { file, size: file.size, ext: extOf(file.name), hash: null, findings: [] };
+    state.items.push(skeleton);
+    const card = renderCard(skeleton, true);
+    $('#cards').appendChild(card);
+    const item = await analyzeFile(file);
+    Object.assign(skeleton, item);
+    card.querySelector('.card-h .badges').innerHTML =
+      '<span class="badge">' + (item.ext ? item.ext.toUpperCase() : 'FILE') + '</span>' +
+      '<span class="badge">' + fmtBytes(item.size) + '</span><span class="badge done">done</span>';
+    card.querySelector('.hashrow').innerHTML = item.hash
+      ? '<code class="hash" title="SHA-256">' + item.hash + '</code>'
+      : '<span class="hash na">hash unavailable (needs secure context)</span>';
+    card.querySelector('.findings').innerHTML = renderFindings(item);
+  }
+  const exp = $('#exportBtn');
+  if (exp) exp.disabled = !state.items.length;
+}
+
+/* ---------------- report export ---------------- */
+
+function buildReportHtml() {
+  const total = state.items.reduce((a, i) => a + i.findings.length, 0);
+  let body = '';
+  for (const item of state.items) {
+    body += '<div class="rcard">' +
+      '<div class="rhead"><h2>' + esc(item.file.name) + '</h2>' +
+      '<div class="rmeta">' + (item.ext ? item.ext.toUpperCase() + ' · ' : '') + fmtBytes(item.size) +
+      (item.hash ? ' · SHA-256 <code>' + item.hash + '</code>' : '') + '</div></div>' +
+      renderFindings(item) + '</div>';
+  }
+  const css = document.querySelector('#appcss').textContent;
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>RhytOSINT Forensic Report</title><style>' + css +
+    ' body{padding:2rem}.rcard{margin-bottom:2rem;break-inside:avoid}' +
+    '.rhead h2{margin:0 0 .3rem}.rmeta{color:#8b98ab;font-size:.85rem} @media print{.no-print{display:none}}</style></head>' +
+    '<body><div class="no-print" style="margin-bottom:1rem"><button onclick="window.print()">Print / Save PDF</button></div>' +
+    '<h1>RhytOSINT — Forensic Metadata Report</h1>' +
+    '<p class="rmeta">' + state.items.length + ' file(s) · ' + total + ' finding(s) · generated ' + new Date().toISOString() + '</p>' +
+    body + '</body></html>';
+}
+
+/* ---------------- wiring ---------------- */
+
+function libStatus() {
+  const zip = typeof JSZip !== 'undefined' ? '✓' : '✗';
+  const cfb = typeof CFB !== 'undefined' ? '✓' : '✗';
+  return 'OOXML (JSZip) ' + zip + ' · OLE (cfb) ' + cfb + ' — hand-rolled parsers for JPEG/EXIF, PDF, ID3, FLAC, OGG, WAV, MP4 need no libraries.';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const zone = $('#dropzone');
+  const input = $('#fileInput');
+
+  zone.addEventListener('click', () => input.click());
+  input.addEventListener('change', () => { handleFiles(input.files); input.value = ''; });
+  ['dragenter', 'dragover'].forEach((ev) => zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((ev) => zone.addEventListener(ev, (e) => { e.preventDefault(); zone.classList.remove('over'); }));
+  zone.addEventListener('drop', (e) => { if (e.dataTransfer && e.dataTransfer.files.length) handleFiles(e.dataTransfer.files); });
+
+  $('#clearBtn').addEventListener('click', () => { state.items = []; $('#cards').innerHTML = ''; $('#exportBtn').disabled = true; });
+  $('#exportBtn').addEventListener('click', () => {
+    const w = window.open('', '_blank', 'width=1000,height=800');
+    if (!w) { alert('Popup blocked — allow popups to export the report.'); return; }
+    w.document.write(buildReportHtml());
+    w.document.close();
+  });
+  $('#libstatus').textContent = libStatus();
+  window.__rhyt = { state, analyzeFile, osmLink }; // for debugging / reuse in the 01-style URL scorer
+});
+
+</script>
+</body>
+</html>

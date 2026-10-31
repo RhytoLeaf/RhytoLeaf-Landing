@@ -35,6 +35,7 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 9. **Superchat** — external: https://rhyto-superchat.web.app
 10. **BMI Calculator** — external: https://rhytoleaf.github.io/Rhyto-BMI/ (copy at `apps/bmi-calculator.html`)
 11. **Zeek** — `apps/zeek.html` (speed reader for dyslexia/ADHD; logos in `images/zeek-logo.*`) — sits at the bottom of the grid so it leads directly into the "Zeek vs. the field" spotlight ribbon below it
+12. **RhytOSINT Forensics** — `apps/rhytosint-forensics.html` (client-side digital forensics: drag & drop file metadata extraction, 100% in-browser; logo embedded in `orbits.js` as base64 WebP, matching the app's own dark theme + cyan accent)
 - **Beebs** — retired from the site (was "under maintenance"); external: https://appadvice.com/app/beebs/1247188870
 - Also in `apps/` (not yet in orbits): `zeek-vs-alternatives.html`
 
@@ -63,6 +64,7 @@ Both theme and orbits assets stay in the repo root so relative paths (`./images/
 ├── apps/                   # App pages
 │   ├── zeek.html
 │   ├── zeek-vs-alternatives.html
+│   ├── rhytosint-forensics.html
 │   ├── econoflo.html
 │   ├── econoflo-vs-alternatives.html
 │   ├── cachehax.html
