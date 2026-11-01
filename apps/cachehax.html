@@ -1765,3 +1765,47 @@
             });
         }
     </script>
+
+<!-- ===== RhytoLeaf: How it works (Mermaid architecture chart) ===== -->
+<section class="rly-arch">
+  <h2 class="rly-arch-title">Cache Hax - Smart Money</h2>
+  <p class="rly-arch-sub">Answer a few questions, nudge your weight sliders, and get a personalised 50/35/5/10 budget split.</p>
+  <div class="rly-arch-diagram">
+    <pre class="mermaid">
+flowchart TD
+  A["Take the budgeting quiz"] --> B["Answer lifestyle and goal questions"]
+  B --> C["Rebalance your weight sliders"]
+  C --> D["Compute the 50/35/5/10 split"]
+  D --> E["Needs 50 percent"]
+  D --> F["Wants 35 percent"]
+  D --> G["Savings 5 percent"]
+  D --> H["Investments 10 percent"]
+  E --> I["Visual budget breakdown"]
+  F --> I
+  G --> I
+  H --> I
+    </pre>
+  </div>
+</section>
+<style>
+  .rly-arch{width:100%;max-width:980px;margin:2.5rem auto;padding:1.6rem 2rem 2rem;background:rgba(16,20,28,.92);border:1px solid rgba(255,255,255,.10);border-radius:16px;align-self:stretch;position:relative;z-index:5;color:#dbe4f0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
+  .rly-arch-title{margin:0 0 .35rem;font-size:1.2rem;font-weight:700;color:#fff;}
+  .rly-arch-sub{margin:0 0 1.1rem;font-size:.9rem;color:#8b98ab;line-height:1.5;}
+  .rly-arch-diagram{overflow:auto;background:rgba(8,12,18,.6);border-radius:12px;padding:1rem;}
+  .rly-arch .mermaid{display:flex;justify-content:center;}
+  .rly-arch svg{max-width:100%;height:auto;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  (function () {
+    function init() {
+      try {
+        if (!window.mermaid) return;
+        window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+        window.mermaid.run();
+      } catch (e) { console.warn('mermaid init failed', e); }
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
+    else { init(); }
+  })();
+</script>
