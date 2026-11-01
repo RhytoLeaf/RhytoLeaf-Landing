@@ -46,7 +46,6 @@ All apps are self-contained single-page HTML files (no server required) and link
 | **Touch Grass** | [`apps/touch-grass.html`](apps/touch-grass.html) | Full-screen interactive grass simulation — wave the blades with your cursor or fingers, flip colors, VR mode |
 | **EconoFlo** | [`apps/econoflo.html`](apps/econoflo.html) | Economics 101 with interactive time-value-of-money simulators and visualizations |
 | **Cache Hax** | [`apps/cachehax.html`](apps/cachehax.html) | Financial-literacy budgeting tool based on the 50/35/5/10 rule |
-| **Style Under Stress** | [`apps/style-under-stress.html`](apps/style-under-stress.html) | "Crucial Conversations" quiz assessing your communication patterns under stress |
 | **SpeedScript** | [`apps/speedscript.html`](apps/speedscript.html) | 90-second typing test measuring WPM and accuracy |
 | **Shoganai** | [`apps/shoganai.html`](apps/shoganai.html) | Free online shogi (Japanese chess) with an AI opponent, tutorials, and adjustable difficulty |
 | **Wuxi (We Watch)** | [`apps/wuxi-we-watch.html`](apps/wuxi-we-watch.html) | Collaborative movie discovery and viewing with enhanced accessibility features |
