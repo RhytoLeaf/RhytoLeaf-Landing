@@ -700,6 +700,35 @@
             </div>
             <div class="arrow"></div>
           </div>
+
+          <div
+            id="chartModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="chartTitle"
+            hidden
+          >
+            <div class="cm-overlay"></div>
+            <div class="cm-panel">
+              <button
+                class="x"
+                id="chartClose"
+                type="button"
+                aria-label="Close diagram"
+                >&times;</button
+              >
+              <div class="cm-head">
+                <span class="cm-emoji" aria-hidden="true">🧜🏿</span>
+                <div>
+                  <h3 id="chartTitle"></h3>
+                  <p id="chartSub"></p>
+                </div>
+              </div>
+              <div class="cm-body">
+                <div id="chartDiagram" class="mermaid"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -304,45 +304,5 @@
       <p>&copy; 2026 RhytoLeaf Inc. This comparison is our honest take, not an endorsement by the other products named. Pricing and features were checked in 2026 and may change.</p>
     </footer>
   </div>
-
-<!-- ===== RhytoLeaf: How it works (Mermaid architecture chart) ===== -->
-<section class="rly-arch">
-  <h2 class="rly-arch-title">EconoFlo vs. the Alternatives</h2>
-  <p class="rly-arch-sub">How EconoFlo compares to other economics learning tools.</p>
-  <div class="rly-arch-diagram">
-    <pre class="mermaid">
-flowchart TD
-  A["Economics learning goal"] --> B{"How do you learn best?"}
-  B -->|interactive simulations| C["EconoFlo - visual and hands-on"]
-  B -->|textbooks and video| D["Traditional resources"]
-  C --> E["Fast intuition via live visuals"]
-  D --> F["Slower and more passive"]
-  E --> G["Pick the tool that fits your style"]
-  F --> G
-    </pre>
-  </div>
-</section>
-<style>
-  .rly-arch{width:100%;max-width:980px;margin:2.5rem auto;padding:1.6rem 2rem 2rem;background:rgba(16,20,28,.92);border:1px solid rgba(255,255,255,.10);border-radius:16px;align-self:stretch;position:relative;z-index:5;color:#dbe4f0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;}
-  .rly-arch-title{margin:0 0 .35rem;font-size:1.2rem;font-weight:700;color:#fff;}
-  .rly-arch-sub{margin:0 0 1.1rem;font-size:.9rem;color:#8b98ab;line-height:1.5;}
-  .rly-arch-diagram{overflow:auto;background:rgba(8,12,18,.6);border-radius:12px;padding:1rem;}
-  .rly-arch .mermaid{display:flex;justify-content:center;}
-  .rly-arch svg{max-width:100%;height:auto;}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
-<script>
-  (function () {
-    function init() {
-      try {
-        if (!window.mermaid) return;
-        window.mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
-        window.mermaid.run();
-      } catch (e) { console.warn('mermaid init failed', e); }
-    }
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
-    else { init(); }
-  })();
-</script>
 </body>
 </html>

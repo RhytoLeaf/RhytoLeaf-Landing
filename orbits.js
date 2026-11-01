@@ -918,8 +918,229 @@
         });
         card.appendChild(ul);
 
+        const chartBtn = document.createElement("button");
+        chartBtn.className = "chart-btn";
+        chartBtn.type = "button";
+        chartBtn.title = "How it works";
+        chartBtn.setAttribute(
+          "aria-label",
+          "How " + app.name + " works - show the diagram",
+        );
+        chartBtn.textContent = "\u{1F9DC}\u{1F3FF}"; // \ud83e\udddc\ud83c\udffb mermaid, dark skin tone
+        chartBtn.addEventListener("click", () => openChart(app, chartBtn));
+        card.appendChild(chartBtn);
+
         grid.appendChild(card);
       });
+
+      /* ───────────────────────── “How it works” chart modal (Mermaid) ─────────────────────────
+   A \ud83e\udddc\ud83c\udffb button on every card toggles a modal that renders that app's architecture
+   diagram. Mermaid is fetched from the CDN lazily, only the first time someone opens a chart.      */
+      const CHARTS = {
+        "Gomoku Frontier": {
+          s: "Place stones, out-think a deep alpha-beta AI, and follow its live commentary.",
+          d: `flowchart TD
+    A["Player places a stone"] --> B{"Valid move?"}
+    B -->|no| A
+    B -->|yes| C["Update board state"]
+    C --> D{"Win or draw?"}
+    D -->|yes| E["Show result and commentary"]
+    D -->|no| F["AI: alpha-beta minimax, 2 to 4 ply"]
+    F --> G["AI responds with live commentary"]
+    G --> H["Redraw board and grass"]
+    H --> A`,
+        },
+        EconoFlo: {
+          s: "Time value of money made visual - run the math, animate the growth, export the result.",
+          d: `flowchart TD
+    A["Choose a topic"] --> B["Run the financial calculation"]
+    B --> C["p5.js renders the generative canvas"]
+    C --> D["Tweak the controls and seed"]
+    D --> E["Step through and watch capital compound"]
+    E --> F["Export the visualization as a PNG"]`,
+        },
+        "Cache Hax": {
+          s: "A few questions, some sliders, and a personalised 50/35/5/10 budget doughnut.",
+          d: `flowchart TD
+    A["Take the budgeting quiz"] --> B["Answer lifestyle and goal questions"]
+    B --> C["Rebalance your weight sliders"]
+    C --> D["Compute the 50/35/5/10 split"]
+    D --> E["Needs 50"]
+    D --> F["Wants 35"]
+    D --> G["Savings 5"]
+    D --> H["Invest 10"]
+    E --> I["Chart.js doughnut of your split"]
+    F --> I
+    G --> I
+    H --> I`,
+        },
+        "Style Under Stress": {
+          s: "Thirty-three scenario questions reveal your under-pressure communication style.",
+          d: `flowchart TD
+    A["Start the Crucial Conversations quiz"] --> B["Read a stressful scenario"]
+    B --> C["Answer true or false"]
+    C --> D{"All 33 done?"}
+    D -->|no| B
+    D -->|yes| E["Score Silence and Violence"]
+    E --> F["Show your communication style profile"]`,
+        },
+        SpeedScript: {
+          s: "Type a quote for 90 seconds; get your WPM, accuracy and score.",
+          d: `flowchart TD
+    A["Load a random quote"] --> B["Start the 90 second timer"]
+    B --> C["You type the words"]
+    C --> D["Track keystrokes and live accuracy"]
+    D --> E{"Time up?"}
+    E -->|no| C
+    E -->|yes| F["Calculate WPM and score"]
+    F --> G["Show your results and rating"]`,
+        },
+        Wuxi: {
+          s: "Discover films with TMDB, explore the details, and read them aloud.",
+          d: `flowchart TD
+    A["Search or browse movies"] --> B["TMDB returns titles and posters"]
+    B --> C["Explore details, cast and info"]
+    C --> D["Read the overview aloud"]
+    D --> E["Watch and explore together"]`,
+        },
+        Shoganai: {
+          s: "Play Japanese chess against a custom alpha-beta AI, with tutorials and multi-language support.",
+          d: `flowchart TD
+    A["Player selects a piece"] --> B["Choose a legal destination"]
+    B --> C{"Legal move?"}
+    C -->|no| A
+    C -->|yes| D["Apply move and captures"]
+    D --> E{"Mate, check or stalemate?"}
+    E -->|yes| F["End game and announce result"]
+    E -->|no| G["ShogiAI opponent replies"]
+    G --> H["Redraw board, prompt next move"]
+    H --> A`,
+        },
+        Superchat: {
+          s: "A real-time public messaging room, hosted on Google Firebase.",
+          d: `flowchart TD
+    A["Open the public chat room"] --> B["Read the live message feed"]
+    B --> C["Type a message"]
+    C --> D["Firebase real-time sync"]
+    D --> B`,
+        },
+        "BMI Calculator": {
+          s: "Enter your measurements, pick your units, and get a BMI score with the healthy range.",
+          d: `flowchart TD
+    A["Enter height and weight"] --> B["Choose metric or imperial"]
+    B --> C["Calculate BMI = kg / m2"]
+    C --> D{"Category?"}
+    D -->|below 18.5| E["Underweight"]
+    D -->|18.5 to 24.9| F["Normal"]
+    D -->|25 to 29.9| G["Overweight"]
+    D -->|30 and above| H["Obese"]
+    E --> I["Show score and healthy range"]
+    F --> I
+    G --> I
+    H --> I`,
+        },
+        Zeek: {
+          s: "Paste or scan text, then read it faster at one word per flash on a single focus point.",
+          d: `flowchart TD
+    A["Paste text or scan with camera OCR"] --> B["Tesseract extracts the words"]
+    B --> C["Tokenize into words"]
+    C --> D["RSVP flashes one word at the ORP point"]
+    D --> E["Adjust WPM, ORP and theme"]
+    E --> D`,
+        },
+        "Touch Grass": {
+          s: "A full-screen meadow that bends in procedural wind and parts around your cursor and every finger.",
+          d: `flowchart TD
+    A["Pointer or multi-touch input"] --> B["Track every active touch point"]
+    B --> C["Apply force to nearby blades"]
+    C --> D["Wind, sway and spring-back physics"]
+    D --> E["requestAnimationFrame loop"]
+    E --> F["Redraw the full-screen meadow"]
+    F --> A`,
+        },
+      };
+
+      const chartModal = document.getElementById("chartModal");
+      const chartClose = document.getElementById("chartClose");
+      let chartBtn = null;
+      let mermaidPromise = null;
+      const CHART_THEME = {
+        startOnLoad: false,
+        theme: "dark",
+        securityLevel: "loose",
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: "basis", padding: 12 },
+        themeVariables: {
+          primaryColor: "#123024",
+          primaryTextColor: "#e8eef2",
+          primaryBorderColor: "#3fcf8e",
+          lineColor: "#3fcf8e",
+          secondaryColor: "#0f161d",
+          tertiaryColor: "#0a1016",
+          fontSize: "15px",
+          fontFamily: "Montserrat, system-ui, -apple-system, sans-serif",
+        },
+      };
+      function loadMermaid() {
+        if (window.mermaid) return Promise.resolve(window.mermaid);
+        if (!mermaidPromise) {
+          mermaidPromise = new Promise((res, rej) => {
+            const s = document.createElement("script");
+            s.src = "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js";
+            s.onload = () => res(window.mermaid);
+            s.onerror = () => rej(new Error("mermaid failed to load"));
+            document.head.appendChild(s);
+          });
+        }
+        return mermaidPromise;
+      }
+      async function renderChart(app) {
+        const c = CHARTS[app.name];
+        document.getElementById("chartTitle").textContent = app.name;
+        document.getElementById("chartSub").textContent =
+          (c && c.s) || "A quick look at how it works.";
+        const diagram = document.getElementById("chartDiagram");
+        diagram.innerHTML =
+          '<p style="color:var(--o-muted)">Drawing the diagram…</p>';
+        try {
+          const m = await loadMermaid();
+          m.initialize(CHART_THEME);
+          const def =
+            (c && c.d) ||
+            "flowchart TD\n  A[\\\"Open the app\\\"] --> B[\\\"Enjoy it\\\"]";
+          /* id must be a single token: mermaid.render() resolves it via getElementById,
+             so any space (e.g. "Gomoku Frontier") would make the lookup return null. */
+          const id =
+            "chart-" + app.name.replace(/[^a-z0-9]+/gi, "-") + "-" + Date.now();
+          const { svg } = await m.render(id, def);
+          diagram.innerHTML = svg;
+        } catch (e) {
+          console.warn("mermaid render failed", e);
+          diagram.innerHTML =
+            '<p style="color:var(--o-muted)">Chart could not be loaded right now (are you offline?)</p>';
+        }
+      }
+      function openChart(app, btn) {
+        chartBtn = btn;
+        chartModal.hidden = false;
+        document.body.classList.add("cm-open");
+        renderChart(app);
+        chartClose.focus();
+      }
+      function closeChart() {
+        if (chartModal.hidden) return;
+        chartModal.hidden = true;
+        document.body.classList.remove("cm-open");
+        if (chartBtn) chartBtn.focus({ preventScroll: true });
+      }
+      if (chartModal && chartClose) {
+        chartClose.addEventListener("click", closeChart);
+        chartModal
+          .querySelector(".cm-overlay")
+          .addEventListener("click", closeChart);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !chartModal.hidden) closeChart();
+        });
+      }
 
       /* ───────────────────────── Starfield (tsParticles v2) ─────────────────────────
    One small particle field per card: ~55 stars that drift almost imperceptibly and fade in and out.
